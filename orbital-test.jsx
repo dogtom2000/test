@@ -5,28 +5,40 @@ Table = React.createClass({
 			<table id={this.props.tableId}>
 				<thead>
 				<tr>
-					{this.props.headingData.map((heading, i) => <TableHeading key={i} data={heading}/>)}
+					{this.props.data[0].map((heading, i) => <th key={i}>{heading}</th>)}
 				</tr>		
 				</thead>
 				<tbody>	
-					{this.props.rowData.map((row, i) => <tr key={i}>{row.map((element, j) => <TableRow key={j} data={element}/>)}</tr>)}					
+					{this.props.data[1].map((row, i) => <tr key={i}>{row.map((element, j) => <td key={j}>{element}</td>)}</tr>)}					
 				</tbody>
 			</table>
 			)
 	}
 });
 
-TableHeading = React.createClass({
+Buttons = React.createClass({
 
 	render(){
-		return <th>{this.props.data}</th>
+		return(
+			<div className={this.props.divclass}>
+				{this.props.subtext.map((text, i) => <button key={i} type="button" className={this.props.subclass} id={this.props.subid[i]}>{text}</button>)}
+			</div>
+			)
 	}
-
 });
 
-TableRow = React.createClass({
+Dropdown = React.createClass({
 
 	render(){
-		return <td>{this.props.data}</td>
+		return(
+			<div className="dropdown">
+				<button className={this.props.subclass} type="button" data-toggle="dropdown">{this.props.maintext}<span className="caret"></span></button>
+				<ul className="dropdown-menu">
+					{this.props.subtext.map((text, i) => <li key={i} id={this.props.subid[i]}><a>{text}</a></li>)}
+				</ul>
+			</div>
+			)
 	}
-})
+});
+
+						

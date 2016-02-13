@@ -43,7 +43,7 @@ body{
   background-color: #228;
 }
 
-table#buildSelection tr td{
+table#buildSelection tr, table#buildSelection td{
   background-color: #4CAF50;
   color: white;
   border: 1px solid;
@@ -51,10 +51,22 @@ table#buildSelection tr td{
   text-align: center;
 }
 
-table#buildPreview tr td{
+table#buildPreview th, table#buildPreview td{
+  padding-left: 5px;
+  padding-right: 5px;
   background-color: #4CAF50;
   color: white;
   border: 1px solid;
-  width: 200px;
+  width: 150px;
   text-align: center;
+}
+
+table#buildPreview td:first-child, table#buildPreview th:first-child{
+  text-align: left;
+  width: 250px;
+}
+
+table#buildModify tr, table#buildModify td{
+  padding-left: 15px;
+  text-align: left;
 }
