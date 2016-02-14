@@ -1,20 +1,4 @@
-Table = React.createClass({
 
-	render(){
-		return(
-			<table id={this.props.tableId}>
-				<thead>
-				<tr>
-					{this.props.data[0].map((heading, i) => <th key={i}>{heading}</th>)}
-				</tr>		
-				</thead>
-				<tbody>	
-					{this.props.data[1].map((row, i) => <tr key={i}>{row.map((element, j) => <td key={j}>{element}</td>)}</tr>)}					
-				</tbody>
-			</table>
-			)
-	}
-});
 
 Buttons = React.createClass({
 

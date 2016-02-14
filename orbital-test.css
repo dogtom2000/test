@@ -1,9 +1,9 @@
 body{
   color: #fff;
-  font-size: 1.5vmin;
+  font-size: 15px;
 }
 
-.container-fluid {
+.container-fluid{
   margin-right: auto;
   margin-left: auto;
   min-width: 1024px;
@@ -11,26 +11,31 @@ body{
 }
 
 .row-1{
-    height: 300px;
+    height: 672px;
 
 }
 .row-2{
-    height: 600px;
+    height: 256px;
 }
 
 #build-1-1{
+    padding: 5px;
     background-color: #333;
     height: 100%;
 }
 #build-1-2{
-    background-color: #777;
+    padding: 5px;
+    background-color: #444;
     height: 100%;
 }
 #build-1-3{
+    padding: 5px;
     background-color: #333;
     height: 100%;
+    overflow-y: auto;
 }
 #build-2-1{
+  padding: 5px;
     background-color: #222;
     height: 100%;
 }
@@ -45,50 +50,55 @@ body{
     height: 100%;
 }
 
-#build-dropdown, #build-control{
-  background-color: #224;
-}
-
-#build-partpreview{
-  background-color: #228;
-}
-
-#buildPreview{
-  margin-top: 2px;
-  background-color: #4CAF50;
-  color: white;
-  border: 1px solid;
+#b12r{
   text-align: center;
 }
+#b12l{
 
-#buildPreview th {
-   text-align: center;
-   width: 25%;
 }
 
-#buildPreview th:first-child {
-   text-align: center;
-   width: 50%;
+#rocket-canvas{
+ display: inline;
+ margin-top: 40px;
+
+
 }
 
-table#buildPreview td:first-child, table#buildPreview th:first-child{
-  text-align: left;
-}
-
+/*build modify table  */
 #buildModify{
   width: 100%;
 }
 
-table#buildModify td{
+#buildModify>tbody>tr>td{
   border: 1px solid;
+  width: 10%;
+}
+
+#buildModify>tbody>tr>td:nth-child(2){
+  padding-left: 4px;
   width: 20%;
 }
 
-table#buildModify td:first-child{
+#buildModify>tbody>tr>td:first-child{
+  padding-left: 4px;
   width: 40%;
-  padding-right: px;
 }
 
-table#buildModify td:first-child, table#buildModify td:nth-child(2){
-  padding-left: 4px;
+/*stage summary list  */
+#stage-summary td{
+  padding: 1px;
+}
+
+#stage-summary th{
+  padding-top: 16px;
+  font-weight: bold;
+  font-size: 20px;
+  width: 50%;
+}
+
+
+
+.title{ 
+  font-weight: bold;
+  font-size: 25px;
 }
