@@ -1,16 +1,10 @@
-
-
 BuildMain = React.createClass({
-	
 	
 	mixins: [ReactMeteorData],
 
 	getMeteorData() {
 
 		return {
-
-
-
 		}
 	},
 
@@ -22,9 +16,13 @@ BuildMain = React.createClass({
 			mixRatio: 5,
 			enginePressure: 100,
 			nozzleLength: 5,
+			tankMass: 5,
+			engineMass: 5,
+			fuelMass: 5,
+			totalMass: 5,
+
 		};
 	},
-
 
 	handleUserInput(index, val, min, max) {
 		switch (index){
@@ -59,52 +57,38 @@ BuildMain = React.createClass({
 				}
 				break;
 		}
+		this.setState({tankMass: this.state.tankMass + 2});
 	},
 
-
-
-
-
 	render(){
-		var val = 1700;
 		return(
 			<div>
-				<div className="row-2 row">
-					<div className="col-md-3 fixed" id="build-1-1">
 
-					</div>{/* column end */}
+				<div className="row-fluid row-2">
+					<Build_11 />
 
-					<div className="col-md-6 fixed" id="build-1-2">
-					Graphical stage preview
-					</div>
-					<div className="col-md-3 fixed" id="build-1-3">
-					Overall rocket properties
-					</div>
+					<Build_12 />
+
+					<Build_13 
+					tankMass={this.state.tankMass}
+					engineMass={this.state.engineMass}
+					fuelMass={this.state.fuelMass}
+					totalMass={this.state.totalMass}/>
+
 				</div>{/* row one ends */}
 
+				<div className="row-fluid row-1">
+					<Build_21 />			
 
-				<div className="row-1 row">
-					<div className="col-md-3 fixed" id="build-2-1">
-						<Table tableId={"buildEcon"} data={[["H1", "H2", "H3","H4"],[["D1", "D2", "D3","D4"],[, "D5", "D6","D7", "D8"]]]}/>
-					</div>{/* column end */}
+					<Build_22 	tankLength={this.state.tankLength} 
+								wallThickness={this.state.wallThickness} 
+								fuelRate={this.state.fuelRate} 
+								mixRatio={this.state.mixRatio} 
+								enginePressure={this.state.enginePressure} 
+								nozzleLength={this.state.nozzleLength} 
+								onUserInput={this.handleUserInput} />
 
-					<Build_22 tankLength={this.state.tankLength} wallThickness={this.state.wallThickness} fuelRate={this.state.fuelRate} mixRatio={this.state.mixRatio} enginePressure={this.state.enginePressure} nozzleLength={this.state.nozzleLength} onUserInput={this.handleUserInput} />
-
-					<div className="col-md-3 fixed" id="build-2-3">
-						<div className="col-md-3 fixed">
-							<Buttons divclass={"btn-group-vertical"} subclass={"btn btn-primary"} subid={["build-stage-1", "build-stage-2", "build-stage-2", "build-stage-4", "build-stage-5", "build-stage-6", "build-stage-1"]} subtext={["Stage 1", "Stage 2", "Stage 3", "Stage 4", "Stage 5", "Stage 6"]}/>
-						</div>{/* sub column end */}
-						<div className="col-md-3 fixed">
-						</div>{/* sub column end */}
-						<div className="col-md-3 fixed">
-						</div>{/* sub column end */}
-						<div className="col-md-3 fixed" id="shigger">
-							<div className="btn-group-vertical">
-							  <button type="button" className="btn btn-success">Launch</button>
-							  <button type="button" className="btn btn-danger">Clear</button>
-							</div>
-						</div>{/* sub column end */}
-					</div>{/* column end */}
+					<Build_23 />
 				</div>{/* row two ends */}		
 			</div>
 			)
