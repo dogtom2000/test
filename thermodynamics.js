@@ -1,5 +1,6 @@
-engineThermo = function(fuel, mixRatio, pressure, nozzleLength, massRate){
+thermodynamics = function(fuel, mixRatio, pressure, nozzleLength, massRate){
 
+//check for values in range
 
 fuel = {
     pressure:  [1, 10, 25, 50, 75, 100, 150, 200],

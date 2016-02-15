@@ -1,6 +1,6 @@
-tankStructure = function(fuel, mixRatio, tankDiameter, tankLength, structuralDensity){
+tankCalc = function(fuel, mixRatio, tankDiameter, tankLength, structuralDensity){
 
-	//with Saturn V materials tank should weight 5.708 * L/D + 1.823 kg/m3
+	//with Saturn V materials tank should weight 7.11 * L/D + 4.32 kg/m3 (L/D range from 2 to 4)
 fuel = {
     pressure:  [1, 10, 25, 50, 75, 100, 150, 200],
     data: [1141, 70.8],
@@ -13,11 +13,11 @@ fuel = {
 
 var tankVolume = Math.PI / 4 * Math.pow(tankDiameter, 2) * tankLength;
 var stuctureMass = tankVolume * structuralDensity;
-var fuelOxDensity = (mixRatio + 1) / (mixRatio / fuel.data[0] + 1 / fuel.data[1]);
-var fuelOxMass = tankVolume * 0.55 * fuelOxDensity;
+var fuelDensity = (mixRatio + 1) / (mixRatio / fuel.data[0] + 1 / fuel.data[1]);
+var fuelMass = tankVolume * 0.55 * fuelDensity;
 
 
 
-return [fuelOxMass, stuctureMass]
+return [fuelMass, stuctureMass]
 
 }

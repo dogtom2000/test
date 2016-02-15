@@ -32,10 +32,9 @@ body{
     padding: 5px;
     background-color: #333;
     height: 100%;
-    overflow-y: auto;
 }
 #build-2-1{
-  padding: 5px;
+    padding: 5px;
     background-color: #222;
     height: 100%;
 }
@@ -50,18 +49,16 @@ body{
     height: 100%;
 }
 
-#b12r{
+#build-2-1-R{
   text-align: center;
 }
-#b12l{
+#build-2-1-L{
 
 }
 
 #rocket-canvas{
  display: inline;
  margin-top: 40px;
-
-
 }
 
 /*build modify table  */
@@ -85,13 +82,11 @@ body{
 }
 
 /*stage summary list  */
-#stage-summary td{
+#rocket-summary td{
   padding: 1px;
 }
 
-#stage-summary th{
-  padding-top: 5px;
-  padding-bottom: 5px;
+#rocket-summary th{
   font-weight: bold;
   font-size: 20px;
   width: 50%;
