@@ -1,7 +1,9 @@
 engineThermo = function(fuel, mixRatio, pressure, nozzleLength, massRate){
 
-    fuel = {
+
+fuel = {
     pressure:  [1, 10, 25, 50, 75, 100, 150, 200],
+    data: [1141, 70.8],
     mixRatio1: [3.9681,[2802.3, 2979.4, 3037.1, 3074.6, 3093.9, 3106.4, 3122.5, 3132.7],[9.6360, 9.7940, 9.8470, 9.8820, 9.9000, 9.9110, 9.9260, 9.9360],[1.2313, 1.2242, 1.2219, 1.2205, 1.2197, 1.2193, 1.2187, 1.2183]],
     mixRatio2: [4.5350,[2898.0, 3119.3, 3198.7, 3253.3, 3282.6, 3302.1, 3327.7, 3344.5],[10.537, 10.758, 10.839, 10.896, 10.926, 10.946, 10.973, 10.991],[1.2267, 1.2181, 1.2152, 1.2132, 1.2122, 1.2115, 1.2106, 1.2100]],
     mixRatio3: [5.2908,[2978.0, 3243.6, 3347.0, 3422.0, 3463.9, 3492.6, 3531.5, 3557.7],[11.657, 11.954, 12.073, 12.161, 12.210, 12.244, 12.290, 12.321],[1.2226, 1.2127, 1.2091, 1.2065, 1.2051, 1.2042, 1.2029, 1.2020]],
@@ -25,6 +27,7 @@ engineThermo = function(fuel, mixRatio, pressure, nozzleLength, massRate){
     var machNumber;
 
 
+    keys.shift();
     keys.shift();
     
     for (var i = 0; i < keys.length; i++){
@@ -94,8 +97,8 @@ engineThermo = function(fuel, mixRatio, pressure, nozzleLength, massRate){
     var ispVac = thrustVac / massRate / standardGravity;
     var ispAtm = thrustAtm / massRate / standardGravity;
 
-    var engineMass = 5 * massRate + Math.pow(throatArea, 0.5) * 550 + nozzleVolume * 80;
+    var engineMass = 5 * massRate + Math.pow(massRate / pressure, 0.5) * 75 + nozzleVolume * 80;
     var heatCoefficient = Math.pow(temperature / 1000, 2) * massRate / 100;
-    return [thrustVac/1000, thrustAtm/1000, ispVac, ispAtm, thrustVac / engineMass / standardGravity, thrustAtm / engineMass / standardGravity];
+    return [thrustVac/1000, thrustAtm/1000, ispVac, ispAtm, engineMass];
  
 }

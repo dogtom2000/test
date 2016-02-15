@@ -90,7 +90,8 @@ body{
 }
 
 #stage-summary th{
-  padding-top: 16px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   font-weight: bold;
   font-size: 20px;
   width: 50%;
@@ -101,4 +102,18 @@ body{
 .title{ 
   font-weight: bold;
   font-size: 25px;
+}
+
+.dropdown-menu {
+  width: 100%; 
+  text-align: center;
+}
+
+.dropdown-menu li > a:hover{
+
+  background-color: #8C8C50;
+}
+
+.btn{
+ width: 100%;
 }
