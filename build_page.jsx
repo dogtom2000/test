@@ -33,7 +33,9 @@ BuildPage = React.createClass({
 			selectDiameter: ["Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter"],
 			selectFuel: ["Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type"],
 			selectMatStruct: ["Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material"],
-			SelectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"]
+			SelectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"],
+
+			rocketImage: [["default.png"],["default.png"],["default.png"],["default.png"],["default.png"],["default.png"]],
 		};
 	},
 
@@ -124,15 +126,6 @@ BuildPage = React.createClass({
 				}
 				break;
 		}
-
-		//var c = document.getElementById("rocket-canvas");
-    	//var ctx = c.getContext("2d");
-		//ctx.imageSmoothingEnabled = false;
-		//ctx.mozImageSmoothingEnabled = false;
-		//ctx.imageSmoothingEnabled = false; 
-    	//var img = new Image(117, 280);
-    	//img.src = "10MLG.png";
-    	//ctx.drawImage(img,0,0, 234, 560);
 	},
 
 	dropdownInput(index, val){
@@ -140,11 +133,24 @@ BuildPage = React.createClass({
 			case 0:
 				var selectDiameterArray = this.state.selectDiameter;
 				var tankDiameterArray = this.state.tankDiameter;
+				var rocketImageArray = this.state.rocketImage;
 				selectDiameterArray[this.state.stageCurrent] = val + " Meter Diameter";
 				tankDiameterArray[this.state.stageCurrent] = val;
-				this.setState({
+				switch(val){
+					case 4:
+						rocketImageArray[this.state.stageCurrent] = "4MC.png"
+						break;
+					case 7:
+						rocketImageArray[this.state.stageCurrent] = "7MS.png"
+						break;
+					case 10:
+						rocketImageArray[this.state.stageCurrent] = "10ML.png"
+						break;
+				}
+				this.setState({				
 					selectDiameter: selectDiameterArray,
-					tankDiameter: tankDiameterArray
+					tankDiameter: tankDiameterArray,
+					rocketImage: rocketImageArray
 				});
 				break;
 			case 1:
@@ -168,6 +174,7 @@ BuildPage = React.createClass({
 					SelectMatEng: selectMatEngArray,
 				});
 				break;
+
 		}
 			var selectStatusArray = this.state.selectStatus;
 			selectStatusArray[this.state.stageCurrent][index] = 1;
@@ -245,7 +252,9 @@ BuildPage = React.createClass({
 			selectDiameter: ["Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter"],
 			selectFuel: ["Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type"],
 			selectMatStruct: ["Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material"],
-			SelectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"]
+			SelectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"],
+
+			rocketImage: [["default.png"],["default.png"],["default.png"],["default.png"],["default.png"],["default.png"]],
 		});
 	},
 
@@ -295,7 +304,8 @@ BuildPage = React.createClass({
 					<Build_11 />
 
 					<Build_12 	performance={this.state.performance[this.state.stageCurrent]}
-							  	tankStats={this.state.tankStats[this.state.stageCurrent]}/>
+							  	tankStats={this.state.tankStats[this.state.stageCurrent]}
+							  	image={this.state.rocketImage[this.state.stageCurrent]}/>
 
 					<Build_13 />
 

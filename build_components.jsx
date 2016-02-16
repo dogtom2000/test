@@ -3,7 +3,69 @@ Build_11 = React.createClass({
 	render(){
 		return(
 			<div className="col-xs-3 fixed" id="build-1-1">
-				Interesting plots rocket and stage
+				<div className="title">Command Module Summary</div>
+					<table className="table " id="system-summary">
+						<thead>
+						    <tr>
+						      <th>Systems</th>
+						      <th></th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						  </tbody>
+						  						<thead>
+						    <tr>
+						      <th>Materials</th>
+						      <th></th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						    <tr>
+						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td>Option Information</td>
+						    </tr>
+						  </tbody>				
+						</table>	
 			</div>
 		)
 	}
@@ -126,7 +188,7 @@ Build_12 = React.createClass({
 						</table>		
 					</div>
 				<div className="col-xs-6 fixed" id="build-1-2-R">
-					<canvas id="rocket-canvas" width="234" height="640"></canvas>
+					<img id="rocket-image" src={this.props.image}></img>
 				</div>
 			</div>
 		)
@@ -247,7 +309,7 @@ Build_21 = React.createClass({
 	render(){
 		return(
 			<div className="col-xs-3 fixed" id="build-2-1">
-				player profile: research, money, experience, etc.
+				<div className="title">Profile Information</div>
 			</div>
 		)
 	}

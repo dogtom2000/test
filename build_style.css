@@ -92,8 +92,6 @@ body{
   width: 50%;
 }
 
-
-
 .title{ 
   font-weight: bold;
   font-size: 25px;
@@ -111,4 +109,26 @@ body{
 
 .btn{
  width: 100%;
+}
+
+#rocket-image{
+  height: 560px;
+  width: 234px;
+  border: none;
+  margin-top: 60px;
+  image-rendering: pixelated;
+  background-color: #444;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#system-summary>tbody>tr>td:first-child{
+  width: 150px;
+  padding: 1px;
+}
+
+#system-summary th{
+  font-weight: bold;
+  font-size: 20px;
 }
