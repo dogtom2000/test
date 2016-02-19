@@ -188,7 +188,7 @@ Build_12 = React.createClass({
 						</table>		
 					</div>
 				<div className="col-xs-6 fixed" id="build-1-2-R">
-					<img id="rocket-image" src={this.props.image}></img>
+					<img id="rocket-image" src={this.props.rocketType + ".png"}></img>
 				</div>
 			</div>
 		)
@@ -318,7 +318,7 @@ Build_21 = React.createClass({
 Build_22 = React.createClass({	
 
 	dropdownChange(){
-		this.props.userDropdownInput(arguments[0], arguments[1]);
+		this.props.userDropdownInput(arguments[0], arguments[1], arguments[2]);
 	},
 
 	buttonChange(){
@@ -332,16 +332,18 @@ Build_22 = React.createClass({
 				<div className="dropdown">
 					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.selectDiameter}<span className="caret"></span></button>
 					<ul className="dropdown-menu" >
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 0, 4)}>4 Meter</a></li>
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 0, 7)}>7 Meter</a></li>
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 0, 10)}>10 Meter</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 0, "4MC", 4)}>4 Meter</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 0, "7MS", 7)}>7 Meter</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 0, "10ML", 10)}>10 Meter</a></li>
 					</ul>
 				</div>
 				<div className="dropdown">
 					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.selectFuel}<span className="caret"></span></button>
 					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 1, 4)}>LOX LH2</a></li>
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 1, 7)}>Other</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 1, "LH2 LOX")}>LH2 LOX</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 1, "RP1 LOX")}>RP1 LOX</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 1, "Aerozine 50 N2O4")}>Aerozine 50 N2O4</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 1, "Solid Rocket Fuel")}>Solid Rocket Fuel</a></li>
 					</ul>
 				</div>
 				<div className="dropdown">
@@ -352,11 +354,15 @@ Build_22 = React.createClass({
 					</ul>
 				</div>
 				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.SelectMatEng}<span className="caret"></span></button>
+					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.selectMatEng}<span className="caret"></span></button>
 					<ul className="dropdown-menu">
 						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, 4)}>Material 1</a></li>
 						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, 7)}>Material 2</a></li>
 					</ul>
+				</div>
+				<div className="btn-group-vertical btn-block">
+				<button type="button" className="btn btn-block btn-success" disabled={this.props.submitStatus} onClick={this.props.userSubmitStage}>Submit Stage</button>
+				<button type="button" className="btn btn-block btn-danger" disabled={this.props.clearStatus} onClick={this.props.userClearStage}>Clear Stage</button>
 				</div>
 			</div>{/* sub column end */}
 			<div className="col-xs-7 fixed">

@@ -1,3 +1,5 @@
+Fuel = new Mongo.Collection("fuel");
+
 BuildPage = React.createClass({
 	
 	mixins: [ReactMeteorData],
@@ -16,7 +18,10 @@ BuildPage = React.createClass({
 			stageButton: [["Add Stage", false, "btn btn-block btn-primary", false], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], [, true]],
 			dropdownStatus: [true, false, false, false, false, false],
 
+			fuel: ["","","","","",""],
 			buttonStatus: [true, true, true, true, true, true],
+			submitStatus: [true, true, true, true, true, true],
+			clearStatus: [true, true, true, true, true, true],
 			selectStatus: [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]],
 			tankLength: ["---", "---", "---", "---", "---", "---"],
 			tankDiameter: ["---", "---", "---", "---", "---", "---"],
@@ -33,9 +38,9 @@ BuildPage = React.createClass({
 			selectDiameter: ["Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter"],
 			selectFuel: ["Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type"],
 			selectMatStruct: ["Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material"],
-			SelectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"],
+			selectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"],
 
-			rocketImage: [["default.png"],["default.png"],["default.png"],["default.png"],["default.png"],["default.png"]],
+			rocketType: ["default","default","default","default","default","default"],
 		};
 	},
 
@@ -48,7 +53,6 @@ BuildPage = React.createClass({
 			var nozzleLengthArray = this.state.nozzleLength;
 			var performanceArray = this.state.performance;
 			var tankStatsArray = this.state.tankStats;
-
 			var tankLengthValue = tankLengthArray[this.state.stageCurrent];
 			var tankDiameterValue = this.state.tankDiameter[this.state.stageCurrent];
 			var structuralDensityValue = structuralDensityArray[this.state.stageCurrent];
@@ -56,6 +60,8 @@ BuildPage = React.createClass({
 			var mixRatioValue = mixRatioArray[this.state.stageCurrent];
 			var enginePressureValue = enginePressureArray[this.state.stageCurrent];
 			var nozzleLengthValue = nozzleLengthArray[this.state.stageCurrent];
+			var fuelValue = Fuel.find({name: this.state.fuel[this.state.stageCurrent]}).fetch()[0];
+			console.log(mixRatioValue)
 		switch (index){
 			case 0:
 				if ((tankLengthValue > min || val > 0) && (tankLengthValue < max || val < 0)){
@@ -83,7 +89,7 @@ BuildPage = React.createClass({
 				if ((massRateValue > min || val > 0) && (massRateValue < max || val < 0)){
 					massRateValue = Math.round((massRateValue + val) * 10) / 10;
 					massRateArray[this.state.stageCurrent] = massRateValue;
-					performanceArray[this.state.stageCurrent] = thermodynamics(0, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
 						massRate: massRateArray,
 						performance: performanceArray
@@ -95,7 +101,7 @@ BuildPage = React.createClass({
 					mixRatioValue = Math.round((mixRatioValue + val) * 10) / 10;
 					mixRatioArray[this.state.stageCurrent] = mixRatioValue;
 					tankStatsArray[this.state.stageCurrent] = tankCalc(0, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
-					performanceArray[this.state.stageCurrent] = thermodynamics(0, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
 						mixRatio: mixRatioArray,
 						performance: performanceArray,
@@ -107,7 +113,7 @@ BuildPage = React.createClass({
 				if ((enginePressureValue > min || val > 0) && (enginePressureValue < max || val < 0)){
 					enginePressureValue = Math.round((enginePressureValue + val) * 10) / 10;
 					enginePressureArray[this.state.stageCurrent] = enginePressureValue;
-					performanceArray[this.state.stageCurrent] = thermodynamics(0, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
 						enginePressure: enginePressureArray,
 						performance: performanceArray
@@ -118,7 +124,7 @@ BuildPage = React.createClass({
 				if ((nozzleLengthValue > min || val > 0) && (nozzleLengthValue < max || val < 0)){
 					nozzleLengthValue = Math.round((nozzleLengthValue + val) * 10) / 10;
 					nozzleLengthArray[this.state.stageCurrent] = nozzleLengthValue;
-					performanceArray[this.state.stageCurrent] = thermodynamics(0, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
 						nozzleLength: nozzleLengthArray,
 						performance: performanceArray
@@ -128,36 +134,48 @@ BuildPage = React.createClass({
 		}
 	},
 
-	dropdownInput(index, val){
+	dropdownInput(index, val, val2){
 		switch(index){
 			case 0:
 				var selectDiameterArray = this.state.selectDiameter;
 				var tankDiameterArray = this.state.tankDiameter;
-				var rocketImageArray = this.state.rocketImage;
-				selectDiameterArray[this.state.stageCurrent] = val + " Meter Diameter";
-				tankDiameterArray[this.state.stageCurrent] = val;
-				switch(val){
-					case 4:
-						rocketImageArray[this.state.stageCurrent] = "4MC.png"
-						break;
-					case 7:
-						rocketImageArray[this.state.stageCurrent] = "7MS.png"
-						break;
-					case 10:
-						rocketImageArray[this.state.stageCurrent] = "10ML.png"
-						break;
-				}
+				var rocketTypeArray = this.state.rocketType;
+				selectDiameterArray[this.state.stageCurrent] = val2 + " Meter Diameter";
+				tankDiameterArray[this.state.stageCurrent] = val2;
+				rocketTypeArray[this.state.stageCurrent] = val;
+	
 				this.setState({				
 					selectDiameter: selectDiameterArray,
 					tankDiameter: tankDiameterArray,
-					rocketImage: rocketImageArray
+					rocketType: rocketTypeArray
 				});
 				break;
 			case 1:
 				var selectFuelArray = this.state.selectFuel;
+				var fuelArray = this.state.fuel;
 				selectFuelArray[this.state.stageCurrent] = "Selected";
+				switch(val){
+					case "LH2 LOX":
+						selectFuelArray[this.state.stageCurrent] = "LH2 LOX"
+						var fuelValue = "LH2"
+						break;
+					case "RP1 LOX":
+						selectFuelArray[this.state.stageCurrent] = "RP1 LOX"
+						var fuelValue = "RP1"
+						break;
+					case "Aerozine 50 N2O4":
+						selectFuelArray[this.state.stageCurrent] = "Aerozine 50 N2O4"
+						var fuelValue = "H4N2"
+						break;
+					case "Solid Rocket Fuel":
+						selectFuelArray[this.state.stageCurrent] = "Solid Rocket Fuel"
+						var fuelValue = "SRF"
+						break;
+				}
+				fuelArray[this.state.stageCurrent] = fuelValue;
 				this.setState({
 					selectFuel: selectFuelArray,
+					fuel: fuelArray
 				});
 				break;
 			case 2:
@@ -168,22 +186,122 @@ BuildPage = React.createClass({
 				});
 				break;
 			case 3:
-				var selectMatEngArray = this.state.SelectMatEng;
+				var selectMatEngArray = this.state.selectMatEng;
 				selectMatEngArray[this.state.stageCurrent] = "Selected";
 				this.setState({
-					SelectMatEng: selectMatEngArray,
+					selectMatEng: selectMatEngArray,
 				});
 				break;
 
 		}
 			var selectStatusArray = this.state.selectStatus;
+			var clearStatusArray = this.state.clearStatus;
+
 			selectStatusArray[this.state.stageCurrent][index] = 1;
 			if (selectStatusArray[this.state.stageCurrent].indexOf(0) == -1){
+			var submitStatusArray = this.state.submitStatus;
+			submitStatusArray[this.state.stageCurrent] = false;
+			this.setState({
+				submitStatus: submitStatusArray,
+			});
+			}
+			if (selectStatusArray[this.state.stageCurrent].indexOf(1) !== -1){	
+				clearStatusArray[this.state.stageCurrent] = false;
+			}
+			this.setState({
+				selectStatus: selectStatusArray,
+				clearStatus: clearStatusArray
+			});
+	},
+
+	clearStage(){
+
+			fuelArray = this.state.fuel;
+			buttonStatusArray = this.state.buttonStatus;
+			submitStatusArray = this.state.submitStatus;
+			clearStatusArray = this.state.clearStatus;
+			selectStatusArray = this.state.selectStatus;
+			tankLengthArray = this.state.tankLength;
+			tankDiameterArray = this.state.tankDiameter;
+			structuralDensityArray = this.state.structuralDensity;
+			massRateArray = this.state.massRate;
+			mixRatioArray = this.state.mixRatio;
+			enginePressureArray = this.state.enginePressure;
+			nozzleLengthArray = this.state.nozzleLength;
+			performanceArray = this.state.performance;
+			tankStatsArray = this.state.tankStats;
+			selectDiameterArray = this.state.selectDiameter;
+			selectFuelArray = this.state.selectFuel;
+			selectMatStructArray = this.state.selectMatStruct;
+			selectMatEngArray = this.state.selectMatEng;
+			rocketTypeArray = this.state.rocketType;
+			dropdownStatusArray = this.state.dropdownStatus;
+
+
+			fuelArray[this.state.stageCurrent] = "";
+			buttonStatusArray[this.state.stageCurrent] = true;
+			submitStatusArray[this.state.stageCurrent] = true;
+			clearStatusArray[this.state.stageCurrent] =  true;
+			selectStatusArray[this.state.stageCurrent] = [0,0,0,0];
+			tankLengthArray[this.state.stageCurrent] = "---";
+			tankDiameterArray[this.state.stageCurrent] = "---";
+			structuralDensityArray[this.state.stageCurrent] = "---";
+			massRateArray[this.state.stageCurrent] = "---";
+			mixRatioArray[this.state.stageCurrent] = "---";
+			enginePressureArray[this.state.stageCurrent] = "---";
+			nozzleLengthArray[this.state.stageCurrent] = "---";
+			performanceArray[this.state.stageCurrent] = [0, 0, 0, 0, 0, 0, 0, 0];
+			tankStatsArray[this.state.stageCurrent] = [0.1, 0.1];
+			selectDiameterArray[this.state.stageCurrent] = "Stage Diameter";
+			selectFuelArray[this.state.stageCurrent] = "Fuel/Oxidizer Type";
+			selectMatStructArray[this.state.stageCurrent] = "Structural Material";
+			selectMatEngArray[this.state.stageCurrent] = "Engine Material";
+			rocketTypeArray[this.state.stageCurrent] = "default";
+			dropdownStatusArray[this.state.stageCurrent] = false;
+
+			this.setState({
+				fuel: fuelArray,
+				buttonStatus: buttonStatusArray,
+				submitStatus: submitStatusArray,
+				clearStatus: clearStatusArray,
+				selectStatus: selectStatusArray,
+				tankLength: tankLengthArray,
+				tankDiameter: tankDiameterArray,
+				structuralDensity: structuralDensityArray,
+				massRate: massRateArray,
+				mixRatio: mixRatioArray,
+				enginePressure: enginePressureArray,
+				nozzleLength: nozzleLengthArray,
+				performance: performanceArray,
+				tankStats: tankStatsArray,
+				selectDiameter: selectDiameterArray,
+				selectFuel: selectFuelArray,
+				selectMatStruct: selectMatStructArray,
+				selectMatEng: selectMatEngArray,
+				rocketType: rocketTypeArray, 
+				dropdownStatus: dropdownStatusArray
+			});
+	},
+
+	submitStage(){
+				var initialTank = {
+					"4MC": [12, 4, 25, 40, 2],
+					"7MS": [21, 7, 25, 200, 4],
+					"10ML": [30, 10, 25, 2600, 6]
+				};
+				var initialFuel = {
+					"LH2": 5.5,
+					"RP1": 2.3,
+					"H4N2": 1.9,
+					"SRF": 2.1
+				};
+
 				var buttonStatusArray = this.state.buttonStatus;
 				var dropdownStatusArray = this.state.dropdownStatus;
 				buttonStatusArray[this.state.stageCurrent] = false;
 				dropdownStatusArray[this.state.stageCurrent] = true;
-				
+
+				var fuelValue = Fuel.find({name: this.state.fuel[this.state.stageCurrent]}).fetch()[0];
 				var tankLengthArray = this.state.tankLength;
 				var structuralDensityArray = this.state.structuralDensity;
 				var massRateArray = this.state.massRate;
@@ -193,13 +311,13 @@ BuildPage = React.createClass({
 				var performanceArray = this.state.performance;
 				var tankStatsArray = this.state.tankStats;
 
-				var tankLengthValue = 20;
-				var tankDiameterValue = this.state.tankDiameter[this.state.stageCurrent];
-				var structuralDensityValue = 20;
-				var massRateValue = 200;
-				var mixRatioValue = 6;
+				var tankLengthValue = initialTank[this.state.rocketType[this.state.stageCurrent]][0];
+				var tankDiameterValue = initialTank[this.state.rocketType[this.state.stageCurrent]][1];
+				var structuralDensityValue = initialTank[this.state.rocketType[this.state.stageCurrent]][2];
+				var massRateValue = initialTank[this.state.rocketType[this.state.stageCurrent]][3];
+				var mixRatioValue = initialFuel[this.state.fuel[this.state.stageCurrent]];
 				var enginePressureValue = 50;
-				var nozzleLengthValue = 5;	
+				var nozzleLengthValue = initialTank[this.state.rocketType[this.state.stageCurrent]][4];
 
 				tankLengthArray[this.state.stageCurrent] = tankLengthValue;
 				structuralDensityArray[this.state.stageCurrent] = structuralDensityValue;
@@ -208,7 +326,7 @@ BuildPage = React.createClass({
 				enginePressureArray[this.state.stageCurrent] = enginePressureValue;
 				nozzleLengthArray[this.state.stageCurrent] = nozzleLengthValue;
 				tankStatsArray[this.state.stageCurrent] = tankCalc(0, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
-				performanceArray[this.state.stageCurrent] = thermodynamics(0, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+				performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 
 				this.setState({
 					performance: performanceArray,
@@ -222,10 +340,6 @@ BuildPage = React.createClass({
 					buttonStatus: buttonStatusArray,
 					dropdownStatus: dropdownStatusArray
 				});
-			}	
-			this.setState({
-				selectStatus: selectStatusArray,
-			});
 	},
 
 	resetInput(){
@@ -235,7 +349,10 @@ BuildPage = React.createClass({
 			stageButton: [["Add Stage", false, "btn btn-block btn-primary", false], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], [, true]],
 			dropdownStatus: [true, false, false, false, false, false],
 
+			fuel: ["","","","","",""],
 			buttonStatus: [true, true, true, true, true, true],
+			submitStatus: [true, true, true, true, true, true],
+			clearStatus: [true, true, true, true, true, true],
 			selectStatus: [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]],
 			tankLength: ["---", "---", "---", "---", "---", "---"],
 			tankDiameter: ["---", "---", "---", "---", "---", "---"],
@@ -252,9 +369,9 @@ BuildPage = React.createClass({
 			selectDiameter: ["Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter"],
 			selectFuel: ["Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type"],
 			selectMatStruct: ["Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material"],
-			SelectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"],
+			selectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"],
 
-			rocketImage: [["default.png"],["default.png"],["default.png"],["default.png"],["default.png"],["default.png"]],
+			rocketType: ["default","default","default","default","default","default"],
 		});
 	},
 
@@ -305,7 +422,7 @@ BuildPage = React.createClass({
 
 					<Build_12 	performance={this.state.performance[this.state.stageCurrent]}
 							  	tankStats={this.state.tankStats[this.state.stageCurrent]}
-							  	image={this.state.rocketImage[this.state.stageCurrent]}/>
+							  	rocketType={this.state.rocketType[this.state.stageCurrent]}/>
 
 					<Build_13 />
 
@@ -326,9 +443,13 @@ BuildPage = React.createClass({
 								selectDiameter={this.state.selectDiameter[this.state.stageCurrent]}
 								selectFuel={this.state.selectFuel[this.state.stageCurrent]}
 								selectMatStruct={this.state.selectMatStruct[this.state.stageCurrent]}
-								SelectMatEng={this.state.SelectMatEng[this.state.stageCurrent]}
+								selectMatEng={this.state.selectMatEng[this.state.stageCurrent]}
 								userDropdownInput={this.dropdownInput}
-								userButtonInput={this.buttonInput}/>
+								userButtonInput={this.buttonInput}
+								userSubmitStage={this.submitStage}
+								userClearStage={this.clearStage}
+								submitStatus={this.state.submitStatus[this.state.stageCurrent]}
+								clearStatus={this.state.clearStatus[this.state.stageCurrent]}/>
 
 					<Build_23 	stageButton={this.state.stageButton}
 								userStageButtonInput={this.stageButtonInput}
