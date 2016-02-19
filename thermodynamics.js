@@ -57,17 +57,16 @@ thermodynamics = function(fuel, mixRatio, pressure, nozzleLength, massRate){
     var expansionRatio = exhaustArea / throatArea;
     
     machNumber = Math.pow((Math.pow((expansionRatio * 5), 1 / c) - a) / b, 0.2)
-    
-    for (var i = 1; i < 20; i++){
+
+    for (var i = 1; i < 100; i++){
         var F = 1 / machNumber * Math.pow((a + b * Math.pow(machNumber, 2)), c) - expansionRatio;
         var dF = Math.pow((a + b * Math.pow(machNumber, 2)), c - 1) - Math.pow((a + b * Math.pow(machNumber, 2)), c) / Math.pow(machNumber, 2);
         machNumber -= F/dF;
-        
         if (Math.abs(F) < 1e-8){
             break;
         }
     }
-
+ 
     var exhaustPressure = pressure / Math.pow(Math.pow(machNumber, 2) * (gamma - 1) / 2 + 1, gamma / (gamma - 1));
 
     var exhaustVelocity = Math.pow((2 * gamma) / (gamma - 1) * (1000 * gasConstant * temperature / weight) * (1 - Math.pow(exhaustPressure / pressure, (gamma - 1) / gamma)), 0.5)

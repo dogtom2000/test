@@ -76,9 +76,9 @@ Build_12 = React.createClass({
 	render(){
 		var fuelMass = this.props.tankStats[0];
 		var structureMass = this.props.tankStats[1];
-		var engineMass = this.props.performance[4];
+		var engineMass = this.props.performance[4] * this.props.engineCount;
 		var totalMass = fuelMass + structureMass + engineMass;
-		var thrust = [this.props.performance[0], this.props.performance[1]];
+		var thrust = [this.props.performance[0] * this.props.engineCount, this.props.performance[1] * this.props.engineCount];
 		var isp = [this.props.performance[2], this.props.performance[3]];
 		var TWR = [1000 * thrust[0] / (9.80665 * totalMass), 1000 * thrust[1] / (9.80665 * totalMass)]
 		var deltaVBase = Math.log(totalMass / (structureMass + engineMass)) * 9.80665;
@@ -322,7 +322,7 @@ Build_22 = React.createClass({
 	},
 
 	buttonChange(){
-		this.props.userButtonInput(arguments[0], arguments[1], arguments[2], arguments[3]);
+		this.props.userButtonInput(arguments[0], arguments[1]);
 	},
 
   render() {
@@ -330,11 +330,23 @@ Build_22 = React.createClass({
 		<div className="col-xs-6 fixed" id="build-2-2">
 			<div className="col-xs-5 fixed">
 				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.selectDiameter}<span className="caret"></span></button>
-					<ul className="dropdown-menu" >
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 0, "4MC", 4)}>4 Meter</a></li>
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 0, "7MS", 7)}>7 Meter</a></li>
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 0, "10ML", 10)}>10 Meter</a></li>
+					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.selectRocketClass}<span className="caret"></span></button>
+					<ul className="dropdown-menu">
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, 0)}>0</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, 1)}>1</a></li>
+					</ul>
+				</div>
+				
+				<RocketClass classId={this.props.selectRocketClass} dropdownChange={this.dropdownChange} dropdownStatus={this.props.dropdownStatus} selectDiameter={this.props.selectDiameter} />
+
+				<div className="dropdown">
+					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>Engine Count: {this.props.selectEngineCount}<span className="caret"></span></button>
+					<ul className="dropdown-menu">
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 2, 1)}>1 Engines</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 2, 2)}>2 Engines</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 2, 3)}>3 Engines</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 2, 4)}>4 Engines</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 2, 5)}>5 Engines</a></li>
 					</ul>
 				</div>
 				<div className="dropdown">
@@ -344,20 +356,6 @@ Build_22 = React.createClass({
 						<li><a href="#" onClick={this.dropdownChange.bind(null, 1, "RP1 LOX")}>RP1 LOX</a></li>
 						<li><a href="#" onClick={this.dropdownChange.bind(null, 1, "Aerozine 50 N2O4")}>Aerozine 50 N2O4</a></li>
 						<li><a href="#" onClick={this.dropdownChange.bind(null, 1, "Solid Rocket Fuel")}>Solid Rocket Fuel</a></li>
-					</ul>
-				</div>
-				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.selectMatStruct}<span className="caret"></span></button>
-					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 2, 4)}>Material 1</a></li>
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 2, 7)}>Material 2</a></li>
-					</ul>
-				</div>
-				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.selectMatEng}<span className="caret"></span></button>
-					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, 4)}>Material 1</a></li>
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, 7)}>Material 2</a></li>
 					</ul>
 				</div>
 				<div className="btn-group-vertical btn-block">
@@ -371,43 +369,43 @@ Build_22 = React.createClass({
 						<tr>
 							<td>Tank Length</td>
 							<td>{this.props.tankLength + " m"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 0, 2.5, 15, 35)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 0, -2.5, 15, 35)}>-</button></td>
+							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 0, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 0, -1, 15, 35)}>-</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
 						</tr>
 						<tr>
 							<td>Structural Density</td>
 							<td>{this.props.structuralDensity + " kg/m3"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus}onClick={this.buttonChange.bind(null, 1, 5, 5, 50)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 1, -5, 5, 50)}>-</button></td>
+							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus}onClick={this.buttonChange.bind(null, 1, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 1, -1)}>-</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
 						</tr>
 						<tr>
 							<td>Mass Flow Rate</td>
 							<td>{this.props.massRate + " kg/s"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus}onClick={this.buttonChange.bind(null, 2, 25, 25, 5000)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}onClick={this.buttonChange.bind(null, 2, -25, 25, 5000)}>-</button></td>
+							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus}onClick={this.buttonChange.bind(null, 2, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}onClick={this.buttonChange.bind(null, 2, -1)}>-</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
 						</tr>
 						<tr>
 							<td>Mixture Ratio</td>
 							<td>{this.props.mixRatio}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 3, 0.2, 4, 7.8)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 3, -0.2, 4, 7.8)}>-</button></td>
+							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 3, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 3, -1)}>-</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
 						</tr>
 						<tr>
 							<td>Engine Pressure</td>
 							<td>{this.props.enginePressure + " atm"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 4, 5, 5, 200)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 4, -5, 5, 200)}>-</button></td>
+							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 4, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 4, -1)}>-</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
 						</tr>
 						<tr>
 							<td>Nozzle Length</td>
 							<td>{this.props.nozzleLength + " m"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 5, 0.5, 1, 6)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 5, -0.5, 1, 6)}>-</button></td>
+							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 5, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 5, -1)}>-</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
 						</tr>
 					</tbody>
@@ -453,3 +451,45 @@ Build_23 = React.createClass({
 });
 
 
+RocketClass = React.createClass({
+
+	userSelectRocketClass(classId){
+		switch(classId){
+					case "Rocket Class":
+
+			var list = <ul className="dropdown-menu">
+					<li><a href="#"></a></li>
+				</ul>
+				return list
+				break;
+			case 0:
+
+			var list = <ul className="dropdown-menu">
+					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "4MC", 4)}>4 Meter</a></li>
+					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "7MS", 7)}>7 Meter</a></li>
+					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "10ML", 10)}>10 Meter</a></li>
+				</ul>
+				return list
+				break;
+			case 1:
+
+			var list = <ul className="dropdown-menu">
+					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "4MC", 4)}>4 test</a></li>
+					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "7MS", 7)}>7 test</a></li>
+					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "10ML", 10)}>10 test</a></li>
+				</ul>
+				return list
+				break;
+		}		
+
+	},
+
+	render(){
+		return(
+			<div className="dropdown">
+				<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.selectDiameter}<span className="caret"></span></button>				
+				{this.userSelectRocketClass(this.props.classId)}
+			</div>
+			);
+	}
+});

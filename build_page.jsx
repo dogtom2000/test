@@ -37,14 +37,14 @@ BuildPage = React.createClass({
 
 			selectDiameter: ["Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter"],
 			selectFuel: ["Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type"],
-			selectMatStruct: ["Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material"],
-			selectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"],
+			selectEngineCount: [1, 1, 1, 1, 1, 1],
+			selectRocketClass: ["Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class"],
 
 			rocketType: ["default","default","default","default","default","default"],
 		};
 	},
 
-	buttonInput(index, val, min, max) {
+	buttonInput(index, val) {
 			var tankLengthArray = this.state.tankLength;
 			var structuralDensityArray = this.state.structuralDensity;
 			var massRateArray = this.state.massRate;
@@ -61,13 +61,12 @@ BuildPage = React.createClass({
 			var enginePressureValue = enginePressureArray[this.state.stageCurrent];
 			var nozzleLengthValue = nozzleLengthArray[this.state.stageCurrent];
 			var fuelValue = Fuel.find({name: this.state.fuel[this.state.stageCurrent]}).fetch()[0];
-			console.log(mixRatioValue)
 		switch (index){
 			case 0:
-				if ((tankLengthValue > min || val > 0) && (tankLengthValue < max || val < 0)){
-					tankLengthValue = Math.round((tankLengthValue + val) * 10) / 10;
+				if ((tankLengthValue / tankDiameterValue > 2 || val > 0) && (tankLengthValue / tankDiameterValue < 5 || val < 0)){
+					tankLengthValue = Math.round((tankLengthValue + 1 * val) * 10) / 10;
 					tankLengthArray[this.state.stageCurrent] = tankLengthValue;
-					tankStatsArray[this.state.stageCurrent] = tankCalc(0, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
+					tankStatsArray[this.state.stageCurrent] = tankCalc(fuelValue, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
 					this.setState({
 						tankLength: tankLengthArray,
 						tankStats: tankStatsArray
@@ -75,10 +74,10 @@ BuildPage = React.createClass({
 				}
 				break;
 			case 1:
-				if ((structuralDensityValue > min || val > 0) && (structuralDensityValue < max || val < 0)){
-					structuralDensityValue = Math.round((structuralDensityValue + val) * 10) / 10;
+				if ((structuralDensityValue > 10 || val > 0) && (structuralDensityValue < 40 || val < 0)){
+					structuralDensityValue = Math.round((structuralDensityValue + val * 2) * 10) / 10;
 					structuralDensityArray[this.state.stageCurrent] = structuralDensityValue;
-					tankStatsArray[this.state.stageCurrent] = tankCalc(0, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
+					tankStatsArray[this.state.stageCurrent] = tankCalc(fuelValue, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
 					this.setState({
 						structuralDensity: structuralDensityArray,
 						tankStats: tankStatsArray
@@ -86,8 +85,26 @@ BuildPage = React.createClass({
 				}
 				break;
 			case 2:
-				if ((massRateValue > min || val > 0) && (massRateValue < max || val < 0)){
-					massRateValue = Math.round((massRateValue + val) * 10) / 10;
+				switch (tankDiameterValue){
+					case 0.5:
+							var increment = 5;
+						break;
+					case 3:
+							var increment = 10
+						break;
+					case 4:
+							var increment = 10
+						break;
+					case 7:
+							var increment = 20;
+						break;
+					case 10:
+							var increment = 50;
+						break;
+				}
+				
+				if ((massRateValue > increment * 5 || val > 0) && (massRateValue < increment * 100 || val < 0)){
+					massRateValue = Math.round((massRateValue + val * increment ) * 10) / 10;
 					massRateArray[this.state.stageCurrent] = massRateValue;
 					performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
@@ -97,10 +114,10 @@ BuildPage = React.createClass({
 				}
 				break;
 			case 3:
-				if ((mixRatioValue > min || val > 0) && (mixRatioValue < max || val < 0)){
-					mixRatioValue = Math.round((mixRatioValue + val) * 10) / 10;
+				if ((mixRatioValue > Math.ceil(fuelValue["mixRatio1"][0] * 10) / 10 || val > 0) && (mixRatioValue < Math.floor(fuelValue["mixRatio5"][0] * 10) / 10 || val < 0)){
+					mixRatioValue = Math.round((mixRatioValue + val * 0.1) * 10) / 10;
 					mixRatioArray[this.state.stageCurrent] = mixRatioValue;
-					tankStatsArray[this.state.stageCurrent] = tankCalc(0, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
+					tankStatsArray[this.state.stageCurrent] = tankCalc(fuelValue, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
 					performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
 						mixRatio: mixRatioArray,
@@ -110,8 +127,8 @@ BuildPage = React.createClass({
 				}
 				break;
 			case 4:
-				if ((enginePressureValue > min || val > 0) && (enginePressureValue < max || val < 0)){
-					enginePressureValue = Math.round((enginePressureValue + val) * 10) / 10;
+				if ((enginePressureValue > 10 || val > 0) && (enginePressureValue < 300 || val < 0)){
+					enginePressureValue = Math.round((enginePressureValue + val * 10) * 10) / 10;
 					enginePressureArray[this.state.stageCurrent] = enginePressureValue;
 					performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
@@ -121,8 +138,8 @@ BuildPage = React.createClass({
 				}
 				break;
 			case 5:
-				if ((nozzleLengthValue > min || val > 0) && (nozzleLengthValue < max || val < 0)){
-					nozzleLengthValue = Math.round((nozzleLengthValue + val) * 10) / 10;
+				if ((nozzleLengthValue / tankDiameterValue > 0.1  || val > 0) && (nozzleLengthValue / tankDiameterValue < 1 || val < 0)){
+					nozzleLengthValue = Math.round((nozzleLengthValue + val * tankDiameterValue * 0.05) * 100) / 100;
 					nozzleLengthArray[this.state.stageCurrent] = nozzleLengthValue;
 					performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
@@ -179,17 +196,17 @@ BuildPage = React.createClass({
 				});
 				break;
 			case 2:
-				var selectMatStructArray = this.state.selectMatStruct;
-				selectMatStructArray[this.state.stageCurrent] = "Selected";
+				var selectEngineCountArray = this.state.selectEngineCount;
+				selectEngineCountArray[this.state.stageCurrent] = val;
 				this.setState({
-					selectMatStruct: selectMatStructArray,
+					selectEngineCount: selectEngineCountArray,
 				});
 				break;
 			case 3:
-				var selectMatEngArray = this.state.selectMatEng;
-				selectMatEngArray[this.state.stageCurrent] = "Selected";
+				var selectRocketClassArray = this.state.selectRocketClass;
+				selectRocketClassArray[this.state.stageCurrent] = val;
 				this.setState({
-					selectMatEng: selectMatEngArray,
+					selectRocketClass: selectRocketClassArray,
 				});
 				break;
 
@@ -232,8 +249,8 @@ BuildPage = React.createClass({
 			tankStatsArray = this.state.tankStats;
 			selectDiameterArray = this.state.selectDiameter;
 			selectFuelArray = this.state.selectFuel;
-			selectMatStructArray = this.state.selectMatStruct;
-			selectMatEngArray = this.state.selectMatEng;
+			selectEngineCountArray = this.state.selectEngineCount;
+			selectRocketClassArray = this.state.selectRocketClass;
 			rocketTypeArray = this.state.rocketType;
 			dropdownStatusArray = this.state.dropdownStatus;
 
@@ -254,8 +271,8 @@ BuildPage = React.createClass({
 			tankStatsArray[this.state.stageCurrent] = [0.1, 0.1];
 			selectDiameterArray[this.state.stageCurrent] = "Stage Diameter";
 			selectFuelArray[this.state.stageCurrent] = "Fuel/Oxidizer Type";
-			selectMatStructArray[this.state.stageCurrent] = "Structural Material";
-			selectMatEngArray[this.state.stageCurrent] = "Engine Material";
+			selectEngineCountArray[this.state.stageCurrent] = 1;
+			selectRocketClassArray[this.state.stageCurrent] = "Rocket Class";
 			rocketTypeArray[this.state.stageCurrent] = "default";
 			dropdownStatusArray[this.state.stageCurrent] = false;
 
@@ -276,8 +293,8 @@ BuildPage = React.createClass({
 				tankStats: tankStatsArray,
 				selectDiameter: selectDiameterArray,
 				selectFuel: selectFuelArray,
-				selectMatStruct: selectMatStructArray,
-				selectMatEng: selectMatEngArray,
+				selectEngineCount: selectEngineCountArray,
+				selectRocketClass: selectRocketClassArray,
 				rocketType: rocketTypeArray, 
 				dropdownStatus: dropdownStatusArray
 			});
@@ -285,9 +302,9 @@ BuildPage = React.createClass({
 
 	submitStage(){
 				var initialTank = {
-					"4MC": [12, 4, 25, 40, 2],
-					"7MS": [21, 7, 25, 200, 4],
-					"10ML": [30, 10, 25, 2600, 6]
+					"4MC": [12, 4, 20, 50, 2],
+					"7MS": [20, 7, 20, 200, 4],
+					"10ML": [30, 10, 20, 2600, 6]
 				};
 				var initialFuel = {
 					"LH2": 5.5,
@@ -325,7 +342,7 @@ BuildPage = React.createClass({
 				mixRatioArray[this.state.stageCurrent] = mixRatioValue;
 				enginePressureArray[this.state.stageCurrent] = enginePressureValue;
 				nozzleLengthArray[this.state.stageCurrent] = nozzleLengthValue;
-				tankStatsArray[this.state.stageCurrent] = tankCalc(0, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
+				tankStatsArray[this.state.stageCurrent] = tankCalc(fuelValue, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
 				performanceArray[this.state.stageCurrent] = thermodynamics(fuelValue, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 
 				this.setState({
@@ -368,8 +385,8 @@ BuildPage = React.createClass({
 
 			selectDiameter: ["Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter"],
 			selectFuel: ["Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type"],
-			selectMatStruct: ["Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material", "Structural Material"],
-			selectMatEng: ["Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material", "Engine Material"],
+			selectEngineCount: [1, 1, 1, 1, 1, 1],
+			selectRocketClass: ["Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class"],
 
 			rocketType: ["default","default","default","default","default","default"],
 		});
@@ -422,7 +439,8 @@ BuildPage = React.createClass({
 
 					<Build_12 	performance={this.state.performance[this.state.stageCurrent]}
 							  	tankStats={this.state.tankStats[this.state.stageCurrent]}
-							  	rocketType={this.state.rocketType[this.state.stageCurrent]}/>
+							  	rocketType={this.state.rocketType[this.state.stageCurrent]}
+							  	engineCount={this.state.selectEngineCount[this.state.stageCurrent]}/>
 
 					<Build_13 />
 
@@ -442,8 +460,8 @@ BuildPage = React.createClass({
 								dropdownStatus={this.state.dropdownStatus[this.state.stageCurrent]}
 								selectDiameter={this.state.selectDiameter[this.state.stageCurrent]}
 								selectFuel={this.state.selectFuel[this.state.stageCurrent]}
-								selectMatStruct={this.state.selectMatStruct[this.state.stageCurrent]}
-								selectMatEng={this.state.selectMatEng[this.state.stageCurrent]}
+								selectEngineCount={this.state.selectEngineCount[this.state.stageCurrent]}
+								selectRocketClass={this.state.selectRocketClass[this.state.stageCurrent]}
 								userDropdownInput={this.dropdownInput}
 								userButtonInput={this.buttonInput}
 								userSubmitStage={this.submitStage}
