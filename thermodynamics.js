@@ -85,7 +85,7 @@ thermodynamics = function(fuel, mixRatio, pressure, nozzleLength, massRate){
     var ispAtm = thrustAtm / massRate / standardGravity;
 
     var engineMass = 5 * massRate + Math.pow(massRate / pressure, 0.5) * 75 + nozzleVolume * 80;
-    var heatCoefficient = Math.pow(temperature / 1000, 2) * massRate / 100;
+
     return [thrustVac/1000, thrustAtm/1000, ispVac, ispAtm, engineMass];
  
 }

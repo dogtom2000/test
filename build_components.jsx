@@ -74,16 +74,8 @@ Build_11 = React.createClass({
 Build_12 = React.createClass({
 
 	render(){
-		var fuelMass = this.props.tankStats[0];
-		var structureMass = this.props.tankStats[1];
-		var engineMass = this.props.performance[4] * this.props.engineCount;
-		var totalMass = fuelMass + structureMass + engineMass;
-		var thrust = [this.props.performance[0] * this.props.engineCount, this.props.performance[1] * this.props.engineCount];
-		var isp = [this.props.performance[2], this.props.performance[3]];
-		var TWR = [1000 * thrust[0] / (9.80665 * totalMass), 1000 * thrust[1] / (9.80665 * totalMass)]
-		var deltaVBase = Math.log(totalMass / (structureMass + engineMass)) * 9.80665;
-		var deltaV = [deltaVBase * isp[0], deltaVBase * isp[1]];
 
+		rocketSummaryArray = rocketSummary(this.props.stageCurrent, this.props.performance, this.props.tankStats, this.props.engineCount, this.props.selectFuel, this.props.enginePressure, this.props.tankDiameter, this.props.tankLength, this.props.structuralDensity);
 		return(
 			<div className="col-xs-6 fixed" id="build-1-2">
 				<div className="col-xs-6 fixed" id="build-1-2-L">
@@ -97,40 +89,40 @@ Build_12 = React.createClass({
 						  </thead>
 						  <tbody>
 						    <tr>
-						      <td>Thrust</td>
-						      <td>{Math.round(thrust[0]) + " (" + Math.round(thrust[1]) + ")"}</td>
+						      <td>Thrust [mN]</td>
+						      <td>{Math.round(rocketSummaryArray[0][0]) / 1000 + " (" + Math.round(rocketSummaryArray[0][1]) / 1000 + ")"}</td>
 						    </tr>
 						    <tr>
-						      <td>Isp</td>
-						      <td>{Math.round(isp[0]) + " (" + Math.round(isp[1]) + ")"}</td>
+						      <td>Isp [s]</td>
+						      <td>{Math.round(rocketSummaryArray[1][0]) + " (" + Math.round(rocketSummaryArray[1][1]) + ")"}</td>
 						    </tr>
 						    <tr>
 						      <td>TWR</td>
-						      <td>{Math.round(TWR[0] * 100) / 100 + " (" + Math.round(TWR[1] * 100) / 100 + ")"}</td>
+						      <td>{Math.round(rocketSummaryArray[2][0] * 100) / 100 + " (" + Math.round(rocketSummaryArray[2][1] * 100) / 100 + ")"}</td>
 						    </tr>
 						    <tr>
-						      <td>Delta V</td>
-						      <td>{Math.round(deltaV[0]) + " (" + Math.round(deltaV[1]) + ")"}</td>
+						      <td>Delta V [m/s]</td>
+						      <td>{Math.round(rocketSummaryArray[3][0]) + " (" + Math.round(rocketSummaryArray[3][1]) + ")"}</td>
 						    </tr>
 						    <tr>
 						      <th>Mass</th>
 						      <th></th>
 						    </tr>
 						    <tr>
-						      <td>Fuel/Oxidizer</td>
-						      <td>{Math.round(fuelMass)}</td>
+						      <td>Fuel/Oxidizer [ton]</td>
+						      <td>{Math.round(rocketSummaryArray[4]/10)/100}</td>
 						    </tr>
 						    <tr>
-						      <td>Engine</td>
-						      <td>{Math.round(engineMass)}</td>
+						      <td>Engine [ton]</td>
+						      <td>{Math.round(rocketSummaryArray[5]/10)/100}</td>
 						    </tr>
 						    <tr>
-						      <td>Structure</td>
-						      <td>{Math.round(structureMass)}</td>
+						      <td>Structure [ton]</td>
+						      <td>{Math.round(rocketSummaryArray[6]/10)/100}</td>
 						    </tr>
 						    <tr>
-						      <td>Total</td>
-						      <td>{Math.round(totalMass)}</td>
+						      <td>Total [ton]</td>
+						      <td>{Math.round(rocketSummaryArray[7]/10)/100}</td>
 						    </tr>
 						  </tbody>
 						  <thead>
@@ -210,12 +202,8 @@ Build_13 = React.createClass({
 					  </thead>
 					  <tbody>
 					  <tr>
-					    <td>TWR</td>
-					    <td>100</td>
-					  </tr>
-					  <tr>
-					    <td>Delta V</td>
-					    <td>100</td>
+					    <td>Delta V [m/s]</td>
+					    <td>{Math.round(rocketSummaryArray[8][0]) + " (" + Math.round(rocketSummaryArray[8][1]) + ")"}</td>
 					  </tr>
 					  <tr>
 					    <th>Mass</th>
@@ -226,20 +214,20 @@ Build_13 = React.createClass({
 					    <td>100</td>
 					  </tr>
 					  <tr>
-					    <td>Fuel/Oxidizer</td>
-					    <td>100</td>
+					    <td>Fuel/Oxidizer [ton]</td>
+					    <td>{Math.round(rocketSummaryArray[9]/10)/100}</td>
 					  </tr>
 					  <tr>
-					    <td>Engine</td>
-					    <td>100</td>
+					    <td>Engine [ton]</td>
+					    <td>{Math.round(rocketSummaryArray[10]/10)/100}</td>
 					  </tr>
 					  <tr>
-					    <td>Structure</td>
-					    <td>100</td>
+					    <td>Structure [ton]</td>
+					    <td>{Math.round(rocketSummaryArray[11]/10)/100}</td>
 					  </tr>
 					  <tr>
-					    <td>Total</td>
-					    <td>100</td>
+					    <td>Total [ton]</td>
+					    <td>{Math.round(rocketSummaryArray[12]/10)/100}</td>
 					  </tr>
 					  </tbody>
 					  <thead>
@@ -330,10 +318,10 @@ Build_22 = React.createClass({
 		<div className="col-xs-6 fixed" id="build-2-2">
 			<div className="col-xs-5 fixed">
 				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.dropdownStatus}>{this.props.selectRocketClass}<span className="caret"></span></button>
+					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.rocketTypeStatus}>{this.props.selectRocketClass}<span className="caret"></span></button>
 					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, 0)}>0</a></li>
-						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, 1)}>1</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, "Sounding Rocket")}>Sounding Rockets</a></li>
+						<li><a href="#" onClick={this.dropdownChange.bind(null, 3, "Manned Rocket")}>Manned Rockets</a></li>
 					</ul>
 				</div>
 				
@@ -371,42 +359,42 @@ Build_22 = React.createClass({
 							<td>{this.props.tankLength + " m"}</td> 
 							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 0, 1)}>+</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 0, -1, 15, 35)}>-</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
+							
 						</tr>
 						<tr>
 							<td>Structural Density</td>
 							<td>{this.props.structuralDensity + " kg/m3"}</td> 
 							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus}onClick={this.buttonChange.bind(null, 1, 1)}>+</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 1, -1)}>-</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
+							
 						</tr>
 						<tr>
 							<td>Mass Flow Rate</td>
 							<td>{this.props.massRate + " kg/s"}</td> 
 							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus}onClick={this.buttonChange.bind(null, 2, 1)}>+</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}onClick={this.buttonChange.bind(null, 2, -1)}>-</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
+							
 						</tr>
 						<tr>
 							<td>Mixture Ratio</td>
 							<td>{this.props.mixRatio}</td> 
 							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 3, 1)}>+</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 3, -1)}>-</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
+							
 						</tr>
 						<tr>
 							<td>Engine Pressure</td>
 							<td>{this.props.enginePressure + " atm"}</td> 
 							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 4, 1)}>+</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 4, -1)}>-</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
+							
 						</tr>
 						<tr>
 							<td>Nozzle Length</td>
 							<td>{this.props.nozzleLength + " m"}</td> 
 							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 5, 1)}>+</button></td>
 							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus} onClick={this.buttonChange.bind(null, 5, -1)}>-</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.buttonStatus}>-</button></td>
+							
 						</tr>
 					</tbody>
 				</table>
@@ -462,21 +450,21 @@ RocketClass = React.createClass({
 				</ul>
 				return list
 				break;
-			case 0:
+			case "Sounding Rocket":
+
+			var list = <ul className="dropdown-menu">
+					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "QM", 0.25)}>0.25 Meter</a></li>
+					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "HM", 0.5)}>0.50 Meter</a></li>
+					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "FM", 1)}>1.00 Meter</a></li>
+				</ul>
+				return list
+				break;
+			case "Manned Rocket":
 
 			var list = <ul className="dropdown-menu">
 					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "4MC", 4)}>4 Meter</a></li>
 					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "7MS", 7)}>7 Meter</a></li>
 					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "10ML", 10)}>10 Meter</a></li>
-				</ul>
-				return list
-				break;
-			case 1:
-
-			var list = <ul className="dropdown-menu">
-					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "4MC", 4)}>4 test</a></li>
-					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "7MS", 7)}>7 test</a></li>
-					<li><a href="#" onClick={this.props.dropdownChange.bind(null, 0, "10ML", 10)}>10 test</a></li>
 				</ul>
 				return list
 				break;

@@ -17,12 +17,13 @@ BuildPage = React.createClass({
 			stageCurrent: 0,
 			stageButton: [["Add Stage", false, "btn btn-block btn-primary", false], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], [, true]],
 			dropdownStatus: [true, false, false, false, false, false],
+			rocketTypeStatus: [true],
 
 			fuel: ["","","","","",""],
 			buttonStatus: [true, true, true, true, true, true],
 			submitStatus: [true, true, true, true, true, true],
 			clearStatus: [true, true, true, true, true, true],
-			selectStatus: [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]],
+			selectStatus: [[0,0,1,0], [0,0,1,1], [0,0,1,1], [0,0,1,1], [0,0,1,1], [0,0,1,1]],
 			tankLength: ["---", "---", "---", "---", "---", "---"],
 			tankDiameter: ["---", "---", "---", "---", "---", "---"],
 			structuralDensity: ["---", "---", "---", "---", "---", "---"],
@@ -33,12 +34,12 @@ BuildPage = React.createClass({
 
 			performance: [[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]],
 
-			tankStats: [[0.1, 0.1], [0.1, 0.1], [0.1, 0.1], [0.1, 0.1], [0.1, 0.1], [0.1, 0.1]],
+			tankStats: [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
 
 			selectDiameter: ["Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter"],
 			selectFuel: ["Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type"],
 			selectEngineCount: [1, 1, 1, 1, 1, 1],
-			selectRocketClass: ["Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class"],
+			selectRocketClass: "Rocket Class",
 
 			rocketType: ["default","default","default","default","default","default"],
 		};
@@ -63,7 +64,7 @@ BuildPage = React.createClass({
 			var fuelValue = Fuel.find({name: this.state.fuel[this.state.stageCurrent]}).fetch()[0];
 		switch (index){
 			case 0:
-				if ((tankLengthValue / tankDiameterValue > 2 || val > 0) && (tankLengthValue / tankDiameterValue < 5 || val < 0)){
+				if ((tankLengthValue * tankLengthValue / tankDiameterValue > 40 || val > 0) && (tankLengthValue / tankDiameterValue < 250 || val < 0)){
 					tankLengthValue = Math.round((tankLengthValue + 1 * val) * 10) / 10;
 					tankLengthArray[this.state.stageCurrent] = tankLengthValue;
 					tankStatsArray[this.state.stageCurrent] = tankCalc(fuelValue, mixRatioValue, tankDiameterValue, tankLengthValue, structuralDensityValue);
@@ -85,24 +86,23 @@ BuildPage = React.createClass({
 				}
 				break;
 			case 2:
-				switch (tankDiameterValue){
-					case 0.5:
-							var increment = 5;
+				switch (true){
+					case (tankDiameterValue <= 1):
+							var increment = 1;
 						break;
-					case 3:
+					case (tankDiameterValue == 3):
 							var increment = 10
 						break;
-					case 4:
+					case (tankDiameterValue == 4):
 							var increment = 10
 						break;
-					case 7:
+					case (tankDiameterValue == 7):
 							var increment = 20;
 						break;
-					case 10:
+					case (tankDiameterValue == 10):
 							var increment = 50;
 						break;
 				}
-				
 				if ((massRateValue > increment * 5 || val > 0) && (massRateValue < increment * 100 || val < 0)){
 					massRateValue = Math.round((massRateValue + val * increment ) * 10) / 10;
 					massRateArray[this.state.stageCurrent] = massRateValue;
@@ -203,18 +203,17 @@ BuildPage = React.createClass({
 				});
 				break;
 			case 3:
-				var selectRocketClassArray = this.state.selectRocketClass;
-				selectRocketClassArray[this.state.stageCurrent] = val;
 				this.setState({
-					selectRocketClass: selectRocketClassArray,
+					selectRocketClass: val,
+					rocketTypeStatus: true
 				});
 				break;
 
 		}
 			var selectStatusArray = this.state.selectStatus;
 			var clearStatusArray = this.state.clearStatus;
-
 			selectStatusArray[this.state.stageCurrent][index] = 1;
+			console.log(selectStatusArray)
 			if (selectStatusArray[this.state.stageCurrent].indexOf(0) == -1){
 			var submitStatusArray = this.state.submitStatus;
 			submitStatusArray[this.state.stageCurrent] = false;
@@ -250,7 +249,7 @@ BuildPage = React.createClass({
 			selectDiameterArray = this.state.selectDiameter;
 			selectFuelArray = this.state.selectFuel;
 			selectEngineCountArray = this.state.selectEngineCount;
-			selectRocketClassArray = this.state.selectRocketClass;
+
 			rocketTypeArray = this.state.rocketType;
 			dropdownStatusArray = this.state.dropdownStatus;
 
@@ -259,7 +258,7 @@ BuildPage = React.createClass({
 			buttonStatusArray[this.state.stageCurrent] = true;
 			submitStatusArray[this.state.stageCurrent] = true;
 			clearStatusArray[this.state.stageCurrent] =  true;
-			selectStatusArray[this.state.stageCurrent] = [0,0,0,0];
+			selectStatusArray[this.state.stageCurrent] = [0,0,1,1];
 			tankLengthArray[this.state.stageCurrent] = "---";
 			tankDiameterArray[this.state.stageCurrent] = "---";
 			structuralDensityArray[this.state.stageCurrent] = "---";
@@ -272,7 +271,7 @@ BuildPage = React.createClass({
 			selectDiameterArray[this.state.stageCurrent] = "Stage Diameter";
 			selectFuelArray[this.state.stageCurrent] = "Fuel/Oxidizer Type";
 			selectEngineCountArray[this.state.stageCurrent] = 1;
-			selectRocketClassArray[this.state.stageCurrent] = "Rocket Class";
+			selectRocketClassArray = this.state.selectRocketClass;
 			rocketTypeArray[this.state.stageCurrent] = "default";
 			dropdownStatusArray[this.state.stageCurrent] = false;
 
@@ -304,7 +303,10 @@ BuildPage = React.createClass({
 				var initialTank = {
 					"4MC": [12, 4, 20, 50, 2],
 					"7MS": [20, 7, 20, 200, 4],
-					"10ML": [30, 10, 20, 2600, 6]
+					"10ML": [30, 10, 20, 2600, 6],
+					"QM": [3, 0.25, 20, 10, 0.2],
+					"HM": [4.5, 0.5, 20, 15, 0.3],
+					"FM": [9, 1, 20, 20, 0.4]
 				};
 				var initialFuel = {
 					"LH2": 5.5,
@@ -365,12 +367,13 @@ BuildPage = React.createClass({
 			stageCurrent: 0,
 			stageButton: [["Add Stage", false, "btn btn-block btn-primary", false], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], ["Add Stage", true, "btn btn-block btn-primary"], [, true]],
 			dropdownStatus: [true, false, false, false, false, false],
+			rocketTypeStatus: [true],
 
 			fuel: ["","","","","",""],
 			buttonStatus: [true, true, true, true, true, true],
 			submitStatus: [true, true, true, true, true, true],
 			clearStatus: [true, true, true, true, true, true],
-			selectStatus: [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]],
+			selectStatus: [[0,0,1,0], [0,0,1,1], [0,0,1,1], [0,0,1,1], [0,0,1,1], [0,0,1,1]],
 			tankLength: ["---", "---", "---", "---", "---", "---"],
 			tankDiameter: ["---", "---", "---", "---", "---", "---"],
 			structuralDensity: ["---", "---", "---", "---", "---", "---"],
@@ -381,12 +384,12 @@ BuildPage = React.createClass({
 
 			performance: [[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]],
 
-			tankStats: [[0.1, 0.1], [0.1, 0.1], [0.1, 0.1], [0.1, 0.1], [0.1, 0.1], [0.1, 0.1]],
+			tankStats: [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
 
 			selectDiameter: ["Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter", "Stage Diameter"],
 			selectFuel: ["Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type", "Fuel/Oxidizer Type"],
 			selectEngineCount: [1, 1, 1, 1, 1, 1],
-			selectRocketClass: ["Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class", "Rocket Class"],
+			selectRocketClass: "Rocket Class",
 
 			rocketType: ["default","default","default","default","default","default"],
 		});
@@ -406,6 +409,7 @@ BuildPage = React.createClass({
 				stage: stageCountValue,
 				stageButton: stageButtonArray,
 				dropdownStatus: dropdownStatusArray,
+				rocketTypeStatus: false
 			});
 		} else if (stageCountValue < 5 && stageButtonArray[val + 1][1] == true){
 			stageButtonArray[val + 1][1] = false;
@@ -437,10 +441,16 @@ BuildPage = React.createClass({
 
 					<Build_11 />
 
-					<Build_12 	performance={this.state.performance[this.state.stageCurrent]}
-							  	tankStats={this.state.tankStats[this.state.stageCurrent]}
+					<Build_12 	performance={this.state.performance}
+							  	tankStats={this.state.tankStats}
+							  	stageCurrent={this.state.stageCurrent}
 							  	rocketType={this.state.rocketType[this.state.stageCurrent]}
-							  	engineCount={this.state.selectEngineCount[this.state.stageCurrent]}/>
+							  	engineCount={this.state.selectEngineCount}
+							  	selectFuel={this.state.selectFuel}
+							  	tankDiameter={this.state.tankDiameter}
+							  	tankLength={this.state.tankLength}
+							  	enginePressure={this.state.enginePressure}
+							  	structuralDensity={this.state.structuralDensity}/>
 
 					<Build_13 />
 
@@ -461,13 +471,14 @@ BuildPage = React.createClass({
 								selectDiameter={this.state.selectDiameter[this.state.stageCurrent]}
 								selectFuel={this.state.selectFuel[this.state.stageCurrent]}
 								selectEngineCount={this.state.selectEngineCount[this.state.stageCurrent]}
-								selectRocketClass={this.state.selectRocketClass[this.state.stageCurrent]}
+								selectRocketClass={this.state.selectRocketClass}
 								userDropdownInput={this.dropdownInput}
 								userButtonInput={this.buttonInput}
 								userSubmitStage={this.submitStage}
 								userClearStage={this.clearStage}
 								submitStatus={this.state.submitStatus[this.state.stageCurrent]}
-								clearStatus={this.state.clearStatus[this.state.stageCurrent]}/>
+								clearStatus={this.state.clearStatus[this.state.stageCurrent]}
+								rocketTypeStatus={this.state.rocketTypeStatus}/>
 
 					<Build_23 	stageButton={this.state.stageButton}
 								userStageButtonInput={this.stageButtonInput}
