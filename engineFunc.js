@@ -1,4 +1,4 @@
-thermodynamics = function(fuel, mixRatio, pressure, nozzleLength, massRate){
+engineFunc = function(fuel, mixRatio, pressure, nozzleLength, massRate){
 
 //check for values in range
     var pressureArray = [5, 10, 25, 50, 100, 200, 300];
@@ -71,11 +71,8 @@ thermodynamics = function(fuel, mixRatio, pressure, nozzleLength, massRate){
 
     var exhaustVelocity = Math.pow((2 * gamma) / (gamma - 1) * (1000 * gasConstant * temperature / weight) * (1 - Math.pow(exhaustPressure / pressure, (gamma - 1) / gamma)), 0.5)
 
-    //we only really need to return exhaust pressure, exhaust velocity, and throat area
-    //mass will be related to pressure, chamber size, temp leads to more heating
+    var nozzleVolume = (exhaustArea + throatArea) / 2 * nozzleLength; 
 
-    var nozzleVolume = (exhaustArea + throatArea) / 2 * nozzleLength; //mass rate 0.2kg / (kg/s sqrt(atm)) 200 kg/s @ 100 atm = 400kg; 480 kg / m3 if they have better nozzle effective length is longer, but actualy is not, improve ratios with other upgrades
-    
     var thrustVac = massRate * exhaustVelocity + 101325 * exhaustPressure * exhaustArea;
     var thrustAtm = massRate * exhaustVelocity + 101325 * (exhaustPressure - 1) * exhaustArea;
     if (thrustAtm < 0){
@@ -86,6 +83,13 @@ thermodynamics = function(fuel, mixRatio, pressure, nozzleLength, massRate){
 
     var engineMass = 5 * massRate + Math.pow(massRate / pressure, 0.5) * 75 + nozzleVolume * 80;
 
-    return [thrustVac/1000, thrustAtm/1000, ispVac, ispAtm, engineMass];
- 
+    engine = {
+        "thrustVac": thrustVac,
+        "thrustAtm": thrustAtm,
+        "ispVac": ispVac,
+        "ispAtm": ispAtm,
+        "engineMass": engineMass
+    };
+
+    return engine 
 }
