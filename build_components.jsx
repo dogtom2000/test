@@ -74,7 +74,6 @@ Build_11 = React.createClass({
 Build_12 = React.createClass({
 
 	render(){
-		console.log(this.props.dataSummary)
 		return(
 			<div className="col-xs-6 fixed" id="build-1-2">
 				<div className="col-xs-6 fixed" id="build-1-2-L">
@@ -89,19 +88,23 @@ Build_12 = React.createClass({
 						  <tbody>
 						    <tr>
 						      <td>Thrust [mN]</td>
-						      <td>{this.props.dataSummary["stageThrustVac"][this.props.stageCurrent]}</td>
+						      <td>{Math.round(this.props.dataSummary["thrust"][this.props.stageCurrent][0] / 1000) + " "} 
+						      	({Math.round(this.props.dataSummary["thrust"][this.props.stageCurrent][1] / 1000)})</td>
 						    </tr>
 						    <tr>
 						      <td>Isp [s]</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["Isp"][this.props.stageCurrent][0]) + " "} 
+						      	({Math.round(this.props.dataSummary["Isp"][this.props.stageCurrent][1])})</td>
 						    </tr>
 						    <tr>
 						      <td>TWR</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["TWR"][this.props.stageCurrent][0] * 100) / 100 + " "} 
+						      	({Math.round(this.props.dataSummary["TWR"][this.props.stageCurrent][1] * 100) / 100})</td>
 						    </tr>
 						    <tr>
 						      <td>Delta V [m/s]</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["dV"][this.props.stageCurrent][0]) + " "} 
+						      	({Math.round(this.props.dataSummary["dV"][this.props.stageCurrent][1])})</td>
 						    </tr>
 						    <tr>
 						      <th>Mass</th>
@@ -109,19 +112,19 @@ Build_12 = React.createClass({
 						    </tr>
 						    <tr>
 						      <td>Fuel/Oxidizer [ton]</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["mass"][this.props.stageCurrent][0] / 10) / 100}</td>
 						    </tr>
 						    <tr>
 						      <td>Engine [ton]</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["mass"][this.props.stageCurrent][1] / 10) / 100}</td>
 						    </tr>
 						    <tr>
 						      <td>Structure [ton]</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["mass"][this.props.stageCurrent][2] / 10) / 100}</td>
 						    </tr>
 						    <tr>
 						      <td>Total [ton]</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["mass"][this.props.stageCurrent][3] / 10) / 100}</td>
 						    </tr>
 						  </tbody>
 						  <thead>
@@ -133,19 +136,20 @@ Build_12 = React.createClass({
 						  <tbody>
 						    <tr>
 						      <td>Fuel/Oxidizer</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["reliability"][this.props.stageCurrent][0][0] * 10000) / 100 + " "}
+						      ({Math.round(this.props.dataSummary["reliability"][this.props.stageCurrent][0][1] * 10000) / 100 + " "})</td>
 						    </tr>
 						    <tr>
 						      <td>Engine</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["reliability"][this.props.stageCurrent][1] * 10000) / 100}</td>
 						    </tr>
 						    <tr>
 						      <td>Structure</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["reliability"][this.props.stageCurrent][2] * 10000) / 100}</td>
 						    </tr>
 						    <tr>
 						      <td>Total</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["reliability"][this.props.stageCurrent][3] * 10000) / 100}</td>
 						    </tr>
 						  </tbody>
 						  <thead>
@@ -157,19 +161,19 @@ Build_12 = React.createClass({
 						  <tbody>
 						    <tr>
 						      <td>Fuel/Oxidizer</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["cost"][this.props.stageCurrent][0])}</td>
 						    </tr>
 						    <tr>
 						      <td>Engine</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["cost"][this.props.stageCurrent][1])}</td>
 						    </tr>
 						    <tr>
 						      <td>Structure</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["cost"][this.props.stageCurrent][2])}</td>
 						    </tr>
 						    <tr>
 						      <td>Total</td>
-						      <td>100</td>
+						      <td>{Math.round(this.props.dataSummary["cost"][this.props.stageCurrent][3])}</td>
 						    </tr>
 						    <tr>
 						      <td></td>
@@ -202,7 +206,8 @@ Build_13 = React.createClass({
 					  <tbody>
 					  <tr>
 					    <td>Delta V [m/s]</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["dV"][6][0]) + " "} 
+						      	({Math.round(this.props.dataSummary["dV"][6][1])})</td>
 					  </tr>
 					  <tr>
 					    <th>Mass</th>
@@ -210,23 +215,23 @@ Build_13 = React.createClass({
 					  </tr>
 					  <tr>
 					    <td>Systems</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["mass"][6][0]) / 1000 + " "}</td>
 					  </tr>
 					  <tr>
 					    <td>Fuel/Oxidizer [ton]</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["mass"][6][1]) / 1000 + " "}</td>
 					  </tr>
 					  <tr>
 					    <td>Engine [ton]</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["mass"][6][2]) / 1000 + " "}</td>
 					  </tr>
 					  <tr>
 					    <td>Structure [ton]</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["mass"][6][3]) / 1000 + " "}</td>
 					  </tr>
 					  <tr>
 					    <td>Total [ton]</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["mass"][6][4]) / 1000 + " "}</td>
 					  </tr>
 					  </tbody>
 					  <thead>
@@ -235,22 +240,26 @@ Build_13 = React.createClass({
 					 <th></th>
 					 </tr>
 					 </thead>
-					 <tbody>		  
-					  <tr>
-					    <td>Fuel/Oxidizer</td>
-					    <td>100</td>
-					  </tr>
-					  <tr>
-					    <td>Engine</td>
-					   <td>100</td>
-					  </tr>
-					  <tr>
-					    <td>Structure</td>
-					    <td>100</td>
-					  </tr>
-					  <tr>
-					    <td>Total</td>
-					    <td>100</td>
+				 <tbody>	
+				 		<tr>
+					    <td>Systems</td>
+					    <td>{Math.round(this.props.dataSummary["reliability"][6][0] * 10000) / 100 + " "}</td>
+					  </tr>	  
+					    <tr>
+					      <td>Fuel/Oxidizer</td>
+					      <td>{Math.round(this.props.dataSummary["reliability"][6][1] * 10000) / 100 + " "}</td>
+					    </tr>
+					    <tr>
+					      <td>Engine</td>
+					      <td>{Math.round(this.props.dataSummary["reliability"][6][2] * 10000) / 100}</td>
+					    </tr>
+					    <tr>
+					      <td>Structure</td>
+					      <td>{Math.round(this.props.dataSummary["reliability"][6][3] * 10000) / 100}</td>
+					    </tr>
+					    <tr>
+					      <td>Total</td>
+					      <td>{Math.round(this.props.dataSummary["reliability"][6][4] * 10000) / 100}</td>
 					    </tr>
 					    </tbody>
 					    <thead>
@@ -262,23 +271,23 @@ Build_13 = React.createClass({
 					  <tbody>
 					  <tr>
 					    <td>Systems</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["cost"][6][0]) + " "}</td>
 					  </tr>
 					  <tr>
 					    <td>Fuel/Oxidizer</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["cost"][6][1]) + " "}</td>
 					  </tr>
 					  <tr>
 					    <td>Engine</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["cost"][6][2]) + " "}</td>
 					  </tr>
 					  <tr>
 					    <td>Structure</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["cost"][6][3]) + " "}</td>
 					  </tr>
 					  <tr>
 					    <td>Total</td>
-					    <td>100</td>
+					    <td>{Math.round(this.props.dataSummary["cost"][6][4]) + " "}</td>
 					  </tr>
 					  <tr>
 					    <td></td>
@@ -344,7 +353,6 @@ Build_22 = React.createClass({
 				</div>
 				<div className="btn-group-vertical btn-block">
 				<button type="button" className="btn btn-block btn-success" disabled={this.props.submitStatus} onClick={this.props.handleSubmitStage}>Submit Stage</button>
-				<button type="button" className="btn btn-block btn-danger" disabled={this.props.clearStatus} onClick={this.props.handleClearStage}>Clear Stage</button>
 				</div>
 			</div>{/* sub column end */}
 			<div className="col-xs-7 fixed">

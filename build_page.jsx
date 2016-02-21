@@ -45,109 +45,61 @@ BuildPage = React.createClass({
 			//function control
 			dataEngine: [],
 			dataSummary: {
-					stageThrustVac: [0],
-					stageThrustAtm: [0],
-					stageIspVac: [0],
-					stageIspAtm: [0],
-					stageTWRVac: [0],
-					stageTWRAtm: [0],
-					stageDvVac: [0],
-					stageDvAtm: [0],
-					stageFuelMass: [0],
-					stageEngineMass: [0],
-					stageStructureMass: [0],
-					stageMass: [0],
-					stageFuelRisk: [0],
-					stageEngineRisk: [0],
-					stageStructureRisk: [0],
-					stageTotalRisk: [0],
-					totalDvVac: 0,
-					totalDvAtm: 0,
-					totalFuelMass: 0,
-					totalEngineMass: 0,
-					totalStructureMass: 0,
-					totalMass: 0,
-					totalFuelRisk: 0,
-					totalEngineRisk: 0,
-					totalStructureRisk: 0,
-					totalRisk: 0,
+				thrust: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				Isp: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				TWR: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				dV: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0], [0, 0]],
+				mass: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]],
+				reliability: [[[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [0, 0, 0, 0, 0]],
+				cost: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]]
 			},
 		};
 	},
 
 	clearShip(){
-		console.log("clear ship")
+		this.setState({
+			stageCount: 0,
+			stageCurrent: 0,
+
+			//button control
+			addStatus: [[false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"]],
+			selectStatus: [true, false, false, false, false, false],
+			modifyStatus: [true, true, true, true, true, true],
+			submitStatus: [true, true, true, true, true, true],
+			clearStatus: [true, true, true, true, true, true],
+			typeStatus: true,
+
+			//display control
+			selectClass: "Unselected",
+			selectTemplate: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
+
+			//property control	
+			tankLength: ["---", "---", "---", "---", "---", "---"],
+			tankDiameter: [0, 0, 0, 0, 0, 0],
+			structuralDensity: ["---", "---", "---", "---", "---", "---"],
+			fuelType: ["---", "---", "---", "---", "---", "---"],
+			massRate: ["---", "---", "---", "---", "---", "---"],
+			mixRatio: ["---", "---", "---", "---", "---", "---"],
+			enginePressure: ["---", "---", "---", "---", "---", "---"],
+			engineCount: ["---", "---", "---", "---", "---", "---"],
+			nozzleLength: ["---", "---", "---", "---", "---", "---"],		
+
+			//function control
+			dataEngine: [],
+			dataSummary: {
+				thrust: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				Isp: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				TWR: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				dV: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0], [0, 0]],
+				mass: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]],
+				reliability: [[[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [0, 0, 0, 0, 0]],
+				cost: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]]
+			},
+		});
 	},
 
 	buildRocket(){
 		console.log("build rocket")
-	},
-
-	clearStage(){
-		console.log("clear")
-	},
-
-	submitStage(){
-		var stage = this.state.stageCurrent;
-
-		//database data
-		var fuelTypeData = Fuel.find({name: this.state.fuelType[stage]}).fetch()[0];
-		var templateData = Template.find({name: this.state.selectTemplate[stage]}).fetch()[0];
-
-		//statuses to be updated
-		var submitStatusArray = this.state.submitStatus;
-		console.log(submitStatusArray)
-		var modifyStatusArray = this.state.modifyStatus;
-		var selectStatusArray = this.state.selectStatus;
-
-		//properties to be updated
-		var	tankLengthArray = this.state.tankLength;
-		var	tankDiameterArray = this.state.tankDiameter;
-		var	structuralDensityArray = this.state.structuralDensity;
-		var	massRateArray = this.state.massRate;
-		var	mixRatioArray = this.state.mixRatio;
-		var	enginePressureArray = this.state.enginePressure;
-		var	nozzleLengthArray = this.state.nozzleLength;
-
-		//functions to be updated
-		var	dataEngineArray = this.state.dataEngine;
-		var	dataSummaryArray = this.state.dataSummary;
-		var	dataSummaryArray = this.state.dataSummary;
-
-		//update values
-		submitStatusArray[stage] = true;
-		modifyStatusArray[stage] = false;
-		selectStatusArray[stage] = true;
-
-		tankLengthArray[stage] = templateData["length"]; 
-		tankDiameterArray[stage] = templateData["diameter"]; 
-		structuralDensityArray[stage] = templateData["structuralDensity"]; 
-		massRateArray[stage] = templateData["massRate"]; 
-		mixRatioArray[stage] = fuelTypeData["defaultMixRatio"]; 
-		enginePressureArray[stage] = templateData["enginePressure"]; 
-		nozzleLengthArray[stage] = templateData["nozzleLength"]; 
-		dataEngineArray[stage] = engineFunc(fuelTypeData, mixRatioArray[stage], enginePressureArray[stage], nozzleLengthArray[stage], massRateArray[stage]);
-
-		//update states
-		this.setState({
-			submitStatus: submitStatusArray,
-			selectStatus: selectStatusArray,
-			submitStatus: true,
-			clearStatus: false,
-			modifyStatus: modifyStatusArray,
-
-			tankLength: tankLengthArray,
-			tankDiameter: tankDiameterArray,
-			structuralDensity: structuralDensityArray,
-			massRate: massRateArray,
-			mixRatio: mixRatioArray,
-			enginePressure: enginePressureArray,
-			nozzleLength :nozzleLengthArray,
-
-			dataEngine: dataEngineArray,
-			dataSummary: summaryFunc(submitStatusArray, tankLengthArray, tankDiameterArray, structuralDensityArray, mixRatioArray, enginePressureArray, this.state.stageCount, this.state.engineCount, dataEngineArray, this.state.fuelType),
-		});
-	
 	},
 
 	addStage(){
@@ -258,6 +210,68 @@ BuildPage = React.createClass({
 	
 	},
 
+	submitStage(){
+		var stage = this.state.stageCurrent;
+
+		//database data
+		var fuelTypeData = Fuel.find({name: this.state.fuelType[stage]}).fetch()[0];
+		var templateData = Template.find({name: this.state.selectTemplate[stage]}).fetch()[0];
+
+		//statuses to be updated		
+		var selectStatusArray = this.state.selectStatus;
+		var modifyStatusArray = this.state.modifyStatus;
+		var submitStatusArray = this.state.submitStatus;
+		var clearStatusArray = this.state.clearStatus;
+
+		//properties to be updated
+		var	tankLengthArray = this.state.tankLength;
+		var	tankDiameterArray = this.state.tankDiameter;
+		var	structuralDensityArray = this.state.structuralDensity;
+		var	massRateArray = this.state.massRate;
+		var	mixRatioArray = this.state.mixRatio;
+		var	enginePressureArray = this.state.enginePressure;
+		var	nozzleLengthArray = this.state.nozzleLength;
+
+		//functions to be updated
+		var	dataEngineArray = this.state.dataEngine;
+
+		//update values	
+		selectStatusArray[stage] = true;
+		modifyStatusArray[stage] = false;
+		submitStatusArray[stage] = true;
+		clearStatusArray[stage]	= false;
+
+
+		tankLengthArray[stage] = templateData["length"]; 
+		tankDiameterArray[stage] = templateData["diameter"]; 
+		structuralDensityArray[stage] = templateData["structuralDensity"]; 
+		massRateArray[stage] = templateData["massRate"]; 
+		mixRatioArray[stage] = fuelTypeData["defaultMixRatio"]; 
+		enginePressureArray[stage] = templateData["enginePressure"]; 
+		nozzleLengthArray[stage] = templateData["nozzleLength"]; 
+		dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioArray[stage], enginePressureArray[stage], nozzleLengthArray[stage], massRateArray[stage]);
+
+		//update states
+		this.setState({		
+			selectStatus: selectStatusArray,
+			modifyStatus: modifyStatusArray,
+			submitStatus: submitStatusArray,
+			clearStatus: clearStatusArray,	
+
+			tankLength: tankLengthArray,
+			tankDiameter: tankDiameterArray,
+			structuralDensity: structuralDensityArray,
+			massRate: massRateArray,
+			mixRatio: mixRatioArray,
+			enginePressure: enginePressureArray,
+			nozzleLength :nozzleLengthArray,
+
+			dataEngine: dataEngineArray,
+			dataSummary: summaryFunc(stage, this.state.dataSummary, submitStatusArray[stage], tankLengthArray[stage], tankDiameterArray[stage], structuralDensityArray[stage], mixRatioArray[stage], enginePressureArray[stage], dataEngineArray[stage], this.state.fuelType[stage]),
+		});
+	
+	},
+
 	modifyStage(){
 		var stage = this.state.stageCurrent;
 
@@ -307,7 +321,7 @@ BuildPage = React.createClass({
 						break;
 				}
 				max = Math.pow(250 * tankDiameterValue, 0.5);
-				min = Math.pow(40 * tankDiameterValue, 0.5);
+				min = Math.pow(20 * tankDiameterValue, 0.5);
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
 					tankLengthValue = Math.round((tankLengthValue + sign * increment) * 10) / 10;
 					tankLengthArray[stage] = tankLengthValue;
@@ -363,7 +377,7 @@ BuildPage = React.createClass({
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
 					massRateValue = Math.round((massRateValue + sign * increment) * 10) / 10;
 					massRateArray[stage] = massRateValue;
-					dataEngineArray[stage] = engineFunc(fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
 						massRate: massRateArray,
 						dataEngine: dataEngineArray
@@ -378,7 +392,7 @@ BuildPage = React.createClass({
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
 					mixRatioValue = Math.round((mixRatioValue + sign * increment) * 10) / 10;
 					mixRatioArray[stage] = mixRatioValue;
-					dataEngineArray[stage] = engineFunc(fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
 						mixRatio: mixRatioArray,
 						dataEngine: dataEngineArray
@@ -393,7 +407,7 @@ BuildPage = React.createClass({
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
 					enginePressureValue = Math.round((enginePressureValue + sign * increment) * 10) / 10;
 					enginePressureArray[stage] = enginePressureValue;
-					dataEngineArray[stage] = engineFunc(fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
 						enginePressure: enginePressureArray,
 						dataEngine: dataEngineArray
@@ -415,7 +429,7 @@ BuildPage = React.createClass({
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
 					nozzleLengthValue = Math.round((nozzleLengthValue + sign * increment) * 10) / 10;
 					nozzleLengthArray[stage] = nozzleLengthValue;
-					dataEngineArray[stage] = engineFunc(fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
 					this.setState({
 						nozzleLength: nozzleLengthArray,
 						dataEngine: dataEngineArray
@@ -423,9 +437,8 @@ BuildPage = React.createClass({
 					}
 				break;
 		}
-
 		this.setState({
-			dataSummary: summaryFunc(this.state.submitStatus, tankLengthArray, this.state.tankDiameter, structuralDensityArray, mixRatioArray, enginePressureArray, stage, this.state.stageCount, this.state.engineCount, dataEngineArray, this.state.fuelType),
+			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.submitStatus, tankLengthValue, this.state.tankDiameter[stage], structuralDensityValue, mixRatioValue, enginePressureValue, dataEngineArray[stage], this.state.fuelType[stage]),
 		});
 
 	},
@@ -443,7 +456,7 @@ BuildPage = React.createClass({
 					stageCurrent={this.state.stageCurrent}
 					dataSummary={this.state.dataSummary}/>
 
-					<Build_13 />
+					<Build_13 dataSummary={this.state.dataSummary}/>
 
 				</div>{/* row one ends */}
 
@@ -467,13 +480,13 @@ BuildPage = React.createClass({
 					selectStatus={this.state.selectStatus[this.state.stageCurrent]}
 					modifyStatus={this.state.modifyStatus[this.state.stageCurrent]}
 					submitStatus={this.state.submitStatus[this.state.stageCurrent]}
+					clearStatus={this.state.clearStatus[this.state.stageCurrent]}
 					typeStatus={this.state.typeStatus}					
-					clearStatus={this.state.clearStatus}
+					
 
 					handleSelectStage={this.selectStage}
 					handleModifyStage={this.modifyStage}
-					handleSubmitStage={this.submitStage}
-					handleClearStage={this.clearStage}/>
+					handleSubmitStage={this.submitStage}/>
 
 					<Build_23
 					addStatus={this.state.addStatus}

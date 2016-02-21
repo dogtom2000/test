@@ -1,4 +1,4 @@
-engineFunc = function(fuel, mixRatio, pressure, nozzleLength, massRate){
+engineFunc = function(engineCount, fuel, mixRatio, pressure, nozzleLength, massRate){
 
 //check for values in range
     var pressureArray = [5, 10, 25, 50, 100, 200, 300];
@@ -84,11 +84,11 @@ engineFunc = function(fuel, mixRatio, pressure, nozzleLength, massRate){
     var engineMass = 5 * massRate + Math.pow(massRate / pressure, 0.5) * 75 + nozzleVolume * 80;
 
     engine = {
-        "thrustVac": thrustVac,
-        "thrustAtm": thrustAtm,
+        "thrustVac": thrustVac * engineCount,
+        "thrustAtm": thrustAtm * engineCount,
         "ispVac": ispVac,
         "ispAtm": ispAtm,
-        "engineMass": engineMass
+        "engineMass": engineMass * engineCount
     };
 
     return engine 
