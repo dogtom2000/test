@@ -1,5 +1,5 @@
 body{
-  color: #aaa;
+  color: #fff;
   font-size: 15px;
 }
 
@@ -8,6 +8,7 @@ body{
   margin-left: auto;
   min-width: 1024px;
   max-width: 1664px;
+  background-color: #000;
 }
 
 .row-1{

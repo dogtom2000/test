@@ -37,7 +37,7 @@ BuildPage = React.createClass({
 			massRate: ["---", "---", "---", "---", "---", "---"],
 			mixRatio: ["---", "---", "---", "---", "---", "---"],
 			enginePressure: ["---", "---", "---", "---", "---", "---"],
-			engineCount: ["---", "---", "---", "---", "---", "---"],
+			engineCount: [1, 1, 1, 1, 1, 1],
 			nozzleLength: ["---", "---", "---", "---", "---", "---"],
 			payloadSystem: {mass: 0},	
 
@@ -82,7 +82,7 @@ BuildPage = React.createClass({
 			massRate: ["---", "---", "---", "---", "---", "---"],
 			mixRatio: ["---", "---", "---", "---", "---", "---"],
 			enginePressure: ["---", "---", "---", "---", "---", "---"],
-			engineCount: ["---", "---", "---", "---", "---", "---"],
+			engineCount: [1, 1, 1, 1, 1, 1],
 			nozzleLength: ["---", "---", "---", "---", "---", "---"],
 			payloadSystem: {mass: 0},	
 		
@@ -295,7 +295,6 @@ BuildPage = React.createClass({
 		enginePressureArray[stage] = templateData["enginePressure"]; 
 		nozzleLengthArray[stage] = templateData["nozzleLength"]; 
 		dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioArray[stage], enginePressureArray[stage], nozzleLengthArray[stage], massRateArray[stage]);
-		payloadSystemObject.mass = 30000;
 
 		//update states
 		this.setState({		
@@ -485,7 +484,7 @@ BuildPage = React.createClass({
 				break;
 		}
 		this.setState({
-			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.submitStatus, tankLengthValue, this.state.tankDiameter[stage], structuralDensityValue, mixRatioValue, enginePressureValue, dataEngineArray[stage], this.state.fuelType[stage]. this.state.payloadSystem),
+			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.submitStatus, tankLengthValue, this.state.tankDiameter[stage], structuralDensityValue, mixRatioValue, enginePressureValue, dataEngineArray[stage], this.state.fuelType[stage], this.state.payloadSystem),
 		});
 
 	},
