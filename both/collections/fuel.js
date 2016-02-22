@@ -1,0 +1,1 @@
+this.Fuel = new Mongo.Collection("fuel");

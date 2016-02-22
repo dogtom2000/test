@@ -1,0 +1,1 @@
+this.Template = new Mongo.Collection("template");

@@ -1,4 +1,4 @@
-summaryFunc = function(stage, dataSummary, submitStatus, tankLength, tankDiameter, structuralDensity, mixRatio, enginePressure, engine, fuel){
+summaryFunc = function(stage, dataSummary, submitStatus, tankLength, tankDiameter, structuralDensity, mixRatio, enginePressure, engine, fuel, payloadSystem){
 	
 	var dvMass = [];
 
@@ -28,7 +28,7 @@ summaryFunc = function(stage, dataSummary, submitStatus, tankLength, tankDiamete
 
 	for (var i = 0; i < 6; i++){
 		if (i == 0){
-			dvMass[i] = 0;
+			dvMass[i] = payloadSystem.mass;
 		} else {
 			dvMass[i] = dvMass[i - 1] + dataSummary["mass"][i - 1][3];
 		}
@@ -65,7 +65,7 @@ summaryFunc = function(stage, dataSummary, submitStatus, tankLength, tankDiamete
 
 	}
 
-	dataSummary["mass"][6] = [1, totalFuelMass, totalEngineMass, totalStructureMass, totalFuelMass + totalEngineMass + totalStructureMass];
+	dataSummary["mass"][6] = [payloadSystem.mass, totalFuelMass, totalEngineMass, totalStructureMass, payloadSystem.mass + totalFuelMass + totalEngineMass + totalStructureMass];
 	dataSummary["dV"][6] = totalDv;
 	dataSummary["reliability"][6] = [1, totalFuelReliability, totalEngineReliability, totalStructureReliability, totalFuelReliability * totalEngineReliability * totalStructureReliability];
 

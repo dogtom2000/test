@@ -13,27 +13,27 @@ Build_11 = React.createClass({
 						  </thead>
 						  <tbody>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td><button type="button" className="btn btn-block btn-warning" onClick={this.props.handleAddSystem} disabled={this.props.selectStatus}>Add Payload</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						  </tbody>
@@ -425,7 +425,8 @@ Build_23 = React.createClass({
 			</div>{/* sub column end */}
 			<div className="col-xs-6 fixed">
 				<div className="btn-group-vertical btn-block">
-				  <button type="button" className="btn btn-block btn-success" onClick={this.props.handleBuildRocket}>Launch</button>
+				  <button type="button" className="btn btn-block btn-primary" onClick={this.props.handleBuildRocket}>{this.props.buildStatus}</button>
+				  <button type="button" className="btn btn-block btn-success" onClick={this.props.handleSaveRocket}>Save Rocket</button>
 				  <button type="button" className="btn btn-block btn-danger" onClick={this.props.handleClearShip}>Clear</button>
 				</div>
 			</div>{/* sub column end */}

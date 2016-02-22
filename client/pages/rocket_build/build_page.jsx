@@ -1,6 +1,3 @@
-Fuel = new Mongo.Collection("fuel");
-Template = new Mongo.Collection("template");
-
 BuildPage = React.createClass({
 
 	mixins: [ReactMeteorData],
@@ -30,6 +27,7 @@ BuildPage = React.createClass({
 			//display control
 			selectClass: "Unselected",
 			selectTemplate: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
+			buildStatus: "Build Rocket",
 
 			//property control	
 			tankLength: ["---", "---", "---", "---", "---", "---"],
@@ -40,7 +38,8 @@ BuildPage = React.createClass({
 			mixRatio: ["---", "---", "---", "---", "---", "---"],
 			enginePressure: ["---", "---", "---", "---", "---", "---"],
 			engineCount: ["---", "---", "---", "---", "---", "---"],
-			nozzleLength: ["---", "---", "---", "---", "---", "---"],		
+			nozzleLength: ["---", "---", "---", "---", "---", "---"],
+			payloadSystem: {mass: 0},	
 
 			//function control
 			dataEngine: [],
@@ -60,6 +59,7 @@ BuildPage = React.createClass({
 		this.setState({
 			stageCount: 0,
 			stageCurrent: 0,
+			builtRocket: {},
 
 			//button control
 			addStatus: [[false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"]],
@@ -72,6 +72,7 @@ BuildPage = React.createClass({
 			//display control
 			selectClass: "Unselected",
 			selectTemplate: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
+			buildStatus: "Build Rocket",
 
 			//property control	
 			tankLength: ["---", "---", "---", "---", "---", "---"],
@@ -82,7 +83,9 @@ BuildPage = React.createClass({
 			mixRatio: ["---", "---", "---", "---", "---", "---"],
 			enginePressure: ["---", "---", "---", "---", "---", "---"],
 			engineCount: ["---", "---", "---", "---", "---", "---"],
-			nozzleLength: ["---", "---", "---", "---", "---", "---"],		
+			nozzleLength: ["---", "---", "---", "---", "---", "---"],
+			payloadSystem: {mass: 0},	
+		
 
 			//function control
 			dataEngine: [],
@@ -99,7 +102,48 @@ BuildPage = React.createClass({
 	},
 
 	buildRocket(){
-		console.log("build rocket")
+		var rocketStages = {};
+		var rocketStageCount = 0;
+		var futureStageMass = this.state.payloadSystem.mass;
+		for(var i=0; i < 6; i++){
+			if (this.state.dataSummary["dV"][i][0] > 0 && rocketStageCount == i){
+				rocketStages[i + 1] = [[this.state.dataSummary["mass"][i][0], this.state.dataSummary["mass"][i][0]], this.state.dataSummary["mass"][i][3] - this.state.dataSummary["mass"][i][0], futureStageMass, 0.2, this.state.tankDiameter[i], this.state.dataSummary["thrust"][i][0], this.state.dataSummary["Isp"][i][0]];			
+				rocketStageCount++;
+				futureStageMass += this.state.dataSummary["mass"][i][3];
+			}			
+		}
+		var Rocket = {};
+		Rocket.name = "rocketName";
+		Rocket.stages = rocketStages;
+		Rocket.stageCount = rocketStageCount;
+
+		this.setState({
+			buildStatus: rocketStageCount + " stages built",
+			builtRocket: Rocket
+		});
+		
+	},
+
+	saveRocket(){
+		var Planet = {
+		    name: "Earth",
+		    sgp: 3.986e14,
+		    radius: 6.371e6,
+		    pressure: 1,
+		    atmScale: 7,
+		    atmHeight: 1.4e5,
+		    atmWeight: 28.97,
+		    dayLength: 86400
+		};
+
+		console.log(this.state.builtRocket)
+		console.log(orbitBody(Planet, this.state.builtRocket, 180000))
+	},
+
+	addSystem(){
+		var payloadSystemObject = this.state.payloadSystem;
+		payloadSystemObject.mass = 30000;
+
 	},
 
 	addStage(){
@@ -231,6 +275,7 @@ BuildPage = React.createClass({
 		var	mixRatioArray = this.state.mixRatio;
 		var	enginePressureArray = this.state.enginePressure;
 		var	nozzleLengthArray = this.state.nozzleLength;
+		var payloadSystemObject = this.state.payloadSystem;
 
 		//functions to be updated
 		var	dataEngineArray = this.state.dataEngine;
@@ -250,6 +295,7 @@ BuildPage = React.createClass({
 		enginePressureArray[stage] = templateData["enginePressure"]; 
 		nozzleLengthArray[stage] = templateData["nozzleLength"]; 
 		dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioArray[stage], enginePressureArray[stage], nozzleLengthArray[stage], massRateArray[stage]);
+		payloadSystemObject.mass = 30000;
 
 		//update states
 		this.setState({		
@@ -265,9 +311,10 @@ BuildPage = React.createClass({
 			mixRatio: mixRatioArray,
 			enginePressure: enginePressureArray,
 			nozzleLength :nozzleLengthArray,
+			payloadSystem: payloadSystemObject,
 
 			dataEngine: dataEngineArray,
-			dataSummary: summaryFunc(stage, this.state.dataSummary, submitStatusArray[stage], tankLengthArray[stage], tankDiameterArray[stage], structuralDensityArray[stage], mixRatioArray[stage], enginePressureArray[stage], dataEngineArray[stage], this.state.fuelType[stage]),
+			dataSummary: summaryFunc(stage, this.state.dataSummary, submitStatusArray[stage], tankLengthArray[stage], tankDiameterArray[stage], structuralDensityArray[stage], mixRatioArray[stage], enginePressureArray[stage], dataEngineArray[stage], this.state.fuelType[stage], payloadSystemObject),
 		});
 	
 	},
@@ -438,7 +485,7 @@ BuildPage = React.createClass({
 				break;
 		}
 		this.setState({
-			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.submitStatus, tankLengthValue, this.state.tankDiameter[stage], structuralDensityValue, mixRatioValue, enginePressureValue, dataEngineArray[stage], this.state.fuelType[stage]),
+			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.submitStatus, tankLengthValue, this.state.tankDiameter[stage], structuralDensityValue, mixRatioValue, enginePressureValue, dataEngineArray[stage], this.state.fuelType[stage]. this.state.payloadSystem),
 		});
 
 	},
@@ -449,7 +496,9 @@ BuildPage = React.createClass({
 
 				<div className="row row-1">
 
-					<Build_11 />
+					<Build_11
+					selectStatus={this.state.selectStatus[0]}
+					handleAddSystem={this.addSystem}/>
 
 					<Build_12 
 					selectTemplate={this.state.selectTemplate[this.state.stageCurrent]}
@@ -490,9 +539,11 @@ BuildPage = React.createClass({
 
 					<Build_23
 					addStatus={this.state.addStatus}
+					buildStatus={this.state.buildStatus}
 					handleAddStage={this.addStage}
-					handleClearShip={this.clearShip}
-					handleBuildRocket={this.buildRocket}/>
+					handleBuildRocket={this.buildRocket}
+					handleSaveRocket={this.saveRocket}
+					handleClearShip={this.clearShip}/>
 
 				</div>{/* row two ends */}		
 
