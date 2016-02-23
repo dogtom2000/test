@@ -5,7 +5,7 @@ BuildPage = React.createClass({
 	getMeteorData() {
 
 		return {
-
+			//add in database reads so you dont have to do it a bunch of times :)
 		}
 	},
 
@@ -125,25 +125,12 @@ BuildPage = React.createClass({
 	},
 
 	saveRocket(){
-		var Planet = {
-		    name: "Earth",
-		    sgp: 3.986e14,
-		    radius: 6.371e6,
-		    pressure: 1,
-		    atmScale: 7,
-		    atmHeight: 1.4e5,
-		    atmWeight: 28.97,
-		    dayLength: 86400
-		};
-
-		console.log(this.state.builtRocket)
-		console.log(orbitBody(Planet, this.state.builtRocket, 180000))
+		Vehicle.insert(this.state.builtRocket);
 	},
 
 	addSystem(){
 		var payloadSystemObject = this.state.payloadSystem;
 		payloadSystemObject.mass = 30000;
-
 	},
 
 	addStage(){

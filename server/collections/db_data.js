@@ -106,8 +106,17 @@ insertTemplate = function(){
 		enginePressure: 40,
 		nozzleLength: 6,
 	});
-
-
-
 }
 
+insertPlanet = function(){
+		Planet.insert({
+		    name: "Earth",
+		    sgp: 3.986e14,
+		    radius: 6.371e6,
+		    pressure: 1,
+		    atmScale: 7,
+		    atmHeight: 1.4e5,
+		    atmWeight: 28.97,
+		    dayLength: 86400
+	});
+}
