@@ -1,44 +1,105 @@
-drawchart = function(input){
+drawchart = function(time_input, data_input){
 
-	var data = [1,9,4,2,6,2,5,0,5,9,7,2].map(function(d,i) {
-	        return [input[i][1] * 6371, input[i][0] / 1000 - 6371];
-	    });
-console.log(data)
-	var w = 300,
-	    h = 100;
+d3.select("#chart").selectAll("svg").remove();
 
-	var x = d3.scale.linear()
-	    .domain([0, data.length-1])
-	    .range([0, w]);
+var time = time_input;
 
-	var y = d3.scale.linear()
-	    .domain([0, 10])
-	    .range([h, 0]);
+var data = [];
 
-	var line = d3.svg.line()
-	    .x(function(d) { return x(d[0]); })
-	    .y(function(d) { return y(d[1]); });
+for (var i = 0; i < data_input.length; i++){
+	data.push([(data_input[i][1] * 6371000 - 463.31219 * time[i])/1000 , data_input[i][0] /1000- 6371 ])
+}
 
-	var svg = d3.select('#chart').append('svg')
-	    .attr('w', w)
-	    .attr('h', h);
+var margin = {top: 40, right: 80, bottom: 40, left: 80}
+, width = 712 - margin.left - margin.right
+, height = 632 - margin.top - margin.bottom;
 
-    // add element and transition in
-    var path = svg.append('path')
-        .attr('class', 'line')
-        .attr('d', line(data[0]))
-      .transition()
-        .duration(1000)
-        .attrTween('d', pathTween);
-    
-    function pathTween() {
-        var interpolate = d3.scale.quantile()
-                .domain([0,1])
-                .range(d3.range(1, data.length + 1));
-        return function(t) {
-            return line(data.slice(0, interpolate(t)));
-        };
+var x = d3.scale.linear().domain([-d3.max(data, function(d) { return d[0]; }) / 10, d3.max(data, function(d) { return d[0]; })]).range([0, width])
+var y = d3.scale.linear().domain([0, d3.max(data, function(d) { return d[1]; })]).range([height, 0])
+
+var chart = d3.select("#chart")
+  .append('svg:svg')
+  .attr('width', width + margin.right + margin.left)
+  .attr('height', height + margin.top + margin.bottom)
+  .attr('class', 'chart')
+
+var main = chart.append('g')
+  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+  .attr('width', width)
+  .attr('height', height)
+  .attr('class', 'main')   
+
+// draw the x axis
+var xAxis = d3.svg.axis()
+.scale(x)
+.orient('bottom');
+
+main.append('g')
+  .attr('transform', 'translate(0,' + height + ')')
+  .attr('class', 'axis')
+  .call(xAxis);
+
+// draw the y axis
+var yAxis = d3.svg.axis()
+  .scale(y)
+  .orient('left');
+
+main.append('g')
+  .attr('transform', 'translate(0,0)')
+  .attr('class', 'axis')
+  .call(yAxis);
+
+var g = main.append("svg:g"); 
+
+var line = d3.svg.line()
+.x(function(d, i) {
+  return x(d[0])
+})
+.y(function(d, i) {
+  return y(d[1])
+});
+
+var timeduration = 50 * Math.max.apply(null, time);
+
+
+main.append("svg:path")
+  .attr('class', 'line')
+  .attr("d", line(data[0]))
+  .transition()
+  .duration(timeduration)
+  .attrTween('d', pathTween(data))
+  .each("end", function() {main.append("svg:path").attr("d", line(data))});
+  
+function pathTween(data) {
+	return function (){
+         
+        var c = new Date();
+        var i = 0;
+        var dt = time[time.length - 1] / timeduration;     
+        var outputarray = [];
+
+                
+          return function() {
+
+            var d = new Date();
+
+            var t =(d.getTime() - c.getTime()) * dt ;
+
+            while (t >= time[i]){
+              i++
+            } 
+            if (t >= time[time.length - 1]) {
+              t_int = 1;
+            } else {
+              var t_int = (t - time[i-1]) / (time[i] - time[i-1]);
+            }
+            var xvalue = (data[i][0] - data[i-1][0]) * t_int + data[i-1][0];
+            var yvalue = (data[i][1] - data[i-1][1]) * t_int + data[i-1][1];
+            outputarray.push([xvalue, yvalue]);     
+            return line(outputarray);
+        }
     }
+ }
 
 }
 

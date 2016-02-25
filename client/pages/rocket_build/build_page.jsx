@@ -28,6 +28,7 @@ BuildPage = React.createClass({
 			selectClass: "Unselected",
 			selectTemplate: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
 			buildStatus: "Build Rocket",
+			rocketName: "Rocket Name",
 
 			//property control	
 			tankLength: ["---", "---", "---", "---", "---", "---"],
@@ -73,6 +74,7 @@ BuildPage = React.createClass({
 			selectClass: "Unselected",
 			selectTemplate: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
 			buildStatus: "Build Rocket",
+			rocketName: "Rocket Name",
 
 			//property control	
 			tankLength: ["---", "---", "---", "---", "---", "---"],
@@ -113,7 +115,7 @@ BuildPage = React.createClass({
 			}			
 		}
 		var Rocket = {};
-		Rocket.name = "rocketName";
+		Rocket.name = this.state.rocketName;
 		Rocket.stages = rocketStages;
 		Rocket.stageCount = rocketStageCount;
 
@@ -126,6 +128,12 @@ BuildPage = React.createClass({
 
 	saveRocket(){
 		Vehicle.insert(this.state.builtRocket);
+	},
+
+	returnInput(rocketName){
+		this.setState({
+			rocketName: rocketName.trim()
+		});
 	},
 
 	addSystem(){
@@ -529,7 +537,9 @@ BuildPage = React.createClass({
 					handleAddStage={this.addStage}
 					handleBuildRocket={this.buildRocket}
 					handleSaveRocket={this.saveRocket}
-					handleClearShip={this.clearShip}/>
+					handleClearShip={this.clearShip}
+					returnInput={this.returnInput}/>
+
 
 				</div>{/* row two ends */}		
 

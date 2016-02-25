@@ -4,7 +4,7 @@ Build_11 = React.createClass({
 		return(
 			<div className="col-xs-3 fixed" id="build-1-1">
 				<div className="title">Command Module Summary</div>
-					<table className="table " id="system-summary">
+					<table className="table" id="system-summary">
 						<thead>
 						    <tr>
 						      <th>Systems</th>
@@ -408,7 +408,16 @@ Build_22 = React.createClass({
 	}
 });
 
-Build_23 = React.createClass({
+Build_23 = React.createClass({
+
+
+	getInitialState: function() {
+    return {value: 'Rocket Name'};
+  },
+  handleChange: function(event) {
+    this.setState({value: event.target.value});
+    this.props.returnInput(event.target.value);
+  },
 
 	render(){
 		return(
@@ -429,6 +438,13 @@ Build_23 = React.createClass({
 				  <button type="button" className="btn btn-block btn-success" onClick={this.props.handleSaveRocket}>Save Rocket</button>
 				  <button type="button" className="btn btn-block btn-danger" onClick={this.props.handleClearShip}>Clear</button>
 				</div>
+
+				    <input
+				    	id="rocket-name-input"
+	        			type="text"
+	        			value={this.state.value}
+	        			onChange={this.handleChange}
+	      			/>
 			</div>{/* sub column end */}
 		</div>
 		);

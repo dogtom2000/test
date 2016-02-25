@@ -3,6 +3,10 @@ body{
   font-size: 15px;
 }
 
+#rocket-name-input{
+  color: #000;
+}
+
 .container-fluid{
   margin-right: auto;
   margin-left: auto;
@@ -132,4 +136,10 @@ body{
 #system-summary th{
   font-weight: bold;
   font-size: 20px;
+}
+
+path {
+    stroke: black;
+    stroke-width: 2;
+    fill: none;
 }

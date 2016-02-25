@@ -45,10 +45,12 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
             delete Rocket.stages[Rocket.stageCount];
             Rocket.stageCount--;
             currentStage = Rocket.stages[Rocket.stageCount];
-        } else if (currentStage[0][0] <= 0 && Rocket.stageCount == 1){
-            stopFlag = 1;
-            error = [1, "rocket is out of fuel"];
-        }
+        } 
+
+        //else if (currentStage[0][0] <= 0 && Rocket.stageCount == 1){
+        //    stopFlag = 1;
+        //    error = [1, "rocket is out of fuel"];
+        //}
         
         //assign stage variables
         var stageFuelMass = currentStage[0][0];
@@ -93,7 +95,13 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         
         //calculate thrust acceleration from heading
         var thrustVector = [Math.cos(heading[0]) * Math.sin(heading[1]), Math.sin(heading[0]) * Math.sin(heading[1]), Math.cos(heading[1])];
-        var thrustAcceleration = arrayMul(thrustVector, stageThrust / stageMass);
+
+        if (currentStage[0][0] <= 0 && Rocket.stageCount == 1){
+                var thrustAcceleration = [0,0,0];
+        } else {
+            var thrustAcceleration = arrayMul(thrustVector, stageThrust / stageMass);
+        }
+        
         
         //add accerlations together
         acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, thrustAcceleration);
@@ -210,7 +218,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
     }
 
     //return [error, Rocket, dvRequired, stageDv, position, velocity, acceleration];
-    return [error, Rocket, maxHeight, position];
+    return [error, Rocket, time, position];
     
     //calculate orbital properties
     function orbitalPropertiesCalc(velocity, position){
