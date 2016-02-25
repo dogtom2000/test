@@ -10,12 +10,12 @@ for (var i = 0; i < data_input.length; i++){
 	data.push([(data_input[i][1] * 6371000 - 463.31219 * time[i])/1000 , data_input[i][0] /1000- 6371 ])
 }
 
-var margin = {top: 40, right: 80, bottom: 40, left: 80}
+var margin = {top: 0, right: 0, bottom: 20, left: 0}
 , width = 712 - margin.left - margin.right
 , height = 632 - margin.top - margin.bottom;
 
-var x = d3.scale.linear().domain([-d3.max(data, function(d) { return d[0]; }) / 10, d3.max(data, function(d) { return d[0]; })]).range([0, width])
-var y = d3.scale.linear().domain([0, d3.max(data, function(d) { return d[1]; })]).range([height, 0])
+var x = d3.scale.linear().domain([-d3.max(data, function(d) { return d[0]; }) / 10, 1.1 * d3.max(data, function(d) { return d[0]; })]).range([0, width])
+var y = d3.scale.linear().domain([0, 200]).range([height, 0])
 
 var chart = d3.select("#chart")
   .append('svg:svg')
@@ -27,8 +27,46 @@ var main = chart.append('g')
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
   .attr('width', width)
   .attr('height', height)
-  .attr('class', 'main')   
+  .attr('class', 'main') 
 
+main.append('rect')
+	.attr("width", 712)
+    .attr("height", 184)
+    .attr("fill", "black");
+
+var gradient = main.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("y1", "0%")
+    .attr("x2", "0%")
+    .attr("y2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "black")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "blue")
+    .attr("stop-opacity", 1);
+
+main.append("rect")
+    .attr("width", 712)
+    .attr("height", 428)
+    .attr("transform", "translate(0,184)")
+    .style("fill", "url(#gradient)");
+
+    main.append('rect')
+    .attr("width", 712)
+    .attr("height", 20)
+    .attr("transform", "translate(0,612)")
+    .attr("fill", "#487906"); 
+
+
+
+/*
 // draw the x axis
 var xAxis = d3.svg.axis()
 .scale(x)
@@ -48,7 +86,7 @@ main.append('g')
   .attr('transform', 'translate(0,0)')
   .attr('class', 'axis')
   .call(yAxis);
-
+*/
 var g = main.append("svg:g"); 
 
 var line = d3.svg.line()
@@ -69,7 +107,7 @@ main.append("svg:path")
   .duration(timeduration)
   .attrTween('d', pathTween(data))
   .each("end", function() {main.append("svg:path").attr("d", line(data))});
-  
+
 function pathTween(data) {
 	return function (){
          
@@ -77,8 +115,7 @@ function pathTween(data) {
         var i = 0;
         var dt = time[time.length - 1] / timeduration;     
         var outputarray = [];
-
-                
+               
           return function() {
 
             var d = new Date();
@@ -93,9 +130,11 @@ function pathTween(data) {
             } else {
               var t_int = (t - time[i-1]) / (time[i] - time[i-1]);
             }
-            var xvalue = (data[i][0] - data[i-1][0]) * t_int + data[i-1][0];
-            var yvalue = (data[i][1] - data[i-1][1]) * t_int + data[i-1][1];
-            outputarray.push([xvalue, yvalue]);     
+            if (i < data.length){
+	            var xvalue = (data[i][0] - data[i-1][0]) * t_int + data[i-1][0];
+	            var yvalue = (data[i][1] - data[i-1][1]) * t_int + data[i-1][1];
+	            outputarray.push([xvalue, yvalue]);  
+            }           
             return line(outputarray);
         }
     }

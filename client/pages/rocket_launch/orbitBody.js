@@ -9,10 +9,11 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
     //initialize variables
     var t = 0;
     var dt = 0;
-    var tMax = 5000;
+    var tMax = 20000;
     var stopFlag = 0;
     var apoFlag = 0;
     var fuelFlag = 0;
+    var emtpyFlag = 0;
     var error = "";
     var dvRequired = 0;
     var stageDv = 0;
@@ -45,12 +46,10 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
             delete Rocket.stages[Rocket.stageCount];
             Rocket.stageCount--;
             currentStage = Rocket.stages[Rocket.stageCount];
-        } 
-
-        //else if (currentStage[0][0] <= 0 && Rocket.stageCount == 1){
-        //    stopFlag = 1;
-        //    error = [1, "rocket is out of fuel"];
-        //}
+        } else if (currentStage[0][0] <= 0 && Rocket.stageCount == 1){
+            emtpyFlag = 1;
+           //error = [1, "rocket is out of fuel"];
+        }
         
         //assign stage variables
         var stageFuelMass = currentStage[0][0];
@@ -96,7 +95,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         //calculate thrust acceleration from heading
         var thrustVector = [Math.cos(heading[0]) * Math.sin(heading[1]), Math.sin(heading[0]) * Math.sin(heading[1]), Math.cos(heading[1])];
 
-        if (currentStage[0][0] <= 0 && Rocket.stageCount == 1){
+        if (emtpyFlag == 1){
                 var thrustAcceleration = [0,0,0];
         } else {
             var thrustAcceleration = arrayMul(thrustVector, stageThrust / stageMass);
@@ -116,6 +115,9 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
             apoFlag = 1;
         }
         
+        if (emtpyFlag == 1 ){
+            dt = 2;
+        } else {
         //calculate fuel time steps
         fuelFlag--;
         if(fuelFlag < 0){
@@ -140,7 +142,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         if (apoFlag == 1){
             dt = 2;
         }
-
+        }
         //increment time, velocity, and position based on acceleration
         time[t + 1] = time[t] + dt;
         

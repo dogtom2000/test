@@ -29,6 +29,7 @@ body{
     height: 100%;
 }
 #build-1-2{
+   text-align: center;
     padding: 5px;
     background-color: #444;
     height: 100%;
@@ -139,7 +140,11 @@ body{
 }
 
 path {
-    stroke: black;
+    stroke: #f00;
     stroke-width: 2;
     fill: none;
+}
+
+#chart{
+  display: inline-block;
 }

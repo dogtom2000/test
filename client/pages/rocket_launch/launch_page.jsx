@@ -24,7 +24,9 @@ LaunchPage = React.createClass({
 	},
 
 	displayPlot(){
+		
 		orbit = orbitBody(Planet.find({name: "Earth"}).fetch()[0], Vehicle.find({name: this.state.rocketName}).fetch()[0], 150000);
+		console.log(orbit)
 		drawchart(orbit[2], orbit[3]);
 	},
 
