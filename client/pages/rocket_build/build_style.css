@@ -148,3 +148,7 @@ path {
 #chart{
   display: inline-block;
 }
+
+#chart2, #chart3, #chart4{
+  font-size: 30px;
+}

@@ -1,21 +1,56 @@
-drawchart = function(time_input, data_input){
+drawchart = function(time_input, data_input, vel_input, acc_input){
+
+console.log(vel_input, acc_input)
 
 d3.select("#chart").selectAll("svg").remove();
 
 var time = time_input;
 
 var data = [];
+var velocity = [];
+var acceleration = [];
 
 for (var i = 0; i < data_input.length; i++){
 	data.push([(data_input[i][1] * 6371000 - 463.31219 * time[i])/1000 , data_input[i][0] /1000- 6371 ])
+	velocity.push(Math.pow(vel_input[i][0] * vel_input[i][0] + vel_input[i][1] * vel_input[i][1] + vel_input[i][2] * vel_input[i][2], 0.5));
+	if (i < acc_input.length){
+	acceleration.push(Math.pow(acc_input[i][0] * acc_input[i][0] + acc_input[i][1] * acc_input[i][1] + acc_input[i][2] * acc_input[i][2], 0.5));
+	}
 }
 
-var margin = {top: 0, right: 0, bottom: 20, left: 0}
-, width = 712 - margin.left - margin.right
+
+
+var hzmax = d3.max(data, function(d) { return d[0]; });
+var vtmax = d3.max(data, function(d) { return d[1]; }) + 1;
+
+if (hzmax / vtmax > 1544 / 632){
+ var dpp = hzmax / 1544;
+ var dpphzoffset = Math.ceil(20 / dpp);
+ var dppAtm = Math.ceil(140 / dpp);
+ var dppGrnd = Math.ceil(1 / dpp) + 1;
+ var dppSpace = 632 - dppAtm - dppGrnd;
+ var dppvtoffset = 140 + Math.ceil(dppSpace * dpp);
+} else {
+ var dpp = 2 * vtmax / 632;
+ var dpphzoffset = Math.ceil(20 / dpp);
+ var dppAtm = Math.ceil(140 / dpp);
+ var dppGrnd = Math.ceil(1 / dpp) + 1;
+ var dppSpace = 632 - dppAtm - dppGrnd;
+ var dppvtoffset = 140 + Math.ceil(dppSpace * dpp);
+}
+
+var margin = {top: 0, right: 0, bottom: dppGrnd, left: 0}
+, width = 1584 - margin.left - margin.right
 , height = 632 - margin.top - margin.bottom;
 
-var x = d3.scale.linear().domain([-d3.max(data, function(d) { return d[0]; }) / 10, 1.1 * d3.max(data, function(d) { return d[0]; })]).range([0, width])
-var y = d3.scale.linear().domain([0, 200]).range([height, 0])
+console.log(dpp, dppAtm, dppGrnd, dppSpace)
+
+var x = d3.scale.linear().domain([-dpphzoffset, hzmax + dpphzoffset]).range([0, width])
+var y = d3.scale.linear().domain([0, dppvtoffset]).range([height, 0])
+
+var chart2 = d3.select("#chart2")
+var chart3 = d3.select("#chart3")
+var chart4 = d3.select("#chart4")
 
 var chart = d3.select("#chart")
   .append('svg:svg')
@@ -30,8 +65,8 @@ var main = chart.append('g')
   .attr('class', 'main') 
 
 main.append('rect')
-	.attr("width", 712)
-    .attr("height", 184)
+	.attr("width", width)
+    .attr("height", dppSpace)
     .attr("fill", "black");
 
 var gradient = main.append("defs")
@@ -53,15 +88,15 @@ gradient.append("stop")
     .attr("stop-opacity", 1);
 
 main.append("rect")
-    .attr("width", 712)
-    .attr("height", 428)
-    .attr("transform", "translate(0,184)")
+    .attr("width", width)
+    .attr("height", dppAtm)
+    .attr("transform", 'translate(0,' + dppSpace  +')')
     .style("fill", "url(#gradient)");
-
+var grndoffset = dppSpace + dppAtm;
     main.append('rect')
-    .attr("width", 712)
-    .attr("height", 20)
-    .attr("transform", "translate(0,612)")
+    .attr("width", width)
+    .attr("height", dppGrnd)
+    .attr("transform", 'translate(0,' + grndoffset +')')
     .attr("fill", "#487906"); 
 
 
@@ -97,7 +132,7 @@ var line = d3.svg.line()
   return y(d[1])
 });
 
-var timeduration = 50 * Math.max.apply(null, time);
+var timeduration = 2 * 50 * Math.max.apply(null, time);
 
 
 main.append("svg:path")
@@ -133,8 +168,32 @@ function pathTween(data) {
             if (i < data.length){
 	            var xvalue = (data[i][0] - data[i-1][0]) * t_int + data[i-1][0];
 	            var yvalue = (data[i][1] - data[i-1][1]) * t_int + data[i-1][1];
+	            var output_vel_new =  (velocity[i] - velocity[i-1]) * t_int + velocity[i-1];
+            	var output_acc_new = (acceleration[i] - acceleration[i-1]) * t_int + acceleration[i-1];
 	            outputarray.push([xvalue, yvalue]);  
             }           
+
+
+            if (isNaN(output_vel_new) == false){
+            	var output_vel = output_vel_new;
+            	 chart3.selectAll("*").remove();
+            chart3.append("text")
+              .text("Velocity (m/s):" +Math.floor(output_vel));
+            }
+
+            if (isNaN(output_acc_new) == false){
+            	var output_acc = output_acc_new;
+            	chart4.selectAll("*").remove();
+            chart4.append("text")
+              .text("Acceleration (m/s2):" +Math.floor(output_acc * 100) /100);
+            }
+
+
+            chart2.selectAll("*").remove();
+            chart2.append("text")
+              .text("Time (min):" + Math.floor(t / 60 * 100) / 100);
+             
+              
             return line(outputarray);
         }
     }
