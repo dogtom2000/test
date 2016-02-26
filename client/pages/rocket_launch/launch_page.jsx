@@ -25,9 +25,9 @@ LaunchPage = React.createClass({
 
 	displayPlot(){
 		
-		orbit = orbitBody(Planet.find({name: "Earth"}).fetch()[0], Vehicle.find({name: this.state.rocketName}).fetch()[0], 1000000);
+		orbit = orbitBody(Planet.find({name: "Earth"}).fetch()[0], Vehicle.find({name: this.state.rocketName}).fetch()[0], 150000);
 		console.log(orbit)
-		drawchart(orbit[2], orbit[3], orbit[4], orbit[5]);
+		drawchart(orbit[2], orbit[3]);
 	},
 
 	render(){
@@ -38,6 +38,9 @@ LaunchPage = React.createClass({
 
 					<Launch_11 />
 
+					<Launch_12 />
+
+					<Launch_13 />
 
 				</div>{/* row one ends */}
 

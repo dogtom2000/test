@@ -157,7 +157,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         positionAddLast = positionAdd;
         
         //if we are not coasting through vacuum remove fuel
-        if (apoFlag !== 1 && emtpyFlag !==1 ){
+        if (apoFlag !== 1){
             currentStage[0][0] = stageFuelMass - stageBurnRate * dt;
         }
         
@@ -220,7 +220,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
     }
 
     //return [error, Rocket, dvRequired, stageDv, position, velocity, acceleration];
-    return [error, Rocket, time, position, velocity, acceleration];
+    return [error, Rocket, time, position];
     
     //calculate orbital properties
     function orbitalPropertiesCalc(velocity, position){

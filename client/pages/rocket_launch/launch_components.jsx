@@ -2,25 +2,42 @@ Launch_11 = React.createClass({
 
 	render(){
 		return(
-			<div className="col-xs-12 fixed" id="build-1-2">
-				<div id="chart"></div>
+			<div className="col-xs-3 fixed" id="build-1-1">
+
 
 			</div>
 		);
 	}
 });
 
+Launch_12 = React.createClass({
 
+	render(){
+		return(
+			<div className="col-xs-6 fixed" id="build-1-2">
+				<div id="chart"></div>
+				
+			</div>
+		);
+	}
+});
+
+Launch_13 = React.createClass({
+
+	render(){
+		return(
+			<div className="col-xs-3 fixed" id="build-1-3">
+					
+			</div>
+		);
+	}
+});
 
 Launch_21 = React.createClass({
 
 	render(){
 		return(
 			<div className="col-xs-3 fixed" id="build-2-1">
-						<div id="chart1"></div>
-			<div id="chart2"></div>
-			<div id="chart3"></div>
-			<div id="chart4"></div>
 
 			</div>
 		);
