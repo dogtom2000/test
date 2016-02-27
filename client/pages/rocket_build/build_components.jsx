@@ -2,7 +2,7 @@ Build_11 = React.createClass({
 
 	render(){
 		return(
-			<div className="col-xs-3 fixed" id="build-1-1">
+			<div className="col-xs-3 fixed top-side">
 				<div className="title">Command Module Summary</div>
 					<table className="table" id="system-summary">
 						<thead>
@@ -37,7 +37,7 @@ Build_11 = React.createClass({
 						      <td>Option Information</td>
 						    </tr>
 						  </tbody>
-						  						<thead>
+						  <thead>
 						    <tr>
 						      <th>Materials</th>
 						      <th></th>
@@ -75,7 +75,7 @@ Build_12 = React.createClass({
 
 	render(){
 		return(
-			<div className="col-xs-6 fixed" id="build-1-2">
+			<div className="col-xs-6 fixed top-middle">
 				<div className="col-xs-6 fixed" id="build-1-2-L">
 					<div className="title">Stage Summary</div>
 						<table className="table " id="rocket-summary">
@@ -183,7 +183,7 @@ Build_12 = React.createClass({
 						</table>		
 					</div>
 				<div className="col-xs-6 fixed" id="build-1-2-R">
-					<img id="rocket-image" src={this.props.selectTemplate + ".png"}></img>
+					<img id="rocket-image" src={this.props.selectParts + ".png"}></img>
 				</div>
 			</div>
 		);
@@ -194,7 +194,7 @@ Build_13 = React.createClass({
 
 	render(){
 		return(
-			<div className="col-xs-3 fixed" id="build-1-3">
+			<div className="col-xs-3 fixed top-side">
 					<div className="title">Rocket Summary</div>
 					<table className="table " id="rocket-summary">
 					<thead>
@@ -304,19 +304,10 @@ Build_21 = React.createClass({
 
 	render(){
 		return(
-			<div className="col-xs-3 fixed" id="build-2-1">
-				<div className="title">Profile Information</div>
+			<div className="col-xs-3 fixed bot-side">
+			<div className="col-xs-2">
 			</div>
-		);
-	}
-});
-
-Build_22 = React.createClass({
-
-	render(){
-		return(
-		<div className="col-xs-6 fixed" id="build-2-2">
-			<div className="col-xs-5 fixed">
+			<div className="col-xs-8">
 				<div className="dropdown">
 					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.typeStatus}>Class: {this.props.selectClass}<span className="caret"></span></button>
 					<ul className="dropdown-menu">
@@ -326,9 +317,9 @@ Build_22 = React.createClass({
 				</div>
 				
 				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}> Template: {this.props.selectTemplate}<span className="caret"></span></button>		
+					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}> Parts: {this.props.selectParts}<span className="caret"></span></button>		
 					<ul className="dropdown-menu">		
-					{Template.find({class: this.props.selectClass}).map( function(u) { return u.name; } ).map((template, i) => <li key={i}><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, template)}>{template}</a></li>)}
+					{this.props.selectedClass.map( function(u) { return u.name; } ).map((part, i) => <li key={i}><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, part)}>{part}</a></li>)}
 					</ul>
 				</div>
 
@@ -354,8 +345,30 @@ Build_22 = React.createClass({
 				<div className="btn-group-vertical btn-block">
 				<button type="button" className="btn btn-block btn-success" disabled={this.props.submitStatus} onClick={this.props.handleSubmitStage}>Submit Stage</button>
 				</div>
+			</div>
+			<div className="col-xs-2">
+			</div>
+			</div>
+		);
+	}
+});
+
+Build_22 = React.createClass({
+
+	render(){
+		return(
+		<div className="col-xs-6 fixed  bot-middle">
+			<div className="col-xs-4 fixed">
+				<div className="btn-group-vertical btn-block">
+				  <button type="button" className={this.props.addStatus[0][3]} onClick={this.props.handleAddStage.bind(null, 0)}>{this.props.addStatus[0][2]}</button>
+				  <button type="button" className={this.props.addStatus[1][3]} onClick={this.props.handleAddStage.bind(null, 1)} disabled={this.props.addStatus[1][1]}>{this.props.addStatus[1][2]}</button>
+				  <button type="button" className={this.props.addStatus[2][3]} onClick={this.props.handleAddStage.bind(null, 2)} disabled={this.props.addStatus[2][1]}>{this.props.addStatus[2][2]}</button>
+				  <button type="button" className={this.props.addStatus[3][3]} onClick={this.props.handleAddStage.bind(null, 3)} disabled={this.props.addStatus[3][1]}>{this.props.addStatus[3][2]}</button>
+				  <button type="button" className={this.props.addStatus[4][3]} onClick={this.props.handleAddStage.bind(null, 4)} disabled={this.props.addStatus[4][1]}>{this.props.addStatus[4][2]}</button>
+				  <button type="button" className={this.props.addStatus[5][3]} onClick={this.props.handleAddStage.bind(null, 5)} disabled={this.props.addStatus[5][1]}>{this.props.addStatus[5][2]}</button>
+				</div>
 			</div>{/* sub column end */}
-			<div className="col-xs-7 fixed">
+			<div className="col-xs-8 fixed">
 				<table id="buildModify">
 					<tbody>
 						<tr>
@@ -408,8 +421,7 @@ Build_22 = React.createClass({
 	}
 });
 
-Build_23 = React.createClass({
-
+Build_23 = React.createClass({
 
 	getInitialState: function() {
     return {value: 'Rocket Name'};
@@ -421,16 +433,9 @@ Build_23 = React.createClass({
 
 	render(){
 		return(
-		<div className="col-xs-3 fixed" id="build-2-3">
+		<div className="col-xs-3 fixed bot-side">
 			<div className="col-xs-6 fixed">
-				<div className="btn-group-vertical btn-block">
-				  <button type="button" className={this.props.addStatus[0][3]} onClick={this.props.handleAddStage.bind(null, 0)}>{this.props.addStatus[0][2]}</button>
-				  <button type="button" className={this.props.addStatus[1][3]} onClick={this.props.handleAddStage.bind(null, 1)} disabled={this.props.addStatus[1][1]}>{this.props.addStatus[1][2]}</button>
-				  <button type="button" className={this.props.addStatus[2][3]} onClick={this.props.handleAddStage.bind(null, 2)} disabled={this.props.addStatus[2][1]}>{this.props.addStatus[2][2]}</button>
-				  <button type="button" className={this.props.addStatus[3][3]} onClick={this.props.handleAddStage.bind(null, 3)} disabled={this.props.addStatus[3][1]}>{this.props.addStatus[3][2]}</button>
-				  <button type="button" className={this.props.addStatus[4][3]} onClick={this.props.handleAddStage.bind(null, 4)} disabled={this.props.addStatus[4][1]}>{this.props.addStatus[4][2]}</button>
-				  <button type="button" className={this.props.addStatus[5][3]} onClick={this.props.handleAddStage.bind(null, 5)} disabled={this.props.addStatus[5][1]}>{this.props.addStatus[5][2]}</button>
-				</div>
+
 			</div>{/* sub column end */}
 			<div className="col-xs-6 fixed">
 				<div className="btn-group-vertical btn-block">

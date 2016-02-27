@@ -1,6 +1,6 @@
 FlowRouter.route('/', {
 	action: function() {
-		ReactLayout.render(MainLayout, {
+		ReactLayout.render(App, {
 			content: <Home />
 		});
 	}
@@ -8,7 +8,7 @@ FlowRouter.route('/', {
 
 FlowRouter.route('/build', {
 	action: function() {
-		ReactLayout.render(MainLayout, {
+		ReactLayout.render(App, {
 			content: <BuildPage />
 		});
 	}
@@ -17,7 +17,7 @@ FlowRouter.route('/build', {
 
 FlowRouter.route('/launch', {
 	action: function() {
-		ReactLayout.render(MainLayout, {
+		ReactLayout.render(App, {
 			content: <LaunchPage />
 		});
 	}

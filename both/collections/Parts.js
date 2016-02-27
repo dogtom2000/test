@@ -1,0 +1,1 @@
+this.Parts = new Mongo.Collection("parts");

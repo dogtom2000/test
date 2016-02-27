@@ -13,7 +13,6 @@ LaunchPage = React.createClass({
 
 		return {
 			rocketName: "Rocket Name"
-
 		};
 	},
 
@@ -34,14 +33,14 @@ LaunchPage = React.createClass({
 		return(
 			<div>
 
-				<div className="row row-1">
+				<div className="row top-row">
 
 					<Launch_11 />
 
 
 				</div>{/* row one ends */}
 
-				<div className="row row-2">
+				<div className="row bot-row">
 
 					<Launch_21 />			
 

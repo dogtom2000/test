@@ -16,7 +16,6 @@ engineFunc = function(engineCount, fuel, mixRatio, pressure, nozzleLength, massR
     var gasConstant = 8.3145;
     var standardGravity = 9.80665;
     var machNumber;
-
     
     for (var i = 0; i < keys.length; i++){
         if(mixRatio > fuel[keys[i]][0]){

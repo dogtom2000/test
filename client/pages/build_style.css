@@ -1,13 +1,14 @@
 body{
+  background-color: #000;
+  height: 100%;
+}
+.app-container{
   color: #fff;
   font-size: 15px;
+  font-family: monospace;
 }
 
-#rocket-name-input{
-  color: #000;
-}
-
-.container-fluid{
+.main-container{
   margin-right: auto;
   margin-left: auto;
   min-width: 1024px;
@@ -15,51 +16,40 @@ body{
   background-color: #000;
 }
 
-.row-1{
-    height: 672px;
-
-}
-.row-2{
-    height: 256px;
+.navbar {
+    margin-bottom: 0;
 }
 
-#build-1-1{
-    padding: 5px;
-    background-color: #333;
-    height: 100%;
-}
-#build-1-2{
-   text-align: center;
+.top-middle{
     padding: 5px;
     background-color: #444;
-    height: 100%;
+    height: 100%;  
 }
-#build-1-3{
+
+.top-side{
     padding: 5px;
     background-color: #333;
     height: 100%;
 }
-#build-2-1{
-    padding: 5px;
-    background-color: #222;
-    height: 100%;
-}
-#build-2-2{
+
+.bot-middle{
     padding: 5px;
     background-color: #333;
     height: 100%;
 }
-#build-2-3{
+
+.bot-side{
     padding: 5px;
     background-color: #222;
     height: 100%;
 }
 
-#build-2-1-R{
-  text-align: center;
+.top-row{
+    height: 672px;
 }
-#build-2-1-L{
 
+.bot-row{
+    height: 256px;
 }
 
 #rocket-canvas{
@@ -98,6 +88,18 @@ body{
   width: 50%;
 }
 
+/*system summary list  */
+#system-summary>tbody>tr>td:first-child{
+  width: 150px;
+  padding: 1px;
+}
+
+#system-summary th{
+  font-weight: bold;
+  font-size: 20px;
+}
+
+/* misc */
 .title{ 
   font-weight: bold;
   font-size: 25px;
@@ -109,7 +111,6 @@ body{
 }
 
 .dropdown-menu li > a:hover{
-
   background-color: #8C8C50;
 }
 
@@ -129,15 +130,7 @@ body{
   margin-right: auto;
 }
 
-#system-summary>tbody>tr>td:first-child{
-  width: 150px;
-  padding: 1px;
-}
-
-#system-summary th{
-  font-weight: bold;
-  font-size: 20px;
-}
+/* chart */
 
 path {
     stroke: #f00;
@@ -151,4 +144,8 @@ path {
 
 #chart2, #chart3, #chart4{
   font-size: 30px;
+}
+
+#rocket-name-input{
+  color: #000;
 }

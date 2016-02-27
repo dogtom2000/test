@@ -5,7 +5,8 @@ BuildPage = React.createClass({
 	getMeteorData() {
 
 		return {
-			//add in database reads so you dont have to do it a bunch of times :)
+			fuel: Fuel.find().fetch(),
+			parts: Parts.find().fetch(),
 		}
 	},
 
@@ -26,7 +27,7 @@ BuildPage = React.createClass({
 
 			//display control
 			selectClass: "Unselected",
-			selectTemplate: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
+			selectParts: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
 			buildStatus: "Build Rocket",
 			rocketName: "Rocket Name",
 
@@ -72,7 +73,7 @@ BuildPage = React.createClass({
 
 			//display control
 			selectClass: "Unselected",
-			selectTemplate: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
+			selectParts: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
 			buildStatus: "Build Rocket",
 			rocketName: "Rocket Name",
 
@@ -199,7 +200,7 @@ BuildPage = React.createClass({
 
 	selectStage(){
 		//select rocket class
-		//select stage template
+		//select stage part
 		//select engine count
 		//select fuel type
 		var stage = this.state.stageCurrent;
@@ -211,16 +212,16 @@ BuildPage = React.createClass({
 				});
 				break;
 			case 1:
-				var selectTemplateArray = this.state.selectTemplate;
+				var selectPartsArray = this.state.selectParts;
 				var submitStatusArray = this.state.submitStatus;
-				selectTemplateArray[stage] = arguments[1];
+				selectPartsArray[stage] = arguments[1];
 				if (this.state.fuelType[stage] !== "---"){
 					submitStatusArray[stage] = false;
 				} else {
 					submitStatusArray[stage] = true;
 				}
 				this.setState({
-					selectTemplate: selectTemplateArray,
+					selectParts: selectPartsArray,
 					submitStatus: submitStatusArray
 				});
 				break;
@@ -235,7 +236,7 @@ BuildPage = React.createClass({
 				var fuelTypeArray = this.state.fuelType;
 				var submitStatusArray = this.state.submitStatus;
 				fuelTypeArray[stage] = arguments[1];
-				if (this.state.selectTemplate[stage] !== "Unselected"){
+				if (this.state.selectParts[stage] !== "Unselected"){
 					submitStatusArray[stage] = false;
 				} else {
 					submitStatusArray[stage] = true;
@@ -253,8 +254,8 @@ BuildPage = React.createClass({
 		var stage = this.state.stageCurrent;
 
 		//database data
-		var fuelTypeData = Fuel.find({name: this.state.fuelType[stage]}).fetch()[0];
-		var templateData = Template.find({name: this.state.selectTemplate[stage]}).fetch()[0];
+		var fuelTypeData = this.data.fuel.filter((obj) => obj.name == this.state.fuelType[stage])[0];
+		var PartsData = this.data.parts.filter((obj) => obj.name == this.state.selectParts[stage])[0];
 
 		//statuses to be updated		
 		var selectStatusArray = this.state.selectStatus;
@@ -282,13 +283,13 @@ BuildPage = React.createClass({
 		clearStatusArray[stage]	= false;
 
 
-		tankLengthArray[stage] = templateData["length"]; 
-		tankDiameterArray[stage] = templateData["diameter"]; 
-		structuralDensityArray[stage] = templateData["structuralDensity"]; 
-		massRateArray[stage] = templateData["massRate"]; 
+		tankLengthArray[stage] = PartsData["length"]; 
+		tankDiameterArray[stage] = PartsData["diameter"]; 
+		structuralDensityArray[stage] = PartsData["structuralDensity"]; 
+		massRateArray[stage] = PartsData["massRate"]; 
 		mixRatioArray[stage] = fuelTypeData["defaultMixRatio"]; 
-		enginePressureArray[stage] = templateData["enginePressure"]; 
-		nozzleLengthArray[stage] = templateData["nozzleLength"]; 
+		enginePressureArray[stage] = PartsData["enginePressure"]; 
+		nozzleLengthArray[stage] = PartsData["nozzleLength"]; 
 		dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioArray[stage], enginePressureArray[stage], nozzleLengthArray[stage], massRateArray[stage]);
 
 		//update states
@@ -317,7 +318,7 @@ BuildPage = React.createClass({
 		var stage = this.state.stageCurrent;
 
 		//database data
-		var fuelTypeData = Fuel.find({name: this.state.fuelType[stage]}).fetch()[0];
+		var fuelTypeData = this.data.fuel.filter((obj) => obj.name == this.state.fuelType[stage])[0];
 
 		//properties arrays
 		var	tankLengthArray = this.state.tankLength;
@@ -488,14 +489,14 @@ BuildPage = React.createClass({
 		return(
 			<div>
 
-				<div className="row row-1">
+				<div className="row top-row">
 
 					<Build_11
 					selectStatus={this.state.selectStatus[0]}
 					handleAddSystem={this.addSystem}/>
 
 					<Build_12 
-					selectTemplate={this.state.selectTemplate[this.state.stageCurrent]}
+					selectParts={this.state.selectParts[this.state.stageCurrent]}
 					stageCurrent={this.state.stageCurrent}
 					dataSummary={this.state.dataSummary}/>
 
@@ -503,11 +504,29 @@ BuildPage = React.createClass({
 
 				</div>{/* row one ends */}
 
-				<div className="row row-2">
+				<div className="row bot-row">
 
-					<Build_21 />			
+					<Build_21
+					selectedClass={this.data.parts.filter((obj) => obj.class == this.state.selectClass)}
 
-					<Build_22 			
+					selectClass={this.state.selectClass}
+					selectParts={this.state.selectParts[this.state.stageCurrent]}
+					engineCount={this.state.engineCount[this.state.stageCurrent]}
+					fuelType={this.state.fuelType[this.state.stageCurrent]}
+
+					selectStatus={this.state.selectStatus[this.state.stageCurrent]}
+					submitStatus={this.state.submitStatus[this.state.stageCurrent]}
+					clearStatus={this.state.clearStatus[this.state.stageCurrent]}
+					typeStatus={this.state.typeStatus}		
+
+					handleSelectStage={this.selectStage}
+					handleSubmitStage={this.submitStage}
+					/>			
+
+					<Build_22
+					addStatus={this.state.addStatus}
+					handleAddStage={this.addStage}
+								
 					tankLength={this.state.tankLength[this.state.stageCurrent]}
 					structuralDensity={this.state.structuralDensity[this.state.stageCurrent]}
 					massRate={this.state.massRate[this.state.stageCurrent]}
@@ -515,26 +534,12 @@ BuildPage = React.createClass({
 					enginePressure={this.state.enginePressure[this.state.stageCurrent]}
 					nozzleLength={this.state.nozzleLength[this.state.stageCurrent]}
 						
-					selectClass={this.state.selectClass}
-					selectTemplate={this.state.selectTemplate[this.state.stageCurrent]}
-					engineCount={this.state.engineCount[this.state.stageCurrent]}
-					fuelType={this.state.fuelType[this.state.stageCurrent]}
-						
-					selectStatus={this.state.selectStatus[this.state.stageCurrent]}
-					modifyStatus={this.state.modifyStatus[this.state.stageCurrent]}
-					submitStatus={this.state.submitStatus[this.state.stageCurrent]}
-					clearStatus={this.state.clearStatus[this.state.stageCurrent]}
-					typeStatus={this.state.typeStatus}					
-					
+					modifyStatus={this.state.modifyStatus[this.state.stageCurrent]}	
 
-					handleSelectStage={this.selectStage}
-					handleModifyStage={this.modifyStage}
-					handleSubmitStage={this.submitStage}/>
+					handleModifyStage={this.modifyStage}/>
 
 					<Build_23
-					addStatus={this.state.addStatus}
 					buildStatus={this.state.buildStatus}
-					handleAddStage={this.addStage}
 					handleBuildRocket={this.buildRocket}
 					handleSaveRocket={this.saveRocket}
 					handleClearShip={this.clearShip}
@@ -542,7 +547,7 @@ BuildPage = React.createClass({
 
 
 				</div>{/* row two ends */}		
-
+				
 			</div>
 			)
 	}

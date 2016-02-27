@@ -1,3 +1,9 @@
+insertData = function(){
+	insertFuel();
+	insertParts();
+	insertPlanet();
+}
+
 insertFuel = function(){
 Fuel.insert({
 	name: "Aerozine 50 N2O4",
@@ -45,8 +51,8 @@ Fuel.insert({
 });
 }
 
-insertTemplate = function(){
-	Template.insert({
+insertParts = function(){
+	Parts.insert({
 		class: "Sounding Rocket",
 		name:  "SR1",
 		length: 3,
@@ -56,7 +62,7 @@ insertTemplate = function(){
 		enginePressure: 40,
 		nozzleLength: 0.4,
 	});
-	Template.insert({
+	Parts.insert({
 		class: "Sounding Rocket",
 		name:  "SR2",
 		length: 5,
@@ -66,7 +72,7 @@ insertTemplate = function(){
 		enginePressure: 40,
 		nozzleLength: 0.6,
 	});
-	Template.insert({
+	Parts.insert({
 		class: "Sounding Rocket",
 		name:  "SR3",
 		length: 7,
@@ -76,7 +82,7 @@ insertTemplate = function(){
 		enginePressure: 40,
 		nozzleLength: 0.8,
 	});
-	Template.insert({
+	Parts.insert({
 		class: "Manned Rocket",
 		name:  "4MC",
 		length: 9,
@@ -86,7 +92,7 @@ insertTemplate = function(){
 		enginePressure: 40,
 		nozzleLength: 3,
 	});
-	Template.insert({
+	Parts.insert({
 		class: "Manned Rocket",
 		name:  "7MS",
 		length: 16,
@@ -96,7 +102,7 @@ insertTemplate = function(){
 		enginePressure: 40,
 		nozzleLength: 3.5,
 	});
-	Template.insert({
+	Parts.insert({
 		class: "Manned Rocket",
 		name:  "10ML",
 		length: 36,

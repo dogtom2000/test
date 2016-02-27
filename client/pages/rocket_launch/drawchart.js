@@ -1,7 +1,5 @@
 drawchart = function(time_input, data_input, vel_input, acc_input){
 
-console.log(vel_input, acc_input)
-
 d3.select("#chart").selectAll("svg").remove();
 
 var time = time_input;
@@ -17,8 +15,6 @@ for (var i = 0; i < data_input.length; i++){
 	acceleration.push(Math.pow(acc_input[i][0] * acc_input[i][0] + acc_input[i][1] * acc_input[i][1] + acc_input[i][2] * acc_input[i][2], 0.5));
 	}
 }
-
-
 
 var hzmax = d3.max(data, function(d) { return d[0]; });
 var vtmax = d3.max(data, function(d) { return d[1]; }) + 1;
