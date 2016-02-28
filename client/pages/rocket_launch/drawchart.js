@@ -155,11 +155,9 @@ function pathTween(data) {
             	var output_vel = output_vel_new;
             	 chart3.selectAll("*").remove();
             chart3.append("text")
-              .text("V (m/s):" +Math.floor(output_vel));
-            chart3.append("text")
-              .text("A (km):" + Math.floor(yvalue));
+              .html("V (m/s):" +Math.floor(output_vel));
               chart3.append("text")
-              .text("A (km):" + Math.floor(yvalue));
+              .html("<br/>" + " A (km):" + Math.floor(yvalue));
             }
 
             if (isNaN(output_acc_new) == false){

@@ -14,16 +14,17 @@ BuildPage = React.createClass({
 
 		return {
 			//stage control
-			stageCount: 0,
+			stageCount: 1,
 			stageCurrent: 0,
 
 			//button control
-			addStatus: [[false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"]],
-			selectStatus: [true, false, false, false, false, false],
+			addStatus: [[false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"]],
+			selectStatus: [false, false, false, false, false, false],
 			modifyStatus: [true, true, true, true, true, true],
 			submitStatus: [true, true, true, true, true, true],
 			clearStatus: [true, true, true, true, true, true],
-			typeStatus: true,
+			stageStatus: false,
+			typeStatus: false,
 			saveStatus: "Rocket not saved",
 
 			//display control
@@ -36,7 +37,7 @@ BuildPage = React.createClass({
 			tankLength: ["---", "---", "---", "---", "---", "---"],
 			tankDiameter: [0, 0, 0, 0, 0, 0],
 			structuralDensity: ["---", "---", "---", "---", "---", "---"],
-			fuelType: ["---", "---", "---", "---", "---", "---"],
+			fuelType: ["Unselected", "Unselected", "Unselected", "Unselected", "Unselected", "Unselected"],
 			massRate: ["---", "---", "---", "---", "---", "---"],
 			mixRatio: ["---", "---", "---", "---", "---", "---"],
 			enginePressure: ["---", "---", "---", "---", "---", "---"],
@@ -60,18 +61,19 @@ BuildPage = React.createClass({
 
 	clearShip(){
 		this.setState({
-			stageCount: 0,
+			//stage control
+			stageCount: 1,
 			stageCurrent: 0,
-			builtRocket: {},
-			saveStatus: "Rocket not saved",
 
 			//button control
-			addStatus: [[false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"]],
-			selectStatus: [true, false, false, false, false, false],
+			addStatus: [[false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"]],
+			selectStatus: [false, false, false, false, false, false],
 			modifyStatus: [true, true, true, true, true, true],
 			submitStatus: [true, true, true, true, true, true],
 			clearStatus: [true, true, true, true, true, true],
-			typeStatus: true,
+			stageStatus: false,
+			typeStatus: false,
+			saveStatus: "Rocket not saved",
 
 			//display control
 			selectClass: "Unselected",
@@ -83,14 +85,13 @@ BuildPage = React.createClass({
 			tankLength: ["---", "---", "---", "---", "---", "---"],
 			tankDiameter: [0, 0, 0, 0, 0, 0],
 			structuralDensity: ["---", "---", "---", "---", "---", "---"],
-			fuelType: ["---", "---", "---", "---", "---", "---"],
+			fuelType: ["Unselected", "Unselected", "Unselected", "Unselected", "Unselected", "Unselected"],
 			massRate: ["---", "---", "---", "---", "---", "---"],
 			mixRatio: ["---", "---", "---", "---", "---", "---"],
 			enginePressure: ["---", "---", "---", "---", "---", "---"],
 			engineCount: [1, 1, 1, 1, 1, 1],
 			nozzleLength: ["---", "---", "---", "---", "---", "---"],
 			payloadSystem: {mass: 0},	
-		
 
 			//function control
 			dataEngine: [],
@@ -163,58 +164,16 @@ BuildPage = React.createClass({
 	},
 
 	addStage(){
+		var addStatusArray = this.state.addStatus;
 		var prevStage = this.state.stageCurrent;
 		var newStage = arguments[0];
-		var addStatusArray = this.state.addStatus;
-		var selectStatusArray = this.state.selectStatus;
-		//(if) add initial stage
-		//(else if) add last stage
-		//(else if) add other stages
-		//(else) select a previously added stage
-		if (addStatusArray[newStage][0] == false && newStage == 0){
-			addStatusArray[0][0] = true;
-			addStatusArray[0][2] = "Stage 1";
-			addStatusArray[0][3] = "btn btn-block btn-info";
-			addStatusArray[1][1] = false;
-			selectStatusArray[0] = false;
-			this.setState({
-				selectStatus: selectStatusArray,
-				addStatus: addStatusArray,
-				typeStatus: false
-			});
-		} else if (addStatusArray[newStage][0] == false && newStage == 5){
-			addStatusArray[newStage][0] = true;
-			addStatusArray[newStage][3] = "btn btn-block btn-info";
-			addStatusArray[prevStage][3] = "btn btn-block btn-primary";
-			for (var i = 0; i <= newStage ; i++){
-				addStatusArray[i][2] = "Stage " + (newStage + 1 - i);
-			}
-			this.setState({
-				stageCount: newStage,
-				stageCurrent: newStage,
-				addStatus: addStatusArray,
-			});
-		} else if (addStatusArray[newStage][0] == false){
-			addStatusArray[newStage + 1][1] = false;
-			addStatusArray[newStage][0] = true;
-			addStatusArray[newStage][3] = "btn btn-block btn-info";
-			addStatusArray[prevStage][3] = "btn btn-block btn-primary";
-			for (var i = 0; i <= newStage ; i++){
-				addStatusArray[i][2] = "Stage " + (newStage + 1 - i);
-			}
-			this.setState({
-				stageCount: newStage,
-				stageCurrent: newStage,
-				addStatus: addStatusArray,
-			});
-		} else {
-			addStatusArray[prevStage][3] = "btn btn-block btn-primary";
-			addStatusArray[newStage][3] = "btn btn-block btn-info";		
-			this.setState({
-				addStatus: addStatusArray,
-				stageCurrent: newStage,
-			});
-		}
+		addStatusArray[prevStage][3] = "btn btn-block btn-primary";
+		addStatusArray[newStage][3] = "btn btn-block btn-info";		
+		this.setState({
+			addStatus: addStatusArray,
+			stageCurrent: newStage,
+		});
+
 	
 	},
 
@@ -232,10 +191,15 @@ BuildPage = React.createClass({
 				});
 				break;
 			case 1:
+				this.setState({
+					stageCount: arguments[1]
+				});
+				break;
+			case 2:
 				var selectPartsArray = this.state.selectParts;
 				var submitStatusArray = this.state.submitStatus;
 				selectPartsArray[stage] = arguments[1];
-				if (this.state.fuelType[stage] !== "---"){
+				if (this.state.fuelType[stage] !== "Unselected" && this.state.stageCount !== "Unselected"){
 					submitStatusArray[stage] = false;
 				} else {
 					submitStatusArray[stage] = true;
@@ -245,18 +209,18 @@ BuildPage = React.createClass({
 					submitStatus: submitStatusArray
 				});
 				break;
-			case 2:
+			case 3:
 				var engineCountArray = this.state.engineCount;
 				engineCountArray[stage] = arguments[1];
 				this.setState({
 					engineCount: engineCountArray
 				});
 				break;
-			case 3:
+			case 4:
 				var fuelTypeArray = this.state.fuelType;
 				var submitStatusArray = this.state.submitStatus;
 				fuelTypeArray[stage] = arguments[1];
-				if (this.state.selectParts[stage] !== "Unselected"){
+				if (this.state.selectParts[stage] !== "Unselected" && this.state.stageCount !== "Unselected"){
 					submitStatusArray[stage] = false;
 				} else {
 					submitStatusArray[stage] = true;
@@ -272,6 +236,7 @@ BuildPage = React.createClass({
 
 	submitStage(){
 		var stage = this.state.stageCurrent;
+		var stageCount = this.state.stageCount;
 
 		//database data
 		var fuelTypeData = this.data.fuel.filter((obj) => obj.name == this.state.fuelType[stage])[0];
@@ -282,6 +247,7 @@ BuildPage = React.createClass({
 		var modifyStatusArray = this.state.modifyStatus;
 		var submitStatusArray = this.state.submitStatus;
 		var clearStatusArray = this.state.clearStatus;
+		var addStatusArray = this.state.addStatus;
 
 		//properties to be updated
 		var	tankLengthArray = this.state.tankLength;
@@ -311,6 +277,14 @@ BuildPage = React.createClass({
 		enginePressureArray[stage] = PartsData["enginePressure"]; 
 		nozzleLengthArray[stage] = PartsData["nozzleLength"]; 
 		dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioArray[stage], enginePressureArray[stage], nozzleLengthArray[stage], massRateArray[stage]);
+		
+		if (this.state.stageStatus == false){
+			for (var i = 0; i < stageCount ; i++){
+				addStatusArray[i][1] = false;
+				addStatusArray[i][2] = "Stage " + (stageCount - i);
+			}
+			addStatusArray[0][3] = "btn btn-block btn-info";
+		}
 
 		//update states
 		this.setState({		
@@ -327,6 +301,9 @@ BuildPage = React.createClass({
 			enginePressure: enginePressureArray,
 			nozzleLength :nozzleLengthArray,
 			payloadSystem: payloadSystemObject,
+
+			stageStatus: true,
+			addStatus: addStatusArray,
 
 			dataEngine: dataEngineArray,
 			dataSummary: summaryFunc(stage, this.state.dataSummary, submitStatusArray[stage], tankLengthArray[stage], tankDiameterArray[stage], structuralDensityArray[stage], mixRatioArray[stage], enginePressureArray[stage], dataEngineArray[stage], this.state.fuelType[stage], payloadSystemObject),
@@ -528,7 +505,7 @@ BuildPage = React.createClass({
 
 					<Build_21
 					selectedClass={this.data.parts.filter((obj) => obj.class == this.state.selectClass)}
-
+					stageCount={this.state.stageCount}
 					selectClass={this.state.selectClass}
 					selectParts={this.state.selectParts[this.state.stageCurrent]}
 					engineCount={this.state.engineCount[this.state.stageCurrent]}
@@ -537,7 +514,8 @@ BuildPage = React.createClass({
 					selectStatus={this.state.selectStatus[this.state.stageCurrent]}
 					submitStatus={this.state.submitStatus[this.state.stageCurrent]}
 					clearStatus={this.state.clearStatus[this.state.stageCurrent]}
-					typeStatus={this.state.typeStatus}		
+					typeStatus={this.state.typeStatus}
+					stageStatus={this.state.stageStatus}		
 
 					handleSelectStage={this.selectStage}
 					handleSubmitStage={this.submitStage}

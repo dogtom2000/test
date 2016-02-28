@@ -40,7 +40,6 @@ LaunchPage = React.createClass({
 	},
 
 	removeVehicle(){
-		console.log(arguments[0])
 		Vehicle.remove({_id: arguments[0]})
 	},
 

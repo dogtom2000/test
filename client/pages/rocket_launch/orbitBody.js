@@ -4,21 +4,15 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
     var theta = 0;
     var phi = Math.PI / 2;
     var hvelScale = 0.90;
-    var maxHeight = 0;
 
     //initialize variables
     var t = 0;
-    var dt = 0;
+    var dt = 1;
     var tMax = 20000;
-    var stopFlag = 0;
-    var apoFlag = 0;
-    var posFlag = 0;
-    var fuelFlag = 0;
-    var emtpyFlag = 0;
-    var apoCount = 0;
+    var stopFlag = false;
+    var orbitFlag = false;
+    var emtpyFlag = false;
     var error = "";
-    var dvRequired = 0;
-    var stageDv = 0;
 
     var standardGravity = 9.80665;
 
@@ -39,7 +33,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
     for (var t = 0; t < tMax; t++){
         //check to see if rocket falls into planet, will happen if twr is insufficient
         if(position[t][0] < Planet.radius){
-            stopFlag = 1;
+            stopFlag = true;
             error = [0, "position inside planet, rocket has crashed"];
         }
         
@@ -49,7 +43,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
             Rocket.stageCount--;
             currentStage = Rocket.stages[Rocket.stageCount];
         } else if (currentStage[0][0] <= 0 && Rocket.stageCount == 1){
-            emtpyFlag = 1;
+            emtpyFlag = true;
            //error = [1, "rocket is out of fuel"];
         }
         
@@ -106,73 +100,42 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         //calculate thrust acceleration from heading
         var thrustVector = [Math.cos(heading[0]) * Math.sin(heading[1]), Math.sin(heading[0]) * Math.sin(heading[1]), Math.cos(heading[1])];
 
-        if (emtpyFlag == 1){
-            var stageThrust = 0;
+        if (emtpyFlag == true){
+            stageThrust = 0;
+            stageBurnRate = 0;
         }
         
         var thrustAcceleration = arrayMul(thrustVector, stageThrust / stageMass);
-        //add accerlations together
-        
+        //add accerlations together        
         
         //if apoapsis is higher than targer and rocket is in atmosphere coast, but account for drag, if out of atmosphere coast
-        if (position[t][0] > orbit + Planet.radius){
-            posFlag = 1;
+
+        if (position[t][0] - Planet.radius > orbit){
+            orbitFlag = true;
         }
 
-        apoFlag == 0;
-        if (posFlag == 0){
-            if (apoapsis - Planet.radius > orbit && position[t][0] - Planet.radius < Planet.atmHeight){
-                stageBurnRate = magn(dragAcceleration) * stageMass / standardGravity / (stageIsp * stageThrust / stageThrustVac); 
-                acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, eulerAcceleration);
-            } else if (apoapsis - Planet.radius > orbit && position[t][0] - Planet.radius >= Planet.atmHeight) {
-                acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration,eulerAcceleration);;
-                apoFlag = 1;
-            } else {
-                acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, thrustAcceleration, eulerAcceleration);
-            }
-        } else {
+        switch (true){
+             case (orbitFlag):
                 velocity[t][0] = 0;
-                acceleration[t] = [0, Math.pow(Math.pow(stageThrust / stageMass, 2) + Math.pow(centripetalAcceleration[0], 2) - Math.pow(gravityAcceleration[0], 2) - Math.pow(eulerAcceleration[0], 2), 0.5), 0];
-
-            if(periapsis > orbit + Planet.radius){
-                velocity[t][0] = 0;
-                acceleration[t] = [0,0,0]
-                apoFlag = 1;
-                apoCount++;
-                if (apoCount > 40){
-                    stopFlag = 1;
+                let netAccel = Math.pow(Math.pow(stageThrust / stageMass, 2) + Math.pow(centripetalAcceleration[0], 2) - Math.pow(gravityAcceleration[0], 2) - Math.pow(eulerAcceleration[0], 2), 0.5)
+                if (netAccel > 0){
+                       acceleration[t] = [0, netAccel, 0];
+                } else {
+                    acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, eulerAcceleration);
+                    stageBurnRate = 0;
                 }
-            }
+                if (periapsis > orbit + Planet.radius){
+                    stopFlag = true;
+                }
+                break;
+            case (apoapsis - Planet.radius > orbit && position[t][0] - Planet.radius < orbit):
+                acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, eulerAcceleration);
+                stageBurnRate = 0;
+                break;
+            default:
+                acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, thrustAcceleration, eulerAcceleration);
         }
  
-        if (emtpyFlag == 1 ){
-            dt = 2;
-        } else {
-        //calculate fuel time steps
-        fuelFlag--;
-        if(fuelFlag < 0){
-                fuelFlag = 0;
-        }
-        
-        if (fuelFlag === 0){
-            var fuelTick = 1;
-            var tickFuel = stageFuelMass;
-    
-            while (tickFuel > 100){
-                fuelTick *= 10;
-                tickFuel /= 10;
-            }
-            dt = fuelTick / stageBurnRate;
-            if (dt > 2){
-                fuelFlag = Math.ceil(dt / 2);
-                dt = dt / fuelFlag;
-            }
-        }
-
-        if (apoFlag == 1){
-            dt = 0.1;
-        }
-        }
         //increment time, velocity, and position based on acceleration
         time[t + 1] = time[t] + dt;
         
@@ -185,22 +148,13 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         position[t + 1] = arrayAdd(position[t], arrayMul(positionAddAve, dt)); 
 
         positionAddLast = positionAdd;
+        currentStage[0][0] = stageFuelMass - stageBurnRate * dt;
         
-        //if we are not coasting through vacuum remove fuel
-        if (apoFlag !== 1 && emtpyFlag !==1 ){
-            currentStage[0][0] = stageFuelMass - stageBurnRate * dt;
-        }
-        
-        if (position[t][0] > maxHeight){
-            maxHeight = position[t][0];
-        }
-
-        if (stopFlag == 1){
+        if (stopFlag == true){
             break;
         }
     }
 
-    //return [error, Rocket, dvRequired, stageDv, position, velocity, acceleration];
     return [error, Rocket, time, position, velocity, acceleration, periapsis];
     
     //calculate orbital properties

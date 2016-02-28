@@ -15,10 +15,9 @@ Launch_21 = React.createClass({
 	render(){
 		return(
 			<div className="col-xs-3 fixed bot-side">
-			<div id="chart2"></div>
-			<div id="chart3"></div>
-			<div id="chart4"></div>
-
+				<div id="chart2"></div>
+				<div id="chart3"></div>
+				<div id="chart4"></div>
 			</div>
 		);
 	}
@@ -42,7 +41,10 @@ Launch_23 = React.createClass({
 
 	render(){
 		return(
-		<div className="col-xs-3 fixed bot-side">	
+		<div className="col-xs-3 fixed bot-side">
+		<div className="col-xs-2 fixed">
+			</div>
+				<div className="col-xs-8 fixed">
 				  <button type="button" className="btn btn-block btn-warning" data-toggle="modal" data-target="#loadModal">Load Rocket</button>
 				<div id="loadModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
@@ -87,6 +89,9 @@ Launch_23 = React.createClass({
 				    </div>
 				  </div>
 				</div>
+				</div>	
+			<div className="col-xs-2 fixed">
+			</div>
 			</div>
 		);
 	}

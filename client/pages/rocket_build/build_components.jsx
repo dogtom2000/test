@@ -85,7 +85,7 @@ var rocketImage = {
  	height: '560px',
   	width: '234px',
   	border: 'none',
-  	marginTop: '60px',
+  	marginTop: '20px',
   	imageRendering: 'pixelated',
   	backgroundColor: '#444',
   	display: 'block',
@@ -345,31 +345,44 @@ Build_21 = React.createClass({
 						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 0, "Manned Rocket")}>Manned Rockets</a></li>
 					</ul>
 				</div>
+
+				<div className="dropdown">
+					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.stageStatus}>Stage Count: {this.props.stageCount}<span className="caret"></span></button>
+					<ul className="dropdown-menu">
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 1)}>1 Stage</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 2)}>2 Stage</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 3)}>3 Stage</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 4)}>4 Stage</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 5)}>5 Stage</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 6)}>6 Stage</a></li>
+					</ul>
+				</div>
 				
 				<div className="dropdown">
 					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}> Parts: {this.props.selectParts}<span className="caret"></span></button>		
 					<ul className="dropdown-menu">		
-					{this.props.selectedClass.map( function(u) { return u.name; } ).map((part, i) => <li key={i}><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, part)}>{part}</a></li>)}
+					{this.props.selectedClass.map( function(u) { return u.name; } ).map((part, i) => <li key={i}><a href="#" onClick={this.props.handleSelectStage.bind(null, 2, part)}>{part}</a></li>)}
 					</ul>
 				</div>
 
-				<div className="dropdown">
+				
+				<div className="dropup">
 					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}>Engine Count: {this.props.engineCount}<span className="caret"></span></button>
 					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 2, 1)}>1 Engine</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 2, 2)}>2 Engines</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 2, 3)}>3 Engines</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 2, 4)}>4 Engines</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 2, 5)}>5 Engines</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 1)}>1 Engine</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 2)}>2 Engines</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 3)}>3 Engines</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 4)}>4 Engines</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 5)}>5 Engines</a></li>
 					</ul>
 				</div>
-				<div className="dropdown">
+				<div className="dropup">
 					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}>Fuel: {this.props.fuelType}<span className="caret"></span></button>
 					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, "LH2 LOX")}>LH2 LOX</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, "RP1 LOX")}>RP1 LOX</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, "Aerozine 50 N2O4")}>Aerozine 50 N2O4</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, "Solid Rocket Fuel")}>Solid Rocket Fuel</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 4, "LH2 LOX")}>LH2 LOX</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 4, "RP1 LOX")}>RP1 LOX</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 4, "Aerozine 50 N2O4")}>Aerozine 50 N2O4</a></li>
+						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 4, "Solid Rocket Fuel")}>Solid Rocket Fuel</a></li>
 					</ul>
 				</div>
 				<div className="btn-group-vertical btn-block">
@@ -390,7 +403,7 @@ Build_22 = React.createClass({
 		<div className="col-xs-6 fixed  bot-middle">
 			<div className="col-xs-3 fixed">
 				<div className="btn-group-vertical btn-block">
-				  <button type="button" className={this.props.addStatus[0][3]} onClick={this.props.handleAddStage.bind(null, 0)}>{this.props.addStatus[0][2]}</button>
+				  <button type="button" className={this.props.addStatus[0][3]} onClick={this.props.handleAddStage.bind(null, 0)} disabled={this.props.addStatus[0][1]}>{this.props.addStatus[0][2]}</button>
 				  <button type="button" className={this.props.addStatus[1][3]} onClick={this.props.handleAddStage.bind(null, 1)} disabled={this.props.addStatus[1][1]}>{this.props.addStatus[1][2]}</button>
 				  <button type="button" className={this.props.addStatus[2][3]} onClick={this.props.handleAddStage.bind(null, 2)} disabled={this.props.addStatus[2][1]}>{this.props.addStatus[2][2]}</button>
 				  <button type="button" className={this.props.addStatus[3][3]} onClick={this.props.handleAddStage.bind(null, 3)} disabled={this.props.addStatus[3][1]}>{this.props.addStatus[3][2]}</button>
@@ -510,7 +523,7 @@ Build_23 = React.createClass({
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h4 className="modal-title">Are you sure?</h4>			        
 				      <div className="modal-footer">
-				      	<button type="button" className="btn btn-default" onClick={this.props.handleClearShip}>Clear</button>
+				      	<button type="button" className="btn btn-default" onClick={this.props.handleClearShip} data-dismiss="modal">Clear</button>
 				        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
 				      </div>
 				    </div>
