@@ -3,7 +3,7 @@ Launch_11 = React.createClass({
 	render(){
 		return(
 			<div className="col-xs-12 fixed top-middle">
-				<div id="chart"></div>
+				<div id="launchDisplay"></div>
 
 			</div>
 		);
@@ -15,7 +15,6 @@ Launch_21 = React.createClass({
 	render(){
 		return(
 			<div className="col-xs-3 fixed bot-side">
-						<div id="chart1"></div>
 			<div id="chart2"></div>
 			<div id="chart3"></div>
 			<div id="chart4"></div>
@@ -26,24 +25,14 @@ Launch_21 = React.createClass({
 });
 
 Launch_22 = React.createClass({
-		getInitialState: function() {
-    return {value: 'Rocket Name'};
-  },
-  handleChange: function(event) {
-    this.setState({value: event.target.value});
-    this.props.returnInput(event.target.value);
-  },
 
 	render(){
+		var stages = this.props.Rocket.stages
 		return(
 		<div className="col-xs-6 fixed bot-middle">
-			<button type="button" className="btn btn-block btn-warning" onClick={this.props.displayPlot}>Add Payload</button>
-			<input
-				    	id="rocket-name-input"
-	        			type="text"
-	        			value={this.state.value}
-	        			onChange={this.handleChange}
-	      			/>
+		<ul>
+				{Object.keys(stages).map((value, i) => <li key={i}>Stage {i + 1}: {Math.round(stages[value][0][0])} / {Math.round(stages[value][0][1])}</li>)}
+		</ul>
 		</div>
 		);
 	}
@@ -53,9 +42,52 @@ Launch_23 = React.createClass({
 
 	render(){
 		return(
-		<div className="col-xs-3 fixed bot-side">
-			
-		</div>
+		<div className="col-xs-3 fixed bot-side">	
+				  <button type="button" className="btn btn-block btn-warning" data-toggle="modal" data-target="#loadModal">Load Rocket</button>
+				<div id="loadModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content">
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h4 className="modal-title">Modal Header</h4>
+				      </div>
+				      <div className="modal-body">
+					    <div className="list-group">    
+				      	{Vehicle.find().fetch().map( function(u) { return u.name; } ).map((name, i) => <li key={i}><a href="#" onClick={this.props.handleSelectRocket.bind(null, name) } data-dismiss="modal">{name}</a></li>)}
+				      	</div>
+				      </div>
+				      <div className="modal-footer">
+				        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+		<br></br>
+		<button type="button" className="btn btn-block btn-warning" onClick={this.props.displayPlot}>Launch</button>
+		<br></br>
+		<button type="button" className="btn btn-block btn-warning" onClick={this.props.displayOrbit}>View Orbit</button>
+		<br></br>
+		 <button type="button" className="btn btn-block btn-warning" data-toggle="modal" data-target="#deleteModal">Delete Rocket</button>
+				<div id="deleteModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content">
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h4 className="modal-title">Modal Header</h4>
+				      </div>
+				      <div className="modal-body">
+					    <div className="list-group">    
+				      	{Vehicle.find().fetch().map( function(u) { return u._id; } ).map((id, i) => <li key={i}><a href="#" onClick={this.props.handleRemoveVehicle.bind(null, id) } data-dismiss="modal">{Vehicle.findOne({_id: id}).name}</a></li>)}
+				      	</div>
+				      </div>
+				      <div className="modal-footer">
+
+				        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
 		);
 	}
 });

@@ -3,7 +3,7 @@ Home = React.createClass({
 		render() {
 		return (
 			<div>
-				<h1>ORBITAL COMMAND</h1>
+				<h1>TRUE ANOMALY</h1>
 			</div>
 		)
 	}

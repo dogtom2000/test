@@ -5,28 +5,43 @@ LaunchPage = React.createClass({
 	getMeteorData() {
 
 		return {
-
+			vehicle: Vehicle.find().fetch(),
+			
 		}
 	},
 
 	getInitialState() {
 
 		return {
-			rocketName: "Rocket Name"
+			rocketName: "Rocket Name",
+			Rocket: {stages: [[[0, 0]]]},
+			orbit: 0,
 		};
 	},
 
-	returnInput(rocketName){
+	selectRocket(){
 		this.setState({
-			rocketName: rocketName
+			Rocket: this.data.vehicle.filter((obj) => obj.name == arguments[0])[0]
 		});
 	},
 
 	displayPlot(){
 		
-		orbit = orbitBody(Planet.find({name: "Earth"}).fetch()[0], Vehicle.find({name: this.state.rocketName}).fetch()[0], 1000000);
-		console.log(orbit)
+		orbit = orbitBody(Planet.find({name: "Earth"}).fetch()[0], this.state.Rocket, 141000);
 		drawchart(orbit[2], orbit[3], orbit[4], orbit[5]);
+		this.setState({
+			orbit: orbit[6],
+			Rocket: orbit[1]
+		})
+	},
+
+	displayOrbit(){
+		drawOrbit(orbit[6], orbit[6], Planet.find({name: "Earth"}).fetch()[0]);
+	},
+
+	removeVehicle(){
+		console.log(arguments[0])
+		Vehicle.remove({_id: arguments[0]})
 	},
 
 	render(){
@@ -45,10 +60,13 @@ LaunchPage = React.createClass({
 					<Launch_21 />			
 
 					<Launch_22 
-					displayPlot={this.displayPlot}
-					returnInput={this.returnInput}/>
+					Rocket={this.state.Rocket}/>
 
-					<Launch_23 />
+					<Launch_23	
+					displayPlot={this.displayPlot}
+					displayOrbit={this.displayOrbit}
+					handleSelectRocket={this.selectRocket}
+					handleRemoveVehicle={this.removeVehicle}/>
 
 				</div>{/* row two ends */}		
 

@@ -1,67 +1,77 @@
+var systemTableStyletd = {
+	width: '150px',
+  	padding: '1px'
+}
+
+var systemTableStyleth = {
+	fontWeight: 'bold',
+	fontSize: '20px'
+}
+
 Build_11 = React.createClass({
 
 	render(){
 		return(
 			<div className="col-xs-3 fixed top-side">
 				<div className="title">Command Module Summary</div>
-					<table className="table" id="system-summary">
+					<table className="table">
 						<thead>
 						    <tr>
-						      <th>Systems</th>
+						      <th style={systemTableStyleth}>Systems</th>
 						      <th></th>
 						    </tr>
 						  </thead>
 						  <tbody>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning" onClick={this.props.handleAddSystem} disabled={this.props.selectStatus}>Add Payload</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" onClick={this.props.handleAddSystem} disabled={this.props.selectStatus}>Add Payload</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						  </tbody>
 						  <thead>
 						    <tr>
-						      <th>Materials</th>
+						      <th style={systemTableStyleth}>Materials</th>
 						      <th></th>
 						    </tr>
 						  </thead>
 						  <tbody>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						    <tr>
-						      <td><button type="button" className="btn btn-block btn-warning">-</button></td>
+						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
 						      <td>Option Information</td>
 						    </tr>
 						  </tbody>				
@@ -70,6 +80,18 @@ Build_11 = React.createClass({
 		);
 	}
 });
+
+var rocketImage = {
+ 	height: '560px',
+  	width: '234px',
+  	border: 'none',
+  	marginTop: '60px',
+  	imageRendering: 'pixelated',
+  	backgroundColor: '#444',
+  	display: 'block',
+  	marginLeft: 'auto',
+  	marginRight: 'auto'
+}
 
 Build_12 = React.createClass({
 
@@ -106,10 +128,14 @@ Build_12 = React.createClass({
 						      <td>{Math.round(this.props.dataSummary["dV"][this.props.stageCurrent][0]) + " "} 
 						      	({Math.round(this.props.dataSummary["dV"][this.props.stageCurrent][1])})</td>
 						    </tr>
+						    </tbody>					  
+						    <thead>
 						    <tr>
 						      <th>Mass</th>
 						      <th></th>
 						    </tr>
+						    </thead>
+						      <tbody>
 						    <tr>
 						      <td>Fuel/Oxidizer [ton]</td>
 						      <td>{Math.round(this.props.dataSummary["mass"][this.props.stageCurrent][0] / 10) / 100}</td>
@@ -137,7 +163,7 @@ Build_12 = React.createClass({
 						    <tr>
 						      <td>Fuel/Oxidizer</td>
 						      <td>{Math.round(this.props.dataSummary["reliability"][this.props.stageCurrent][0][0] * 10000) / 100 + " "}
-						      ({Math.round(this.props.dataSummary["reliability"][this.props.stageCurrent][0][1] * 10000) / 100 + " "})</td>
+						      ({Math.round(this.props.dataSummary["reliability"][this.props.stageCurrent][0][1] * 10000) / 100})</td>
 						    </tr>
 						    <tr>
 						      <td>Engine</td>
@@ -182,8 +208,8 @@ Build_12 = React.createClass({
 						  </tbody>
 						</table>		
 					</div>
-				<div className="col-xs-6 fixed" id="build-1-2-R">
-					<img id="rocket-image" src={this.props.selectParts + ".png"}></img>
+				<div className="col-xs-6 fixed">
+					<img style={rocketImage} src={this.props.selectParts + ".png"}></img>
 				</div>
 			</div>
 		);
@@ -207,12 +233,16 @@ Build_13 = React.createClass({
 					  <tr>
 					    <td>Delta V [m/s]</td>
 					    <td>{Math.round(this.props.dataSummary["dV"][6][0]) + " "} 
-						      	({Math.round(this.props.dataSummary["dV"][6][1])})</td>
+						    ({Math.round(this.props.dataSummary["dV"][6][1])})</td>
 					  </tr>
-					  <tr>
-					    <th>Mass</th>
-					    <th></th>
-					  </tr>
+					  </tbody>
+					    <thead>
+					    <tr>
+					      <th>Mass</th>
+					      <th></th>
+					    </tr>
+					    </thead>
+					    <tbody>
 					  <tr>
 					    <td>Systems</td>
 					    <td>{Math.round(this.props.dataSummary["mass"][6][0]) / 1000 + " "}</td>
@@ -240,14 +270,14 @@ Build_13 = React.createClass({
 					 <th></th>
 					 </tr>
 					 </thead>
-				 <tbody>	
+					 <tbody>	
 				 		<tr>
 					    <td>Systems</td>
 					    <td>{Math.round(this.props.dataSummary["reliability"][6][0] * 10000) / 100 + " "}</td>
 					  </tr>	  
 					    <tr>
 					      <td>Fuel/Oxidizer</td>
-					      <td>{Math.round(this.props.dataSummary["reliability"][6][1] * 10000) / 100 + " "}</td>
+					      <td>{Math.round(this.props.dataSummary["reliability"][6][1] * 10000) / 100}</td>
 					    </tr>
 					    <tr>
 					      <td>Engine</td>
@@ -334,7 +364,7 @@ Build_21 = React.createClass({
 					</ul>
 				</div>
 				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}>Selected Fuel: {this.props.fuelType}<span className="caret"></span></button>
+					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}>Fuel: {this.props.fuelType}<span className="caret"></span></button>
 					<ul className="dropdown-menu">
 						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, "LH2 LOX")}>LH2 LOX</a></li>
 						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, "RP1 LOX")}>RP1 LOX</a></li>
@@ -358,7 +388,7 @@ Build_22 = React.createClass({
 	render(){
 		return(
 		<div className="col-xs-6 fixed  bot-middle">
-			<div className="col-xs-4 fixed">
+			<div className="col-xs-3 fixed">
 				<div className="btn-group-vertical btn-block">
 				  <button type="button" className={this.props.addStatus[0][3]} onClick={this.props.handleAddStage.bind(null, 0)}>{this.props.addStatus[0][2]}</button>
 				  <button type="button" className={this.props.addStatus[1][3]} onClick={this.props.handleAddStage.bind(null, 1)} disabled={this.props.addStatus[1][1]}>{this.props.addStatus[1][2]}</button>
@@ -368,7 +398,7 @@ Build_22 = React.createClass({
 				  <button type="button" className={this.props.addStatus[5][3]} onClick={this.props.handleAddStage.bind(null, 5)} disabled={this.props.addStatus[5][1]}>{this.props.addStatus[5][2]}</button>
 				</div>
 			</div>{/* sub column end */}
-			<div className="col-xs-8 fixed">
+			<div className="col-xs-9 fixed">
 				<table id="buildModify">
 					<tbody>
 						<tr>
@@ -434,23 +464,62 @@ Build_23 = React.createClass({
 	render(){
 		return(
 		<div className="col-xs-3 fixed bot-side">
-			<div className="col-xs-6 fixed">
+			<div className="col-xs-2 fixed">
 
 			</div>{/* sub column end */}
-			<div className="col-xs-6 fixed">
+			<div className="col-xs-8 fixed">
 				<div className="btn-group-vertical btn-block">
-				  <button type="button" className="btn btn-block btn-primary" onClick={this.props.handleBuildRocket}>{this.props.buildStatus}</button>
-				  <button type="button" className="btn btn-block btn-success" onClick={this.props.handleSaveRocket}>Save Rocket</button>
-				  <button type="button" className="btn btn-block btn-danger" onClick={this.props.handleClearShip}>Clear</button>
+				  <button type="button" className="btn btn-block btn-success" data-toggle="modal" data-target="#saveModal" onClick={this.props.handleBuildRocket}>Save Rocket</button>
+				  <button type="button" className="btn btn-block btn-danger" data-toggle="modal" data-target="#clearModal">Clear</button>
 				</div>
 
-				    <input
-				    	id="rocket-name-input"
-	        			type="text"
-	        			value={this.state.value}
-	        			onChange={this.handleChange}
-	      			/>
+				    
+
+
+
+				<div id="saveModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content">
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h4 className="modal-title">Save Rocket</h4>			        
+				      </div>
+				      <div className="modal-body">
+					        <input
+					    	id="rocket-name-input"
+		        			type="text"
+		        			value={this.state.value}
+		        			onChange={this.handleChange}
+		      			/>
+		      			<h4 className="modal-title">{this.props.buildStatus}</h4>
+		      			<h4 className="modal-title">{this.props.saveStatus}</h4>
+				      </div>
+				      <div className="modal-footer">
+				      	<button type="button" className="btn btn-default" onClick={this.props.handleSaveRocket}>Save</button>
+				        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
+
+				<div id="clearModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content">
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h4 className="modal-title">Are you sure?</h4>			        
+				      <div className="modal-footer">
+				      	<button type="button" className="btn btn-default" onClick={this.props.handleClearShip}>Clear</button>
+				        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
 			</div>{/* sub column end */}
+			<div className="col-xs-2 fixed">
+			</div>
 		</div>
 		);
 	}

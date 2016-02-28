@@ -24,6 +24,7 @@ BuildPage = React.createClass({
 			submitStatus: [true, true, true, true, true, true],
 			clearStatus: [true, true, true, true, true, true],
 			typeStatus: true,
+			saveStatus: "Rocket not saved",
 
 			//display control
 			selectClass: "Unselected",
@@ -62,6 +63,7 @@ BuildPage = React.createClass({
 			stageCount: 0,
 			stageCurrent: 0,
 			builtRocket: {},
+			saveStatus: "Rocket not saved",
 
 			//button control
 			addStatus: [[false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"], [false, true, "Add Stage", "btn btn-block btn-primary"]],
@@ -110,7 +112,7 @@ BuildPage = React.createClass({
 		var futureStageMass = this.state.payloadSystem.mass;
 		for(var i=0; i < 6; i++){
 			if (this.state.dataSummary["dV"][i][0] > 0 && rocketStageCount == i){
-				rocketStages[i + 1] = [[this.state.dataSummary["mass"][i][0], this.state.dataSummary["mass"][i][0]], this.state.dataSummary["mass"][i][3] - this.state.dataSummary["mass"][i][0], futureStageMass, 0.2, this.state.tankDiameter[i], this.state.dataSummary["thrust"][i][0], this.state.dataSummary["Isp"][i][0]];			
+				rocketStages[i + 1] = [[this.state.dataSummary["mass"][i][0], this.state.dataSummary["mass"][i][0]], this.state.dataSummary["mass"][i][3] - this.state.dataSummary["mass"][i][0], futureStageMass, 0.2, this.state.tankDiameter[i], this.state.dataSummary["thrust"][i][0], this.state.dataSummary["thrust"][i][1], this.state.dataSummary["Isp"][i][0]];			
 				rocketStageCount++;
 				futureStageMass += this.state.dataSummary["mass"][i][3];
 			}			
@@ -128,13 +130,31 @@ BuildPage = React.createClass({
 	},
 
 	saveRocket(){
-		Vehicle.insert(this.state.builtRocket);
+		var Rocket = this.state.builtRocket;
+		var saveVal = this.state.saveStatus;
+		Rocket.name = this.state.rocketName
+		if (Vehicle.findOne({name: Rocket.name}) !== undefined ){
+			var saveVal = "Rocket with that name already exists";
+		} else if (this.state.buildStatus == "0 stages built"){
+			var saveVal = "No stages built";
+		} else {
+			Vehicle.insert(Rocket);
+			if (Vehicle.findOne({name: Rocket.name}) !== null){
+			var saveVal = "Rocket successfully saved"
+			}
+		}
+		this.setState({
+			saveStatus: saveVal
+		})
+
+		
 	},
 
 	returnInput(rocketName){
 		this.setState({
 			rocketName: rocketName.trim()
 		});
+		console.log(rocketName)
 	},
 
 	addSystem(){
@@ -539,7 +559,9 @@ BuildPage = React.createClass({
 					handleModifyStage={this.modifyStage}/>
 
 					<Build_23
+					saveStatus={this.state.saveStatus}
 					buildStatus={this.state.buildStatus}
+					builtRocket={this.state.builtRocket}
 					handleBuildRocket={this.buildRocket}
 					handleSaveRocket={this.saveRocket}
 					handleClearShip={this.clearShip}

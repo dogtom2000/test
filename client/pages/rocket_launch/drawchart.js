@@ -1,6 +1,6 @@
 drawchart = function(time_input, data_input, vel_input, acc_input){
 
-d3.select("#chart").selectAll("svg").remove();
+d3.select("#launchDisplay").selectAll("svg").remove();
 
 var time = time_input;
 
@@ -35,11 +35,15 @@ if (hzmax / vtmax > 1544 / 632){
  var dppvtoffset = 140 + Math.ceil(dppSpace * dpp);
 }
 
+if (dppSpace < 0){
+  dppRect = 0;
+} else {
+  dppRect = dppSpace;
+}
+
 var margin = {top: 0, right: 0, bottom: dppGrnd, left: 0}
 , width = 1584 - margin.left - margin.right
 , height = 632 - margin.top - margin.bottom;
-
-console.log(dpp, dppAtm, dppGrnd, dppSpace)
 
 var x = d3.scale.linear().domain([-dpphzoffset, hzmax + dpphzoffset]).range([0, width])
 var y = d3.scale.linear().domain([0, dppvtoffset]).range([height, 0])
@@ -48,7 +52,7 @@ var chart2 = d3.select("#chart2")
 var chart3 = d3.select("#chart3")
 var chart4 = d3.select("#chart4")
 
-var chart = d3.select("#chart")
+var chart = d3.select("#launchDisplay")
   .append('svg:svg')
   .attr('width', width + margin.right + margin.left)
   .attr('height', height + margin.top + margin.bottom)
@@ -62,7 +66,7 @@ var main = chart.append('g')
 
 main.append('rect')
 	.attr("width", width)
-    .attr("height", dppSpace)
+    .attr("height", dppRect)
     .attr("fill", "black");
 
 var gradient = main.append("defs")
@@ -95,29 +99,6 @@ var grndoffset = dppSpace + dppAtm;
     .attr("transform", 'translate(0,' + grndoffset +')')
     .attr("fill", "#487906"); 
 
-
-
-/*
-// draw the x axis
-var xAxis = d3.svg.axis()
-.scale(x)
-.orient('bottom');
-
-main.append('g')
-  .attr('transform', 'translate(0,' + height + ')')
-  .attr('class', 'axis')
-  .call(xAxis);
-
-// draw the y axis
-var yAxis = d3.svg.axis()
-  .scale(y)
-  .orient('left');
-
-main.append('g')
-  .attr('transform', 'translate(0,0)')
-  .attr('class', 'axis')
-  .call(yAxis);
-*/
 var g = main.append("svg:g"); 
 
 var line = d3.svg.line()
@@ -128,7 +109,7 @@ var line = d3.svg.line()
   return y(d[1])
 });
 
-var timeduration = 2 * 50 * Math.max.apply(null, time);
+var timeduration = 50 * Math.max.apply(null, time);
 
 
 main.append("svg:path")
@@ -174,14 +155,18 @@ function pathTween(data) {
             	var output_vel = output_vel_new;
             	 chart3.selectAll("*").remove();
             chart3.append("text")
-              .text("Velocity (m/s):" +Math.floor(output_vel));
+              .text("V (m/s):" +Math.floor(output_vel));
+            chart3.append("text")
+              .text("A (km):" + Math.floor(yvalue));
+              chart3.append("text")
+              .text("A (km):" + Math.floor(yvalue));
             }
 
             if (isNaN(output_acc_new) == false){
             	var output_acc = output_acc_new;
             	chart4.selectAll("*").remove();
             chart4.append("text")
-              .text("Acceleration (m/s2):" +Math.floor(output_acc * 100) /100);
+              .text("Acceleration (g):" +Math.floor(output_acc * 100 / 9.80665) /100);
             }
 
 
@@ -196,97 +181,3 @@ function pathTween(data) {
  }
 
 }
-
-
-
-
-
-
-/*drawchart = function(input){
-	d3.select("#chart").selectAll("svg").remove();
-	var x_data = [];
-	var y_data = [];
-
-	for (var i = 0; i < input.length; i++){
-		x_data[i] = input[i][1] * 6371;
-		y_data[i] = input[i][0] / 1000 - 6371;
-	}
-   
-    var margin = {top: 20, right: 15, bottom: 60, left: 60}
-      , width = 616 - margin.left - margin.right
-      , height = 346 - margin.top - margin.bottom;
-    
-	var x = d3.scale.linear().domain([0, d3.max(x_data)]).range([0, width])
-    var y = d3.scale.linear().domain([0, d3.max(y_data)]).range([height, 0])
- 
-    var chart = d3.select("#chart")
-	.append('svg:svg')
-	.attr('width', width + margin.right + margin.left)
-	.attr('height', height + margin.top + margin.bottom)
-	.attr('class', 'chart')
-
-    var main = chart.append('g')
-	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-	.attr('width', width)
-	.attr('height', height)
-	.attr('class', 'main')   
-        
-    // draw the x axis
-    var xAxis = d3.svg.axis()
-	.scale(x)
-	.orient('bottom');
-
-    main.append('g')
-	.attr('transform', 'translate(0,' + height + ')')
-	.attr('class', 'axis')
-	.call(xAxis);
-
-    // draw the y axis
-    var yAxis = d3.svg.axis()
-	.scale(y)
-	.orient('left');
-
-    main.append('g')
-	.attr('transform', 'translate(0,0)')
-	.attr('class', 'axis')
-	.call(yAxis);
-
-    var g = main.append("svg:g"); 
-
-    var line = d3.svg.line()
-    .x(function(d, i) {
-        return x(x_data[i])
-    })
-    .y(function(d, i) {
-        return y(y_data[i])
-    });
-
-
-	main.append("text")      // text label for the x axis
-	        .attr("x", width / 2)
-	        .attr("y", height + margin.top + margin.bottom / 2)
-	        .style("font-family", "helvetica, monospace")
-	        .style("text-anchor", "middle")
-	        .text("horizontal position (km)");
-
-	main.append("text")      // text label for the x axis
-        .attr("x", -(height / 2) )
-        .attr("y", -margin.left / 1.5 )
-        .attr("transform", "rotate(-90)")
-        .style("font-family", "helvetica, monospace")
-        .style("text-anchor", "middle")
-        .text("vertical position (km)");
-
-
-    main.append("svg:path").attr("d", line(x_data))
-    	.style("fill", "none")
-        .style("stroke", "#000")
-
-    main.selectAll('.axis text')
-    .style({"font-size": "16px", "font-family" : "sans-serif"})
-
-    main.selectAll('.axis line, .axis path')
-    .style({"shape-rendering": "crispEdges", "fill": "none", "stroke" : "#000", "stroke-width" : "2px"})
-    
-
-}*/
