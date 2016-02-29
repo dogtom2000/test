@@ -179,7 +179,9 @@ BuildPage = React.createClass({
 	saveRocket(){
 		var Rocket = this.state.builtRocket;
 		var saveVal = this.state.saveStatus;
-		Rocket.name = this.state.rocketName
+		Rocket.name = this.state.rocketName;
+		Rocket.save = JSON.parse(JSON.stringify(this.state));
+
 		if (Vehicle.findOne({name: Rocket.name}) !== undefined ){
 			var saveVal = "Rocket with that name already exists";
 		} else if (this.state.buildStatus == "0 stages built"){
@@ -194,6 +196,12 @@ BuildPage = React.createClass({
 			saveStatus: saveVal
 		})
 	
+	},
+
+	loadRocket(){
+		this.setState(
+			Vehicle.findOne({name: arguments[0]}).save
+		)
 	},
 
 	returnInput(rocketName){
@@ -454,7 +462,7 @@ BuildPage = React.createClass({
 						break;
 				}
 				max = Math.pow(250 * tankDiameterValue, 0.5);
-				min = tankDiameterValue;
+				min = Math.max(tankDiameterValue, 0.5);
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
 					tankLengthValue = Math.round((tankLengthValue + sign * increment) * 10) / 10;
 					tankLengthArray[stage] = tankLengthValue;
@@ -489,7 +497,10 @@ BuildPage = React.createClass({
 			case 2:
 				val = massRateValue;
 				switch (true){
-					case (val < 50 || (val == 50 && sign < 0)):
+					case (val < 10 || (val == 10 && sign < 0)):
+						increment = 1;
+						break;
+					case ((val > 10 && val < 50) || (val == 10 && sign > 0) || (val == 50 && sign < 0)):
 						increment = 5;
 						break;
 					case ((val > 50 && val < 100) || (val == 50 && sign > 0) || (val == 100 && sign < 0)):
@@ -506,7 +517,7 @@ BuildPage = React.createClass({
 						break;
 				}
 				max = 10000;
-				min = 5;
+				min = 1;
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
 					massRateValue = Math.round((massRateValue + sign * increment) * 10) / 10;
 					massRateArray[stage] = massRateValue;
@@ -629,6 +640,7 @@ BuildPage = React.createClass({
 					builtRocket={this.state.builtRocket}
 					handleBuildRocket={this.buildRocket}
 					handleSaveRocket={this.saveRocket}
+					handleLoadRocket={this.loadRocket}
 					handleClearShip={this.clearShip}
 					returnInput={this.returnInput}/>			
 

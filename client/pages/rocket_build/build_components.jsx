@@ -401,9 +401,11 @@ Build_21 = React.createClass({
 				    <div className="modal-content" style={modalStyle}>
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
-				        <h4 className="modal-title">Are you sure?</h4>			        
+				        <h4 className="modal-title">Are you sure?</h4>		
+				        <div className="modal-body">
+				      {Vehicle.find().fetch().map( function(u) { return u.name; } ).map((name, i) => <li key={i}><a href="#" onClick={this.props.handleLoadRocket.bind(null, name) } data-dismiss="modal">{name}</a></li>)}
+				        </div>	        
 				      	<div className="modal-footer">
-				      	<button type="button" className="btn buttonStyle" onClick={this.props.handleClearShip} data-dismiss="modal">Clear</button>
 				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
 				      </div>
 				    </div>

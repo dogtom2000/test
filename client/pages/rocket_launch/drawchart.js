@@ -17,18 +17,30 @@ for (var i = 0; i < data_input.length; i++){
 }
 
 var hzmax = d3.max(data, function(d) { return d[0]; });
+console.log(hzmax)
+if (hzmax < 20){
+  var distanceOffset = hzmax
+  hzmax += distanceOffset * 2;
+} else {
+    var distanceOffset = 20;
+  hzmax += distanceOffset * 2;
+}
+
+
 var vtmax = d3.max(data, function(d) { return d[1]; }) + 1;
 
-if (hzmax / vtmax > 1544 / 632){
- var dpp = hzmax / 1544;
- var dpphzoffset = Math.ceil(20 / dpp);
+
+
+if (hzmax / vtmax > 1584 / 632){
+ var dpp = hzmax / 1584;
+ var dpphzoffset = Math.ceil(distanceOffset / dpp);
  var dppAtm = Math.ceil(140 / dpp);
  var dppGrnd = Math.ceil(1 / dpp) + 1;
  var dppSpace = 632 - dppAtm - dppGrnd;
  var dppvtoffset = 140 + Math.ceil(dppSpace * dpp);
 } else {
  var dpp = 2 * vtmax / 632;
- var dpphzoffset = Math.ceil(20 / dpp);
+ var dpphzoffset = Math.ceil(distanceOffset / dpp);
  var dppAtm = Math.ceil(140 / dpp);
  var dppGrnd = Math.ceil(1 / dpp) + 1;
  var dppSpace = 632 - dppAtm - dppGrnd;
