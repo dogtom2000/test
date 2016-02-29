@@ -1,3 +1,9 @@
+var partsObject = {
+	"Sounding Rocket": ["0.25 Meter", "0.50 Meter", "1.00 Meter", "1.00 Meter Last"],
+	"Medium Lift Rocket": ["2.0 Meter", "2.5 Meter", "3.0 Meter", "3.0 Meter Last"],
+	"Heavy Lift Rocket": ["4.0 Meter", "7.0 Meter", "10.0 Meter", "10.0 Meter Last"],
+}
+
 BuildPage = React.createClass({
 
 	mixins: [ReactMeteorData],
@@ -18,26 +24,46 @@ BuildPage = React.createClass({
 			stageCurrent: 0,
 
 			//button control
-			addStatus: [[false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"]],
-			selectStatus: [false, false, false, false, false, false],
+			addStatus: [[false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"]],
+			rocketConfig: ["btn buttonStyleHigh", "btn buttonStyle", "btn buttonStyle", false],
+			stageConfig: [["btn buttonStyleHigh", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], true],
+			systemConfig: [true],
+			partConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
+			engineConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
+			fuelConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
 			modifyStatus: [true, true, true, true, true, true],
-			submitStatus: [true, true, true, true, true, true],
-			clearStatus: [true, true, true, true, true, true],
 			stageStatus: false,
-			typeStatus: false,
 			saveStatus: "Rocket not saved",
 
 			//display control
-			selectClass: "Unselected",
-			selectParts: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
-			buildStatus: "Build Rocket",
+			selectClass: "Sounding Rocket",
+			selectParts: ["0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter"],
+			buildStatus: "",
 			rocketName: "Rocket Name",
 
 			//property control	
 			tankLength: ["---", "---", "---", "---", "---", "---"],
 			tankDiameter: [0, 0, 0, 0, 0, 0],
 			structuralDensity: ["---", "---", "---", "---", "---", "---"],
-			fuelType: ["Unselected", "Unselected", "Unselected", "Unselected", "Unselected", "Unselected"],
+			fuelType: ["Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel"],
 			massRate: ["---", "---", "---", "---", "---", "---"],
 			mixRatio: ["---", "---", "---", "---", "---", "---"],
 			enginePressure: ["---", "---", "---", "---", "---", "---"],
@@ -66,26 +92,46 @@ BuildPage = React.createClass({
 			stageCurrent: 0,
 
 			//button control
-			addStatus: [[false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"], [false, true, "---", "btn btn-block btn-primary"]],
-			selectStatus: [false, false, false, false, false, false],
+			addStatus: [[false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"], [false, true, "---", "btn btn-block buttonStyle"]],
+			rocketConfig: ["btn buttonStyleHigh", "btn buttonStyle", "btn buttonStyle", false],
+			stageConfig: [["btn buttonStyleHigh", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], true],
+			systemConfig: [true],
+			partConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
+			engineConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
+			fuelConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
 			modifyStatus: [true, true, true, true, true, true],
-			submitStatus: [true, true, true, true, true, true],
-			clearStatus: [true, true, true, true, true, true],
 			stageStatus: false,
-			typeStatus: false,
 			saveStatus: "Rocket not saved",
 
 			//display control
-			selectClass: "Unselected",
-			selectParts: ["Unselected","Unselected","Unselected","Unselected","Unselected","Unselected"],
-			buildStatus: "Build Rocket",
+			selectClass: "Sounding Rocket",
+			selectParts: ["0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter"],
+			buildStatus: "",
 			rocketName: "Rocket Name",
 
 			//property control	
 			tankLength: ["---", "---", "---", "---", "---", "---"],
 			tankDiameter: [0, 0, 0, 0, 0, 0],
 			structuralDensity: ["---", "---", "---", "---", "---", "---"],
-			fuelType: ["Unselected", "Unselected", "Unselected", "Unselected", "Unselected", "Unselected"],
+			fuelType: ["Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel"],
 			massRate: ["---", "---", "---", "---", "---", "---"],
 			mixRatio: ["---", "---", "---", "---", "---", "---"],
 			enginePressure: ["---", "---", "---", "---", "---", "---"],
@@ -147,28 +193,32 @@ BuildPage = React.createClass({
 		this.setState({
 			saveStatus: saveVal
 		})
-
-		
+	
 	},
 
 	returnInput(rocketName){
 		this.setState({
 			rocketName: rocketName.trim()
 		});
-		console.log(rocketName)
 	},
 
 	addSystem(){
 		var payloadSystemObject = this.state.payloadSystem;
-		payloadSystemObject.mass = 30000;
+		payloadSystemObject.mass = arguments[0];
+		this.setState({
+			payloadSystem: payloadSystemObject
+		})
+
+
+		this.submitStage(this.state.stageCurrent);
 	},
 
 	addStage(){
 		var addStatusArray = this.state.addStatus;
 		var prevStage = this.state.stageCurrent;
 		var newStage = arguments[0];
-		addStatusArray[prevStage][3] = "btn btn-block btn-primary";
-		addStatusArray[newStage][3] = "btn btn-block btn-info";		
+		addStatusArray[prevStage][3] = "btn btn-block buttonStyle";
+		addStatusArray[newStage][3] = "btn btn-block buttonStyleHigh";		
 		this.setState({
 			addStatus: addStatusArray,
 			stageCurrent: newStage,
@@ -177,65 +227,110 @@ BuildPage = React.createClass({
 	
 	},
 
-	selectStage(){
-		//select rocket class
-		//select stage part
-		//select engine count
-		//select fuel type
-		var stage = this.state.stageCurrent;
-		switch(arguments[0]){
-			case 0:
-				this.setState({
-					selectClass: arguments[1],
-					typeStatus: true
-				});
-				break;
-			case 1:
-				this.setState({
-					stageCount: arguments[1]
-				});
-				break;
-			case 2:
-				var selectPartsArray = this.state.selectParts;
-				var submitStatusArray = this.state.submitStatus;
-				selectPartsArray[stage] = arguments[1];
-				if (this.state.fuelType[stage] !== "Unselected" && this.state.stageCount !== "Unselected"){
-					submitStatusArray[stage] = false;
-				} else {
-					submitStatusArray[stage] = true;
-				}
-				this.setState({
-					selectParts: selectPartsArray,
-					submitStatus: submitStatusArray
-				});
-				break;
-			case 3:
-				var engineCountArray = this.state.engineCount;
-				engineCountArray[stage] = arguments[1];
-				this.setState({
-					engineCount: engineCountArray
-				});
-				break;
-			case 4:
-				var fuelTypeArray = this.state.fuelType;
-				var submitStatusArray = this.state.submitStatus;
-				fuelTypeArray[stage] = arguments[1];
-				if (this.state.selectParts[stage] !== "Unselected" && this.state.stageCount !== "Unselected"){
-					submitStatusArray[stage] = false;
-				} else {
-					submitStatusArray[stage] = true;
-				}
-				this.setState({
-					fuelType: fuelTypeArray,
-					submitStatus: submitStatusArray
-				});
-				break;
-		}
-	
+	classChange(){
+		var rocketConfigArray = this.state.rocketConfig;
+		var firstPart = partsObject[arguments[0]][0];
+		rocketConfigArray[0] = "btn buttonStyle";
+		rocketConfigArray[1] = "btn buttonStyle";
+		rocketConfigArray[2] = "btn buttonStyle";
+		rocketConfigArray[arguments[1]] = "btn buttonStyleHigh";
+
+		this.setState({
+			rocketConfig: rocketConfigArray,
+			selectClass: arguments[0],
+			selectParts: [firstPart,firstPart,firstPart,firstPart,firstPart,firstPart]
+		});
+
 	},
 
-	submitStage(){
+	stageChange(){
+		if (arguments[0] > 0 && this.state.stageCount < 6 || arguments[0] < 0 && this.state.stageCount > 1){
+			this.setState({
+				stageCount: this.state.stageCount + arguments[0]
+			})
+		}
+	},
+
+	rocketSubmit(){
+		var rocketConfigArray = this.state.rocketConfig;
+		var stageConfigArray = this.state.stageConfig;
+		var systemConfigArray = this.state.systemConfig;
+		var selectPartsArray = this.state.selectParts;
+		stageConfigArray[6] = false;
+		systemConfigArray[0] = false;
+ 		rocketConfigArray[3] = true;
+		for (var i = 0; i < this.state.stageCount; i++){
+			stageConfigArray[i][1] = false;
+			selectPartsArray[i] = partsObject[this.state.selectClass][0]
+		}
+		this.setState({
+			rocketConfig: rocketConfigArray,
+			stageConfig: stageConfigArray,
+			systemConfig: systemConfigArray,
+			selectParts: selectPartsArray,
+		});
+
+	for (var i = 0; i < this.state.stageCount; i++){
+		this.submitStage(i);
+	}
+
+	},
+
+	stageSelect(){
+		var oldStage = this.state.stageCurrent;
+		var stageConfigArray = this.state.stageConfig;	
+		stageConfigArray[oldStage][0] = "btn buttonStyle";
+		stageConfigArray[arguments[0]][0] = "btn buttonStyleHigh";
+		this.setState({
+			stageConfig: stageConfigArray,
+			stageCurrent: arguments[0]
+		});
+
+	},
+
+	partSelect(){
 		var stage = this.state.stageCurrent;
+		var selectPartsArray = this.state.selectParts;
+		var partConfigArray = this.state.partConfig;
+		selectPartsArray[stage] = partsObject[this.state.selectClass][arguments[0]];
+		partConfigArray[stage] = [["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]];
+		partConfigArray[stage][arguments[0]] = ["btn buttonStyleHigh", false];
+		this.setState({
+			selectParts: selectPartsArray,
+			partConfig: partConfigArray,
+		})
+		this.submitStage(stage);
+	},
+
+	engineSelect(){
+		var stage = this.state.stageCurrent;
+		var engineCountArray = this.state.engineCount;
+		var engineConfigArray = this.state.engineConfig;
+		engineCountArray[stage] = arguments[1];
+		engineConfigArray[stage] = [["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]];
+		engineConfigArray[stage][arguments[0]] = ["btn buttonStyleHigh", false];
+		this.setState({
+			engineCount: engineCountArray,
+			engineConfig: engineConfigArray,
+		})
+		this.submitStage(stage);
+	},
+
+	fuelSelect(){
+		var stage = this.state.stageCurrent;
+		var fuelTypeArray = this.state.fuelType;
+		var fuelConfigArray = this.state.fuelConfig;
+		fuelTypeArray[stage] = arguments[1];
+		fuelConfigArray[stage] = [["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]];
+		fuelConfigArray[stage][arguments[0]] = ["btn buttonStyleHigh", false];
+		this.setState({
+			fuelType: fuelTypeArray,
+			fuelConfig: fuelConfigArray,
+		})
+		this.submitStage(stage);
+	},
+
+	submitStage(stage){
 		var stageCount = this.state.stageCount;
 
 		//database data
@@ -263,10 +358,10 @@ BuildPage = React.createClass({
 		var	dataEngineArray = this.state.dataEngine;
 
 		//update values	
-		selectStatusArray[stage] = true;
+
 		modifyStatusArray[stage] = false;
-		submitStatusArray[stage] = true;
-		clearStatusArray[stage]	= false;
+
+
 
 
 		tankLengthArray[stage] = PartsData["length"]; 
@@ -283,7 +378,6 @@ BuildPage = React.createClass({
 				addStatusArray[i][1] = false;
 				addStatusArray[i][2] = "Stage " + (stageCount - i);
 			}
-			addStatusArray[0][3] = "btn btn-block btn-info";
 		}
 
 		//update states
@@ -306,7 +400,7 @@ BuildPage = React.createClass({
 			addStatus: addStatusArray,
 
 			dataEngine: dataEngineArray,
-			dataSummary: summaryFunc(stage, this.state.dataSummary, submitStatusArray[stage], tankLengthArray[stage], tankDiameterArray[stage], structuralDensityArray[stage], mixRatioArray[stage], enginePressureArray[stage], dataEngineArray[stage], this.state.fuelType[stage], payloadSystemObject),
+			dataSummary: summaryFunc(stage, this.state.dataSummary, tankLengthArray[stage], tankDiameterArray[stage], structuralDensityArray[stage], mixRatioArray[stage], enginePressureArray[stage], dataEngineArray[stage], this.state.fuelType[stage], payloadSystemObject),
 		});
 	
 	},
@@ -360,7 +454,7 @@ BuildPage = React.createClass({
 						break;
 				}
 				max = Math.pow(250 * tankDiameterValue, 0.5);
-				min = Math.pow(20 * tankDiameterValue, 0.5);
+				min = tankDiameterValue;
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
 					tankLengthValue = Math.round((tankLengthValue + sign * increment) * 10) / 10;
 					tankLengthArray[stage] = tankLengthValue;
@@ -477,7 +571,7 @@ BuildPage = React.createClass({
 				break;
 		}
 		this.setState({
-			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.submitStatus, tankLengthValue, this.state.tankDiameter[stage], structuralDensityValue, mixRatioValue, enginePressureValue, dataEngineArray[stage], this.state.fuelType[stage], this.state.payloadSystem),
+			dataSummary: summaryFunc(stage, this.state.dataSummary, tankLengthValue, this.state.tankDiameter[stage], structuralDensityValue, mixRatioValue, enginePressureValue, dataEngineArray[stage], this.state.fuelType[stage], this.state.payloadSystem),
 		});
 
 	},
@@ -489,7 +583,6 @@ BuildPage = React.createClass({
 				<div className="row top-row">
 
 					<Build_11
-					selectStatus={this.state.selectStatus[0]}
 					handleAddSystem={this.addSystem}/>
 
 					<Build_12 
@@ -503,23 +596,41 @@ BuildPage = React.createClass({
 
 				<div className="row bot-row">
 
-					<Build_21
-					selectedClass={this.data.parts.filter((obj) => obj.class == this.state.selectClass)}
+					<Build_21 
 					stageCount={this.state.stageCount}
+					handleStageChange={this.stageChange}
+					handleClassChange={this.classChange}
+					handleRocketSubmit={this.rocketSubmit}
+					handleStageSelect={this.stageSelect}
+					handlePartSelect={this.partSelect}
+					handleEngineSelect={this.engineSelect}
+					handleFuelSelect={this.fuelSelect}
+					handleAddSystem={this.addSystem}
+
+					addStatus={this.state.addStatus}
+					fuel={this.data.fuel}
+					parts={partsObject}
+
 					selectClass={this.state.selectClass}
-					selectParts={this.state.selectParts[this.state.stageCurrent]}
-					engineCount={this.state.engineCount[this.state.stageCurrent]}
-					fuelType={this.state.fuelType[this.state.stageCurrent]}
 
-					selectStatus={this.state.selectStatus[this.state.stageCurrent]}
-					submitStatus={this.state.submitStatus[this.state.stageCurrent]}
-					clearStatus={this.state.clearStatus[this.state.stageCurrent]}
-					typeStatus={this.state.typeStatus}
-					stageStatus={this.state.stageStatus}		
+					rocketConfig={this.state.rocketConfig}
+					systemConfig={this.state.systemConfig}
+					stageConfig={this.state.stageConfig}
 
-					handleSelectStage={this.selectStage}
-					handleSubmitStage={this.submitStage}
-					/>			
+					partConfig={this.state.partConfig[this.state.stageCurrent]}
+
+
+					engineConfig={this.state.engineConfig[this.state.stageCurrent]}
+					fuelConfig={this.state.fuelConfig[this.state.stageCurrent]}
+
+
+					saveStatus={this.state.saveStatus}
+					buildStatus={this.state.buildStatus}
+					builtRocket={this.state.builtRocket}
+					handleBuildRocket={this.buildRocket}
+					handleSaveRocket={this.saveRocket}
+					handleClearShip={this.clearShip}
+					returnInput={this.returnInput}/>			
 
 					<Build_22
 					addStatus={this.state.addStatus}
@@ -536,15 +647,7 @@ BuildPage = React.createClass({
 
 					handleModifyStage={this.modifyStage}/>
 
-					<Build_23
-					saveStatus={this.state.saveStatus}
-					buildStatus={this.state.buildStatus}
-					builtRocket={this.state.builtRocket}
-					handleBuildRocket={this.buildRocket}
-					handleSaveRocket={this.saveRocket}
-					handleClearShip={this.clearShip}
-					returnInput={this.returnInput}/>
-
+					<Build_23 />
 
 				</div>{/* row two ends */}		
 				

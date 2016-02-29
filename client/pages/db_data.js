@@ -6,7 +6,7 @@ insertData = function(){
 
 insertFuel = function(){
 Fuel.insert({
-	name: "Aerozine 50 N2O4",
+	name: "Aerozine N2O4",
 	defaultMixRatio: 1.9,
 	density: [1442.5, 891.4, 0.75],
 	reliability: [0.99, 0.99],	
@@ -39,7 +39,7 @@ Fuel.insert({
 	mixRatio5: [3.4754,[3294.1, 3391.9, 3525.9, 3630.8, 3738.7, 3849.6, 3916.3],[24.397, 24.617, 24.923, 25.165, 25.416, 25.672, 25.823],[1.2173, 1.2141, 1.2098, 1.2066, 1.2033, 1.2001, 1.1982]]
 });	
 Fuel.insert({
-	name: "Solid Rocket Fuel",
+	name: "Solid Fuel",
 	defaultMixRatio: 2.1,
 	density: [1952, 1952, 0.75],
 	reliability: [0.99, 0.99],
@@ -51,10 +51,12 @@ Fuel.insert({
 });
 }
 
+
 insertParts = function(){
 	Parts.insert({
 		class: "Sounding Rocket",
-		name:  "SR1",
+		name:  "0.25 Meter",
+		index: 0,
 		length: 3,
 		diameter: 0.25,
 		structuralDensity: 20,
@@ -64,7 +66,8 @@ insertParts = function(){
 	});
 	Parts.insert({
 		class: "Sounding Rocket",
-		name:  "SR2",
+		name:  "0.50 Meter",
+		index: 1,
 		length: 5,
 		diameter: 0.5,
 		structuralDensity: 20,
@@ -74,7 +77,8 @@ insertParts = function(){
 	});
 	Parts.insert({
 		class: "Sounding Rocket",
-		name:  "SR3",
+		name:  "1.00 Meter",
+		index: 2,
 		length: 7,
 		diameter: 1,
 		structuralDensity: 20,
@@ -83,9 +87,20 @@ insertParts = function(){
 		nozzleLength: 0.8,
 	});
 	Parts.insert({
-		class: "Manned Rocket",
-		name:  "4MC",
-		length: 9,
+		class: "Sounding Rocket",
+		name:  "1.00 Meter Last",
+		index: 3,
+		length: 7,
+		diameter: 1,
+		structuralDensity: 20,
+		massRate: 20,
+		enginePressure: 40,
+		nozzleLength: 0.8,
+	});
+	Parts.insert({
+		class: "Heavy Lift Rocket",
+		name:  "4.0 Meter",
+		length: 4,
 		diameter: 4,
 		structuralDensity: 20,
 		massRate: 50,
@@ -93,8 +108,8 @@ insertParts = function(){
 		nozzleLength: 3,
 	});
 	Parts.insert({
-		class: "Manned Rocket",
-		name:  "7MS",
+		class: "Heavy Lift Rocket",
+		name:  "7.0 Meter",
 		length: 16,
 		diameter: 7,
 		structuralDensity: 20,
@@ -103,8 +118,18 @@ insertParts = function(){
 		nozzleLength: 3.5,
 	});
 	Parts.insert({
-		class: "Manned Rocket",
-		name:  "10ML",
+		class: "Heavy Lift Rocket",
+		name:  "10.0 Meter",
+		length: 36,
+		diameter: 10,
+		structuralDensity: 20,
+		massRate: 2600,
+		enginePressure: 40,
+		nozzleLength: 6,
+	});
+	Parts.insert({
+		class: "Heavy Lift Rocket",
+		name:  "10.0 Meter Last",
 		length: 36,
 		diameter: 10,
 		structuralDensity: 20,

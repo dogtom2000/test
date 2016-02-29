@@ -147,6 +147,8 @@ function pathTween(data) {
 	            var yvalue = (data[i][1] - data[i-1][1]) * t_int + data[i-1][1];
 	            var output_vel_new =  (velocity[i] - velocity[i-1]) * t_int + velocity[i-1];
             	var output_acc_new = (acceleration[i] - acceleration[i-1]) * t_int + acceleration[i-1];
+              var yvel = (vel_input[i][0] - vel_input[i-1][0]) * t_int + vel_input[i-1][0]
+              var xvel = (vel_input[i][1] - vel_input[i-1][1]) * t_int + vel_input[i-1][1]
 	            outputarray.push([xvalue, yvalue]);  
             }           
 
@@ -155,7 +157,7 @@ function pathTween(data) {
             	var output_vel = output_vel_new;
             	 chart3.selectAll("*").remove();
             chart3.append("text")
-              .html("V (m/s):" +Math.floor(output_vel));
+              .html("V (m/s):" + Math.floor(output_vel) + " " + Math.floor(xvel * 100) / 100+ " " + Math.floor(yvel * 100)/ 100);
               chart3.append("text")
               .html("<br/>" + " A (km):" + Math.floor(yvalue));
             }

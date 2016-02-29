@@ -1,4 +1,4 @@
-summaryFunc = function(stage, dataSummary, submitStatus, tankLength, tankDiameter, structuralDensity, mixRatio, enginePressure, engine, fuel, payloadSystem){
+summaryFunc = function(stage, dataSummary, tankLength, tankDiameter, structuralDensity, mixRatio, enginePressure, engine, fuel, payloadSystem){
 	
 	var dvMass = [];
 

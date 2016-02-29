@@ -8,74 +8,16 @@ var systemTableStyleth = {
 	fontSize: '20px'
 }
 
+var buttonStyle = {backgroundColor: "black", color: "green"}
+
+var modalStyle = {backgroundColor: "#111", color: "green"}
+
 Build_11 = React.createClass({
 
 	render(){
 		return(
 			<div className="col-xs-3 fixed top-side">
-				<div className="title">Command Module Summary</div>
-					<table className="table">
-						<thead>
-						    <tr>
-						      <th style={systemTableStyleth}>Systems</th>
-						      <th></th>
-						    </tr>
-						  </thead>
-						  <tbody>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" onClick={this.props.handleAddSystem} disabled={this.props.selectStatus}>Add Payload</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning" disabled={this.props.selectStatus}>-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						  </tbody>
-						  <thead>
-						    <tr>
-						      <th style={systemTableStyleth}>Materials</th>
-						      <th></th>
-						    </tr>
-						  </thead>
-						  <tbody>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						    <tr>
-						      <td style={systemTableStyletd}><button type="button" className="btn btn-block btn-warning">-</button></td>
-						      <td>Option Information</td>
-						    </tr>
-						  </tbody>				
-						</table>	
+
 			</div>
 		);
 	}
@@ -109,7 +51,7 @@ Build_12 = React.createClass({
 						  </thead>
 						  <tbody>
 						    <tr>
-						      <td>Thrust [mN]</td>
+						      <td>Thrust [kN]</td>
 						      <td>{Math.round(this.props.dataSummary["thrust"][this.props.stageCurrent][0] / 1000) + " "} 
 						      	({Math.round(this.props.dataSummary["thrust"][this.props.stageCurrent][1] / 1000)})</td>
 						    </tr>
@@ -330,66 +272,188 @@ Build_13 = React.createClass({
 	}
 });
 
+
 Build_21 = React.createClass({
+		getInitialState: function() {
+	    return {value: 'Rocket Name'};
+	  },
+	  handleChange: function(event) {
+	    this.setState({value: event.target.value});
+	    this.props.returnInput(event.target.value);
+	  },
 
 	render(){
 		return(
 			<div className="col-xs-3 fixed bot-side">
-			<div className="col-xs-2">
-			</div>
-			<div className="col-xs-8">
-				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.typeStatus}>Class: {this.props.selectClass}<span className="caret"></span></button>
-					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 0, "Sounding Rocket")}>Sounding Rockets</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 0, "Manned Rocket")}>Manned Rockets</a></li>
-					</ul>
-				</div>
+				<div className="col-xs-2 fixed">
 
-				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.stageStatus}>Stage Count: {this.props.stageCount}<span className="caret"></span></button>
-					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 1)}>1 Stage</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 2)}>2 Stage</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 3)}>3 Stage</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 4)}>4 Stage</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 5)}>5 Stage</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 1, 6)}>6 Stage</a></li>
-					</ul>
-				</div>
-				
-				<div className="dropdown">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}> Parts: {this.props.selectParts}<span className="caret"></span></button>		
-					<ul className="dropdown-menu">		
-					{this.props.selectedClass.map( function(u) { return u.name; } ).map((part, i) => <li key={i}><a href="#" onClick={this.props.handleSelectStage.bind(null, 2, part)}>{part}</a></li>)}
-					</ul>
-				</div>
-
-				
-				<div className="dropup">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}>Engine Count: {this.props.engineCount}<span className="caret"></span></button>
-					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 1)}>1 Engine</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 2)}>2 Engines</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 3)}>3 Engines</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 4)}>4 Engines</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 3, 5)}>5 Engines</a></li>
-					</ul>
-				</div>
-				<div className="dropup">
-					<button className="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown" disabled={this.props.selectStatus}>Fuel: {this.props.fuelType}<span className="caret"></span></button>
-					<ul className="dropdown-menu">
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 4, "LH2 LOX")}>LH2 LOX</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 4, "RP1 LOX")}>RP1 LOX</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 4, "Aerozine 50 N2O4")}>Aerozine 50 N2O4</a></li>
-						<li><a href="#" onClick={this.props.handleSelectStage.bind(null, 4, "Solid Rocket Fuel")}>Solid Rocket Fuel</a></li>
-					</ul>
-				</div>
+			</div>{/* sub column end */}
+			<div className="col-xs-8 fixed">
 				<div className="btn-group-vertical btn-block">
-				<button type="button" className="btn btn-block btn-success" disabled={this.props.submitStatus} onClick={this.props.handleSubmitStage}>Submit Stage</button>
+				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#configureRocketModal">Configure Rocket</button>
+				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#configureSystemModal" disabled={this.props.systemConfig[0]}>Configure Systems </button>
+				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#configureStageModal" disabled={this.props.stageConfig[6]}>Configure Stages </button>
+				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#loadModal">Load Rocket</button>
+				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#saveModal" onClick={this.props.handleBuildRocket}>Save Rocket</button>
+			</div>
+
+			<div id="configureRocketModal" className="modal fade" role="dialog" >
+				  <div className="modal-dialog">
+				    <div className="modal-content" style={modalStyle} >
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h2 className="modal-title">Rocket Configuration</h2>
+				        <div className="modal-body">
+				        <h4>Rocket Class</h4>
+				        <div className="btn-group btn-block">
+					        <button type="button" disabled={this.props.rocketConfig[3]} className={this.props.rocketConfig[0]} style={{width: "33.33%"}} onClick={this.props.handleClassChange.bind(null, "Sounding Rocket", 0)}>Sounding Rocket</button>
+					        <button type="button" disabled={this.props.rocketConfig[3]} className={this.props.rocketConfig[1]} style={{width: "33.33%"}} onClick={this.props.handleClassChange.bind(null, "Medium Lift Rocket", 1)}>Medium Lift Rocket</button>
+					        <button type="button" disabled={this.props.rocketConfig[3]} className={this.props.rocketConfig[2]} style={{width: "33.33%"}} onClick={this.props.handleClassChange.bind(null, "Heavy Lift Rocket", 2)}>Heavy Lift Rocket</button>
+				        </div>
+				        <h4>Number of Stages</h4>
+				        <div className="btn-group btn-block">
+				        	<button type="button" disabled={this.props.rocketConfig[3]} className="btn buttonStyle" style={{width: "33.33%"}} onClick={this.props.handleStageChange.bind(null, -1)}><span className="glyphicon glyphicon-arrow-left"></span></button>
+					        <button type="button" disabled={this.props.rocketConfig[3]} className="btn buttonStyle" style={{width: "33.33%"}}>{this.props.stageCount} Stage(s)</button>
+					        <button type="button" disabled={this.props.rocketConfig[3]} className="btn buttonStyle" style={{width: "33.33%"}} onClick={this.props.handleStageChange.bind(null, 1)}><span className="glyphicon glyphicon-arrow-right"></span></button>
+					    </div>
+     					 </div>			        
+				      	<div className="modal-footer">
+				      	<button type="button" className="btn buttonStyle" data-toggle="modal" data-target="#clearModal">Clear Configuration</button>
+				        <button type="button" className="btn buttonStyle" data-dismiss="modal" onClick={this.props.handleRocketSubmit}>Submit & Close</button>
+				      </div>
+				    </div>
+				  </div>
 				</div>
 			</div>
-			<div className="col-xs-2">
+
+			<div id="configureSystemModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content" style={modalStyle}>
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h4 className="modal-title">system</h4>	
+				         <div className="modal-body">
+				        <h4>Rocket Class</h4>
+				        <div className="btn-group btn-block">
+					        <button type="button" className="btn buttonStyle" style={{width: "33.33%"}} onClick={this.props.handleAddSystem.bind(null, 70)}>70 kg</button>
+					        <button type="button" className="btn buttonStyle" style={{width: "33.33%"}} onClick={this.props.handleAddSystem.bind(null, 7000)}>7000 kg</button>
+					        <button type="button" className="btn buttonStyle" style={{width: "33.33%"}} onClick={this.props.handleAddSystem.bind(null, 21000)}>21000 kg</button>
+				        </div>
+				        </div>		        
+				      	<div className="modal-footer">
+				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+
+			<div id="configureStageModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content" style={modalStyle}>
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h2 className="modal-title">Stage Configuration</h2>
+				    	<div className="modal-body">
+				    	<h4>Select Stage</h4>
+				        <div className="btn-group btn-block">
+					        <button type="button" className={this.props.stageConfig[0][0]} disabled={this.props.stageConfig[0][1]} style={{width: "33.33%"}} onClick={this.props.handleStageSelect.bind(null, 0)}>{this.props.addStatus[0][2]}</button>
+					        <button type="button" className={this.props.stageConfig[1][0]} disabled={this.props.stageConfig[1][1]} style={{width: "33.33%"}} onClick={this.props.handleStageSelect.bind(null, 1)}>{this.props.addStatus[1][2]}</button>
+					        <button type="button" className={this.props.stageConfig[2][0]} disabled={this.props.stageConfig[2][1]} style={{width: "33.33%"}} onClick={this.props.handleStageSelect.bind(null, 2)}>{this.props.addStatus[2][2]}</button>
+					        </div>
+					        <div className="btn-group btn-block">
+					        <button type="button" className={this.props.stageConfig[3][0]} disabled={this.props.stageConfig[3][1]} style={{width: "33.33%"}} onClick={this.props.handleStageSelect.bind(null, 3)}>{this.props.addStatus[3][2]}</button>
+					        <button type="button" className={this.props.stageConfig[4][0]} disabled={this.props.stageConfig[4][1]} style={{width: "33.33%"}} onClick={this.props.handleStageSelect.bind(null, 4)}>{this.props.addStatus[4][2]}</button>
+					        <button type="button" className={this.props.stageConfig[5][0]} disabled={this.props.stageConfig[5][1]} style={{width: "33.33%"}} onClick={this.props.handleStageSelect.bind(null, 5)}>{this.props.addStatus[5][2]}</button>
+				        </div>
+				        <h4>Select Diameter</h4>
+				        <div className="btn-group btn-block">
+					        <button type="button" className={this.props.partConfig[0][0]} style={{width: "25%"}} onClick={this.props.handlePartSelect.bind(null, 0)}>{this.props.parts[this.props.selectClass][0]}</button>
+					        <button type="button" className={this.props.partConfig[1][0]} style={{width: "25%"}} onClick={this.props.handlePartSelect.bind(null, 1)}>{this.props.parts[this.props.selectClass][1]}</button>
+					        <button type="button" className={this.props.partConfig[2][0]} style={{width: "25%"}} onClick={this.props.handlePartSelect.bind(null, 2)}>{this.props.parts[this.props.selectClass][2]}</button>
+					        <button type="button" className={this.props.partConfig[3][0]} style={{width: "25%"}} onClick={this.props.handlePartSelect.bind(null, 3)}>{this.props.parts[this.props.selectClass][3]}</button>
+				        </div>
+				        <h4>Select Engine Count</h4>
+				        <div className="btn-group btn-block">
+				        	<button type="button" className={this.props.engineConfig[0][0]} style={{width: "25%"}} onClick={this.props.handleEngineSelect.bind(null, 0, 1)}>1 Engine</button>
+					        <button type="button" className={this.props.engineConfig[1][0]} style={{width: "25%"}} onClick={this.props.handleEngineSelect.bind(null, 1, 2)}>2 Engines</button>
+					        <button type="button" className={this.props.engineConfig[2][0]} style={{width: "25%"}} onClick={this.props.handleEngineSelect.bind(null, 2, 4)}>4 Engines</button>
+					        <button type="button" className={this.props.engineConfig[3][0]} style={{width: "25%"}} onClick={this.props.handleEngineSelect.bind(null, 3, 5)}>5 Engines</button>
+				        </div>
+				        <h4>Select Fuel Type</h4>
+				        <div className="btn-group btn-block">
+					        <button type="button" className={this.props.fuelConfig[0][0]} style={{width: "25%"}} onClick={this.props.handleFuelSelect.bind(null, 0, "Solid Fuel")}>Solid Fuel</button>
+					        <button type="button" className={this.props.fuelConfig[1][0]} style={{width: "25%"}} onClick={this.props.handleFuelSelect.bind(null, 1, "RP1 LOX")}>RP1 LOX</button>
+					        <button type="button" className={this.props.fuelConfig[2][0]} style={{width: "25%"}} onClick={this.props.handleFuelSelect.bind(null, 2, "LH2 LOX")}>LH2 LOX</button>
+					        <button type="button" className={this.props.fuelConfig[3][0]} style={{width: "25%"}} onClick={this.props.handleFuelSelect.bind(null, 3, "Aerozine N2O4")}>Aerozine N2O4</button>
+				        </div>
+     					 </div>		        
+				      	<div className="modal-footer">
+				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+
+			<div id="loadModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content" style={modalStyle}>
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h4 className="modal-title">Are you sure?</h4>			        
+				      	<div className="modal-footer">
+				      	<button type="button" className="btn buttonStyle" onClick={this.props.handleClearShip} data-dismiss="modal">Clear</button>
+				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div> 
+
+				<div id="saveModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content" style={modalStyle}>
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h4 className="modal-title">Save Rocket</h4>			        
+				      </div>
+				      <div className="modal-body">
+					        <input
+					    	id="rocket-name-input"
+		        			type="text"
+		        			value={this.state.value}
+		        			onChange={this.handleChange}
+		      			/>
+		      			<h4 className="modal-title">{this.props.buildStatus}</h4>
+		      			<h4 className="modal-title">{this.props.saveStatus}</h4>
+				      </div>
+				      <div className="modal-footer">
+				      	<button type="button" className="btn buttonStyle" onClick={this.props.handleSaveRocket}>Save</button>
+				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
+
+				<div id="clearModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content" style={modalStyle}>
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h4 className="modal-title">Are you sure?</h4>			        
+				      	<div className="modal-footer">
+				      	<button type="button" className="btn buttonStyle" onClick={this.props.handleClearShip} data-dismiss="modal">Clear</button>
+				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+
+			</div>{/* sub column end */}
+			<div className="col-xs-2 fixed">
 			</div>
 			</div>
 		);
@@ -417,43 +481,43 @@ Build_22 = React.createClass({
 						<tr>
 							<td>Tank Length</td>
 							<td>{this.props.tankLength + " m"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 0, 1)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 0, -1)}>-</button></td>
+							<td><button type="button" className="btn btn-block buttonStyle" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 0, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block buttonStyleNeg" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 0, -1)}>-</button></td>
 							
 						</tr>
 						<tr>
 							<td>Structural Density</td>
 							<td>{this.props.structuralDensity + " kg/m3"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.modifyStatus}onClick={this.props.handleModifyStage.bind(null, 1, 1)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 1, -1)}>-</button></td>
+							<td><button type="button" className="btn btn-block buttonStyle" disabled={this.props.modifyStatus}onClick={this.props.handleModifyStage.bind(null, 1, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block buttonStyleNeg" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 1, -1)}>-</button></td>
 							
 						</tr>
 						<tr>
 							<td>Mass Flow Rate</td>
 							<td>{this.props.massRate + " kg/s"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.modifyStatus}onClick={this.props.handleModifyStage.bind(null, 2, 1)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.modifyStatus}onClick={this.props.handleModifyStage.bind(null, 2, -1)}>-</button></td>
+							<td><button type="button" className="btn btn-block buttonStyle" disabled={this.props.modifyStatus}onClick={this.props.handleModifyStage.bind(null, 2, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block buttonStyleNeg" disabled={this.props.modifyStatus}onClick={this.props.handleModifyStage.bind(null, 2, -1)}>-</button></td>
 							
 						</tr>
 						<tr>
 							<td>Mixture Ratio</td>
 							<td>{this.props.mixRatio}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 3, 1)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 3, -1)}>-</button></td>
+							<td><button type="button" className="btn btn-block buttonStyle" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 3, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block buttonStyleNeg" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 3, -1)}>-</button></td>
 							
 						</tr>
 						<tr>
 							<td>Engine Pressure</td>
 							<td>{this.props.enginePressure + " atm"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 4, 1)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 4, -1)}>-</button></td>
+							<td><button type="button" className="btn btn-block buttonStyle" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 4, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block buttonStyleNeg" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 4, -1)}>-</button></td>
 							
 						</tr>
 						<tr>
 							<td>Nozzle Length</td>
 							<td>{this.props.nozzleLength + " m"}</td> 
-							<td><button type="button" className="btn btn-block btn-success" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 5, 1)}>+</button></td>
-							<td><button type="button" className="btn btn-block btn-danger" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 5, -1)}>-</button></td>
+							<td><button type="button" className="btn btn-block buttonStyle" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 5, 1)}>+</button></td>
+							<td><button type="button" className="btn btn-block buttonStyleNeg" disabled={this.props.modifyStatus} onClick={this.props.handleModifyStage.bind(null, 5, -1)}>-</button></td>
 							
 						</tr>
 					</tbody>
@@ -466,73 +530,10 @@ Build_22 = React.createClass({
 
 Build_23 = React.createClass({
 
-	getInitialState: function() {
-    return {value: 'Rocket Name'};
-  },
-  handleChange: function(event) {
-    this.setState({value: event.target.value});
-    this.props.returnInput(event.target.value);
-  },
-
 	render(){
 		return(
 		<div className="col-xs-3 fixed bot-side">
-			<div className="col-xs-2 fixed">
-
-			</div>{/* sub column end */}
-			<div className="col-xs-8 fixed">
-				<div className="btn-group-vertical btn-block">
-				  <button type="button" className="btn btn-block btn-success" data-toggle="modal" data-target="#saveModal" onClick={this.props.handleBuildRocket}>Save Rocket</button>
-				  <button type="button" className="btn btn-block btn-danger" data-toggle="modal" data-target="#clearModal">Clear</button>
-				</div>
-
-				    
-
-
-
-				<div id="saveModal" className="modal fade" role="dialog">
-				  <div className="modal-dialog">
-				    <div className="modal-content">
-				      <div className="modal-header">
-				        <button type="button" className="close" data-dismiss="modal">&times;</button>
-				        <h4 className="modal-title">Save Rocket</h4>			        
-				      </div>
-				      <div className="modal-body">
-					        <input
-					    	id="rocket-name-input"
-		        			type="text"
-		        			value={this.state.value}
-		        			onChange={this.handleChange}
-		      			/>
-		      			<h4 className="modal-title">{this.props.buildStatus}</h4>
-		      			<h4 className="modal-title">{this.props.saveStatus}</h4>
-				      </div>
-				      <div className="modal-footer">
-				      	<button type="button" className="btn btn-default" onClick={this.props.handleSaveRocket}>Save</button>
-				        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-
-
-				<div id="clearModal" className="modal fade" role="dialog">
-				  <div className="modal-dialog">
-				    <div className="modal-content">
-				      <div className="modal-header">
-				        <button type="button" className="close" data-dismiss="modal">&times;</button>
-				        <h4 className="modal-title">Are you sure?</h4>			        
-				      <div className="modal-footer">
-				      	<button type="button" className="btn btn-default" onClick={this.props.handleClearShip} data-dismiss="modal">Clear</button>
-				        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-			</div>
-			</div>{/* sub column end */}
-			<div className="col-xs-2 fixed">
-			</div>
+		
 		</div>
 		);
 	}

@@ -57,13 +57,16 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         var stageThrustAtm = currentStage[6]
         var stageIsp = currentStage[7];
         var stageBurnRate = stageThrustVac / stageIsp / standardGravity;
+        if (velocity[t][0] < 0 && velocity[t][0] > -400){
+            currentStage[3] = 1.5;
+            currentStage[4] = 2;
+        }
 
         if (position[t][0] > Planet.atmHeight + Planet.radius){
             stageThrust = stageThrustVac;
         } else {
             stageThrust = stageThrustVac - (stageThrustVac - stageThrustAtm) * Planet.pressure * Math.exp(-(position[t][0] - Planet.radius) / Planet.atmScale / 1000);
         }
-        
         //calculate surface speed
         var surfaceVelocity = arrayAdd(velocity[t], [0, - position[t][0] * Math.sin(phi) * 2 * Math.PI / Planet.dayLength, 0]);
         var surfaceSpeed = magn(surfaceVelocity);
@@ -135,7 +138,22 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
             default:
                 acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, thrustAcceleration, eulerAcceleration);
         }
- 
+
+        if (velocity[t][0] !== 0 && velocity[t][1] !== 0){
+            let velAccelRatio = Math.max(Math.abs(acceleration[t][0] / velocity[t][0]), Math.abs(acceleration[t][1] / velocity[t][1]));
+            if(velAccelRatio > 0.1){
+                if (velAccelRatio < 100){
+                    dt = 0.1 / velAccelRatio;
+                } else {
+                    dt = 0.001
+                }               
+            } else {
+                dt = 1;
+            }
+        } else {
+            dt = 1;
+        }
+        
         //increment time, velocity, and position based on acceleration
         time[t + 1] = time[t] + dt;
         
@@ -149,6 +167,10 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
 
         positionAddLast = positionAdd;
         currentStage[0][0] = stageFuelMass - stageBurnRate * dt;
+
+        if (currentStage[0][0] < 0){
+            currentStage[0][0] = 0;
+        }
         
         if (stopFlag == true){
             break;

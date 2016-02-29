@@ -57,13 +57,38 @@ body{
     height: 256px;
 }
 
+.buttonStyle{
+  background-color: black;
+  color: green;
+}
+
+.buttonStyleHigh{
+  background-color: green;
+  color: black;
+}
+
+.buttonStyleNeg{
+    background-color: black;
+    color: red;
+}
+
+.modalStyle{
+  background-color: #111;
+  color: green;
+}
+
+button:focus {
+    border-color: #0F0;
+    box-shadow: 0 0 5px rgba(00, 255, 0, 0.8);
+}
+
 /*build modify table  */
 #buildModify{
   width: 100%;
 }
 
 #buildModify>tbody>tr>td{
-  border: 1px solid;
+
   width: 10%;
 }
 
@@ -106,6 +131,7 @@ body{
 
 .btn{
  width: 100%;
+ border-radius:0;
 }
 
 /* chart */
@@ -119,6 +145,10 @@ path {
 #launchDisplay{
   display: block;
   text-align: center;
+}
+
+.modal-footer .btn + .btn{
+  margin-left: 0px;
 }
 
 #chart2, #chart3, #chart4{
