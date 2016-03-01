@@ -57,10 +57,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         var stageThrustAtm = currentStage[6]
         var stageIsp = currentStage[7];
         var stageBurnRate = stageThrustVac / stageIsp / standardGravity;
-        if (velocity[t][0] < 0 && velocity[t][0] > -400){
-            currentStage[3] = 1.5;
-            currentStage[4] = 2;
-        }
+
 
         if (position[t][0] > Planet.atmHeight + Planet.radius){
             stageThrust = stageThrustVac;
@@ -70,6 +67,15 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         //calculate surface speed
         var surfaceVelocity = arrayAdd(velocity[t], [0, - position[t][0] * Math.sin(phi) * 2 * Math.PI / Planet.dayLength, 0]);
         var surfaceSpeed = magn(surfaceVelocity);
+
+        if (velocity[t][0] < 0 && surfaceSpeed > 500 && surfaceSpeed < 2000){
+            currentStage[3] = 0.75;
+            currentStage[4] = 0.5;
+        }
+        if (velocity[t][0] < 0 && surfaceSpeed < 250){
+            currentStage[3] = 1.5;
+            currentStage[4] = 2;
+        }
 
         //calculate orbital properties
         var orbitalProperties = orbitalPropertiesCalc(velocity[t], position[t]);
@@ -118,11 +124,11 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         }
 
         switch (true){
-             case (orbitFlag):
-                velocity[t][0] = 0;
-                let netAccel = Math.pow(Math.pow(stageThrust / stageMass, 2) + Math.pow(centripetalAcceleration[0], 2) - Math.pow(gravityAcceleration[0], 2) - Math.pow(eulerAcceleration[0], 2), 0.5)
-                if (netAccel > 0){
-                       acceleration[t] = [0, netAccel, 0];
+             case (orbitFlag):      
+                var netAccelSq = Math.pow(stageThrust / stageMass, 2) + Math.pow(centripetalAcceleration[0], 2) - Math.pow(gravityAcceleration[0], 2) - Math.pow(eulerAcceleration[0], 2);
+                if (netAccelSq > 0){
+                       velocity[t][0] = 0;
+                       acceleration[t] = [0, Math.pow(netAccelSq, 0.5), 0];
                 } else {
                     acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, eulerAcceleration);
                     stageBurnRate = 0;
@@ -153,7 +159,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         } else {
             dt = 1;
         }
-        
+        console.log(dt)
         //increment time, velocity, and position based on acceleration
         time[t + 1] = time[t] + dt;
         

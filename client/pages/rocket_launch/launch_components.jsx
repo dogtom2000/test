@@ -45,10 +45,10 @@ Launch_23 = React.createClass({
 		<div className="col-xs-2 fixed">
 			</div>
 				<div className="col-xs-8 fixed">
-				  <button type="button" className="btn btn-block btn-warning" data-toggle="modal" data-target="#loadModal">Load Rocket</button>
+				  <button type="button" className="btn btn-block buttonStyle" data-toggle="modal" data-target="#loadModal">Load Rocket</button>
 				<div id="loadModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
-				    <div className="modal-content">
+				    <div className="modal-content buttonStyle">
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h4 className="modal-title">Modal Header</h4>
@@ -59,20 +59,20 @@ Launch_23 = React.createClass({
 				      	</div>
 				      </div>
 				      <div className="modal-footer">
-				        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
 				      </div>
 				    </div>
 				  </div>
 				</div>
 		<br></br>
-		<button type="button" className="btn btn-block btn-warning" onClick={this.props.displayPlot}>Launch</button>
+		<button type="button" className="btn btn-block buttonStyle" onClick={this.props.displayPlot}>Launch</button>
 		<br></br>
-		<button type="button" className="btn btn-block btn-warning" onClick={this.props.displayOrbit}>View Orbit</button>
+		<button type="button" className="btn btn-block buttonStyle" onClick={this.props.displayOrbit}>View Orbit</button>
 		<br></br>
-		 <button type="button" className="btn btn-block btn-warning" data-toggle="modal" data-target="#deleteModal">Delete Rocket</button>
+		 <button type="button" className="btn btn-block buttonStyle" data-toggle="modal" data-target="#deleteModal">Delete Rocket</button>
 				<div id="deleteModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
-				    <div className="modal-content">
+				    <div className="modal-content buttonStyle">
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h4 className="modal-title">Modal Header</h4>
@@ -84,7 +84,7 @@ Launch_23 = React.createClass({
 				      </div>
 				      <div className="modal-footer">
 
-				        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
 				      </div>
 				    </div>
 				  </div>

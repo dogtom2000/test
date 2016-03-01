@@ -10,42 +10,25 @@ var acceleration = [];
 
 for (var i = 0; i < data_input.length; i++){
 	data.push([(data_input[i][1] * 6371000 - 463.31219 * time[i])/1000 , data_input[i][0] /1000- 6371 ])
-	velocity.push(Math.pow(vel_input[i][0] * vel_input[i][0] + vel_input[i][1] * vel_input[i][1] + vel_input[i][2] * vel_input[i][2], 0.5));
+	velocity.push(Math.pow(vel_input[i][0] * vel_input[i][0] + (vel_input[i][1] - 463.31219) * (vel_input[i][1] - 463.31219) + vel_input[i][2] * vel_input[i][2], 0.5));
 	if (i < acc_input.length){
 	acceleration.push(Math.pow(acc_input[i][0] * acc_input[i][0] + acc_input[i][1] * acc_input[i][1] + acc_input[i][2] * acc_input[i][2], 0.5));
 	}
 }
 
 var hzmax = d3.max(data, function(d) { return d[0]; });
-console.log(hzmax)
-if (hzmax < 20){
-  var distanceOffset = hzmax
-  hzmax += distanceOffset * 2;
-} else {
-    var distanceOffset = 20;
-  hzmax += distanceOffset * 2;
-}
+var vtmax = d3.max(data, function(d) { return d[1]; });
 
 
-var vtmax = d3.max(data, function(d) { return d[1]; }) + 1;
+var dpp = Math.max((hzmax + 40) / 1584, (vtmax + 20) / 632);
+
+var dppAtm = Math.ceil(140 / dpp);
+var dppGrnd = Math.ceil(1 / dpp) + 1;
+var dppSpace = 632 - dppAtm - dppGrnd;
 
 
-
-if (hzmax / vtmax > 1584 / 632){
- var dpp = hzmax / 1584;
- var dpphzoffset = Math.ceil(distanceOffset / dpp);
- var dppAtm = Math.ceil(140 / dpp);
- var dppGrnd = Math.ceil(1 / dpp) + 1;
- var dppSpace = 632 - dppAtm - dppGrnd;
- var dppvtoffset = 140 + Math.ceil(dppSpace * dpp);
-} else {
- var dpp = 2 * vtmax / 632;
- var dpphzoffset = Math.ceil(distanceOffset / dpp);
- var dppAtm = Math.ceil(140 / dpp);
- var dppGrnd = Math.ceil(1 / dpp) + 1;
- var dppSpace = 632 - dppAtm - dppGrnd;
- var dppvtoffset = 140 + Math.ceil(dppSpace * dpp);
-}
+var hzoffset = (1584 * dpp - hzmax) / 2;
+var vtoffset = 632 * dpp;
 
 if (dppSpace < 0){
   dppRect = 0;
@@ -57,8 +40,8 @@ var margin = {top: 0, right: 0, bottom: dppGrnd, left: 0}
 , width = 1584 - margin.left - margin.right
 , height = 632 - margin.top - margin.bottom;
 
-var x = d3.scale.linear().domain([-dpphzoffset, hzmax + dpphzoffset]).range([0, width])
-var y = d3.scale.linear().domain([0, dppvtoffset]).range([height, 0])
+var x = d3.scale.linear().domain([-hzoffset, hzmax + hzoffset]).range([0, width])
+var y = d3.scale.linear().domain([0, vtoffset]).range([height, 0])
 
 var chart2 = d3.select("#chart2")
 var chart3 = d3.select("#chart3")
@@ -169,9 +152,10 @@ function pathTween(data) {
             	var output_vel = output_vel_new;
             	 chart3.selectAll("*").remove();
             chart3.append("text")
-              .html("V (m/s):" + Math.floor(output_vel) + " " + Math.floor(xvel * 100) / 100+ " " + Math.floor(yvel * 100)/ 100);
-              chart3.append("text")
-              .html("<br/>" + " A (km):" + Math.floor(yvalue));
+              .html("V (m/s):" + Math.floor(output_vel) + " " + Math.floor(xvel * 100 - 46331.219) / 100+ " " + Math.floor(yvel * 100)/ 100 +
+                "<br/>" + " A (km):" + Math.floor(yvalue) +
+                "<br/>" + " R (km):" + Math.floor(xvalue));
+              
             }
 
             if (isNaN(output_acc_new) == false){

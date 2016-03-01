@@ -10,7 +10,7 @@ var systemTableStyleth = {
 
 var buttonStyle = {backgroundColor: "black", color: "green"}
 
-var modalStyle = {backgroundColor: "#111", color: "green"}
+
 
 Build_11 = React.createClass({
 
@@ -282,6 +282,15 @@ Build_21 = React.createClass({
 	    this.props.returnInput(event.target.value);
 	  },
 
+	  handleSave(){
+	  	if (Vehicle.findOne({name: this.state.value}) !== undefined){
+	  		return <button type="button" className="btn buttonStyle" data-toggle="modal" data-target="#overwriteModal">Save</button>
+	  	} else {
+	  		return <button type="button" className="btn buttonStyle" onClick={this.props.handleSaveRocket}>Save</button>
+	  	}
+	  	
+	  },
+
 	render(){
 		return(
 			<div className="col-xs-3 fixed bot-side">
@@ -290,16 +299,16 @@ Build_21 = React.createClass({
 			</div>{/* sub column end */}
 			<div className="col-xs-8 fixed">
 				<div className="btn-group-vertical btn-block">
-				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#configureRocketModal">Configure Rocket</button>
-				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#configureSystemModal" disabled={this.props.systemConfig[0]}>Configure Systems </button>
-				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#configureStageModal" disabled={this.props.stageConfig[6]}>Configure Stages </button>
-				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#loadModal">Load Rocket</button>
-				<button type="button" className="btn btn-block" style={buttonStyle} data-toggle="modal" data-target="#saveModal" onClick={this.props.handleBuildRocket}>Save Rocket</button>
+				<button type="button" className="btn btn-block buttonStyle" data-toggle="modal" data-target="#configureRocketModal">Configure Rocket</button>
+				<button type="button" className="btn btn-block buttonStyle" data-toggle="modal" data-target="#configureSystemModal" disabled={this.props.systemConfig[0]}>Configure Systems </button>
+				<button type="button" className="btn btn-block buttonStyle" data-toggle="modal" data-target="#configureStageModal" disabled={this.props.stageConfig[6]}>Configure Stages </button>
+				<button type="button" className="btn btn-block buttonStyle" data-toggle="modal" data-target="#loadModal">Load Rocket</button>
+				<button type="button" className="btn btn-block buttonStyle" data-toggle="modal" data-target="#saveModal" onClick={this.props.handleBuildRocket}>Save Rocket</button>
 			</div>
 
 			<div id="configureRocketModal" className="modal fade" role="dialog" >
 				  <div className="modal-dialog">
-				    <div className="modal-content" style={modalStyle} >
+				    <div className="modal-content modalStyle" >
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h2 className="modal-title">Rocket Configuration</h2>
@@ -328,7 +337,7 @@ Build_21 = React.createClass({
 
 			<div id="configureSystemModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
-				    <div className="modal-content" style={modalStyle}>
+				    <div className="modal-content modalStyle">
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h4 className="modal-title">system</h4>	
@@ -350,7 +359,7 @@ Build_21 = React.createClass({
 
 			<div id="configureStageModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
-				    <div className="modal-content" style={modalStyle}>
+				    <div className="modal-content modalStyle">
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h2 className="modal-title">Stage Configuration</h2>
@@ -398,7 +407,7 @@ Build_21 = React.createClass({
 
 			<div id="loadModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
-				    <div className="modal-content" style={modalStyle}>
+				    <div className="modal-content modalStyle">
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h4 className="modal-title">Are you sure?</h4>		
@@ -415,7 +424,7 @@ Build_21 = React.createClass({
 
 				<div id="saveModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
-				    <div className="modal-content" style={modalStyle}>
+				    <div className="modal-content modalStyle">
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h4 className="modal-title">Save Rocket</h4>			        
@@ -431,7 +440,7 @@ Build_21 = React.createClass({
 		      			<h4 className="modal-title">{this.props.saveStatus}</h4>
 				      </div>
 				      <div className="modal-footer">
-				      	<button type="button" className="btn buttonStyle" onClick={this.props.handleSaveRocket}>Save</button>
+				      		{this.handleSave()}
 				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
 				      </div>
 				    </div>
@@ -441,12 +450,28 @@ Build_21 = React.createClass({
 
 				<div id="clearModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
-				    <div className="modal-content" style={modalStyle}>
+				    <div className="modal-content modalStyle">
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h4 className="modal-title">Are you sure?</h4>			        
 				      	<div className="modal-footer">
 				      	<button type="button" className="btn buttonStyle" onClick={this.props.handleClearShip} data-dismiss="modal">Clear</button>
+				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+
+
+				<div id="overwriteModal" className="modal fade" role="dialog">
+				  <div className="modal-dialog">
+				    <div className="modal-content modalStyle" >
+				      <div className="modal-header">
+				        <button type="button" className="close" data-dismiss="modal">&times;</button>
+				        <h4 className="modal-title">Overwrite save?</h4>			        
+				      	<div className="modal-footer">
+				      	<button type="button" className="btn buttonStyle" onclick={this.props.handleSaveRocket} data-dismiss="modal">Overwrite</button>
 				        <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
 				      </div>
 				    </div>

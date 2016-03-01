@@ -152,9 +152,13 @@ path {
 }
 
 #chart2, #chart3, #chart4{
-  font-size: 30px;
+  font-size: 20px;
 }
 
 #rocket-name-input{
   color: #000;
+}
+
+a, a:active, a:hover, a:visited, a:link{
+  color:green;
 }

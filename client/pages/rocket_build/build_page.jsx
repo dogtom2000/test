@@ -182,9 +182,7 @@ BuildPage = React.createClass({
 		Rocket.name = this.state.rocketName;
 		Rocket.save = JSON.parse(JSON.stringify(this.state));
 
-		if (Vehicle.findOne({name: Rocket.name}) !== undefined ){
-			var saveVal = "Rocket with that name already exists";
-		} else if (this.state.buildStatus == "0 stages built"){
+		if (this.state.buildStatus == "0 stages built"){
 			var saveVal = "No stages built";
 		} else {
 			Vehicle.insert(Rocket);
@@ -211,14 +209,13 @@ BuildPage = React.createClass({
 	},
 
 	addSystem(){
+		var stage = this.state.stageCurrent;
 		var payloadSystemObject = this.state.payloadSystem;
 		payloadSystemObject.mass = arguments[0];
 		this.setState({
-			payloadSystem: payloadSystemObject
+			payloadSystem: payloadSystemObject,
+			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.tankLength[stage], this.state.tankDiameter[stage], this.state.structuralDensity[stage], this.state.mixRatio[stage], this.state.enginePressure[stage], this.state.dataEngine[stage], this.state.fuelType[stage], payloadSystemObject)
 		})
-
-
-		this.submitStage(this.state.stageCurrent);
 	},
 
 	addStage(){
@@ -279,7 +276,7 @@ BuildPage = React.createClass({
 		});
 
 	for (var i = 0; i < this.state.stageCount; i++){
-		this.submitStage(i);
+		this.submitStage(i, 0);
 	}
 
 	},
@@ -307,7 +304,7 @@ BuildPage = React.createClass({
 			selectParts: selectPartsArray,
 			partConfig: partConfigArray,
 		})
-		this.submitStage(stage);
+		this.submitStage(stage, 1);
 	},
 
 	engineSelect(){
@@ -320,8 +317,9 @@ BuildPage = React.createClass({
 		this.setState({
 			engineCount: engineCountArray,
 			engineConfig: engineConfigArray,
+			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.tankLength[stage], this.state.tankDiameter[stage], this.state.structuralDensity[stage], this.state.mixRatio[stage], this.state.enginePressure[stage], this.state.dataEngine[stage], this.state.fuelType[stage], this.state.payloadSystem)
+
 		})
-		this.submitStage(stage);
 	},
 
 	fuelSelect(){
@@ -335,10 +333,10 @@ BuildPage = React.createClass({
 			fuelType: fuelTypeArray,
 			fuelConfig: fuelConfigArray,
 		})
-		this.submitStage(stage);
+		this.submitStage(stage, 2);
 	},
 
-	submitStage(stage){
+	submitStage(stage, arg2){
 		var stageCount = this.state.stageCount;
 
 		//database data
@@ -353,14 +351,17 @@ BuildPage = React.createClass({
 		var addStatusArray = this.state.addStatus;
 
 		//properties to be updated
+		
 		var	tankLengthArray = this.state.tankLength;
 		var	tankDiameterArray = this.state.tankDiameter;
 		var	structuralDensityArray = this.state.structuralDensity;
-		var	massRateArray = this.state.massRate;
-		var	mixRatioArray = this.state.mixRatio;
+		var	massRateArray = this.state.massRate;			
 		var	enginePressureArray = this.state.enginePressure;
 		var	nozzleLengthArray = this.state.nozzleLength;
 		var payloadSystemObject = this.state.payloadSystem;
+		var	mixRatioArray = this.state.mixRatio;
+		
+		
 
 		//functions to be updated
 		var	dataEngineArray = this.state.dataEngine;
@@ -368,17 +369,19 @@ BuildPage = React.createClass({
 		//update values	
 
 		modifyStatusArray[stage] = false;
-
-
-
-
-		tankLengthArray[stage] = PartsData["length"]; 
-		tankDiameterArray[stage] = PartsData["diameter"]; 
-		structuralDensityArray[stage] = PartsData["structuralDensity"]; 
-		massRateArray[stage] = PartsData["massRate"]; 
-		mixRatioArray[stage] = fuelTypeData["defaultMixRatio"]; 
-		enginePressureArray[stage] = PartsData["enginePressure"]; 
-		nozzleLengthArray[stage] = PartsData["nozzleLength"]; 
+		if (arg2 == 1 || arg2 == 0){
+			tankLengthArray[stage] = PartsData["length"]; 
+			tankDiameterArray[stage] = PartsData["diameter"]; 
+			massRateArray[stage] = PartsData["massRate"]; 			
+			nozzleLengthArray[stage] = PartsData["nozzleLength"]; 
+		}
+		if (arg2 == 0){
+			structuralDensityArray[stage] = PartsData["structuralDensity"];
+			enginePressureArray[stage] = PartsData["enginePressure"]; 
+		}
+		if (arg2 == 2 || arg2 == 0){
+			mixRatioArray[stage] = fuelTypeData["defaultMixRatio"]; 
+		}
 		dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioArray[stage], enginePressureArray[stage], nozzleLengthArray[stage], massRateArray[stage]);
 		
 		if (this.state.stageStatus == false){
