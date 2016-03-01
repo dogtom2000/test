@@ -48,7 +48,7 @@ Launch_23 = React.createClass({
 				  <button type="button" className="btn btn-block buttonStyle" data-toggle="modal" data-target="#loadModal">Load Rocket</button>
 				<div id="loadModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
-				    <div className="modal-content buttonStyle">
+				    <div className="modal-content modalStyle">
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h4 className="modal-title">Modal Header</h4>
@@ -72,7 +72,7 @@ Launch_23 = React.createClass({
 		 <button type="button" className="btn btn-block buttonStyle" data-toggle="modal" data-target="#deleteModal">Delete Rocket</button>
 				<div id="deleteModal" className="modal fade" role="dialog">
 				  <div className="modal-dialog">
-				    <div className="modal-content buttonStyle">
+				    <div className="modal-content modalStyle">
 				      <div className="modal-header">
 				        <button type="button" className="close" data-dismiss="modal">&times;</button>
 				        <h4 className="modal-title">Modal Header</h4>
