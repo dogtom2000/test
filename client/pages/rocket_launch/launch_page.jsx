@@ -27,7 +27,7 @@ LaunchPage = React.createClass({
 
 	displayPlot(){
 		
-		orbit = orbitBody(Planet.find({name: "Earth"}).fetch()[0], this.state.Rocket, 141000);
+		orbit = orbitBody(Planet.find({name: "Earth"}).fetch()[0], this.state.Rocket, 250000);
 		drawchart(orbit[2], orbit[3], orbit[4], orbit[5]);
 		this.setState({
 			orbit: orbit[6],
@@ -36,7 +36,9 @@ LaunchPage = React.createClass({
 	},
 
 	displayOrbit(){
-		drawOrbit(orbit[6], orbit[6], Planet.find({name: "Earth"}).fetch()[0]);
+		orbit = reentry(Planet.find({name: "Earth"}).fetch()[0], this.state.Rocket, 360000 + 6371000,  -50000 + 6371000);
+		drawchart(orbit[2], orbit[3], orbit[4], orbit[5]);
+		//drawOrbit(orbit[6], orbit[6], Planet.find({name: "Earth"}).fetch()[0]);
 	},
 
 	removeVehicle(){

@@ -177,6 +177,7 @@ BuildPage = React.createClass({
 	},
 
 	saveRocket(){
+
 		var Rocket = this.state.builtRocket;
 		var saveVal = this.state.saveStatus;
 		Rocket.name = this.state.rocketName;
@@ -185,6 +186,12 @@ BuildPage = React.createClass({
 		if (this.state.buildStatus == "0 stages built"){
 			var saveVal = "No stages built";
 		} else {
+		var currentRocket = Vehicle.findOne({name: Rocket.name});
+		if(currentRocket != null){
+			//remove the rocket based on name
+			Vehicle.remove({_id: currentRocket._id});
+		}
+			console.log(Rocket)
 			Vehicle.insert(Rocket);
 			if (Vehicle.findOne({name: Rocket.name}) !== null){
 			var saveVal = "Rocket successfully saved"
@@ -200,6 +207,7 @@ BuildPage = React.createClass({
 		this.setState(
 			Vehicle.findOne({name: arguments[0]}).save
 		)
+		drawRocket();
 	},
 
 	returnInput(rocketName){

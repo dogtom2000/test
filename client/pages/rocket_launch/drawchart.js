@@ -106,6 +106,10 @@ var line = d3.svg.line()
 
 var timeduration = 50 * Math.max.apply(null, time);
 
+if (timeduration > 30000){
+  timeduration = 30000;
+}
+
 
 main.append("svg:path")
   .attr('class', 'line')
