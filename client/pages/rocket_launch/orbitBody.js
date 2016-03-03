@@ -3,7 +3,6 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
     //set constant, variable theta/phi could be implemented in future build
     var theta = 0;
     var phi = Math.PI / 2;
-    var hvelScale = 0.90;
 
     //initialize variables
     var t = 0;
@@ -12,9 +11,9 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
     var stopFlag = false;
     var orbitFlag = false;
     var emtpyFlag = false;
-    var error = "";
 
     var standardGravity = 9.80665;
+    var hvelScale = 0.90;
 
     var time = [0];
     var heading = [];
@@ -34,7 +33,6 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         //check to see if rocket falls into planet, will happen if twr is insufficient
         if(position[t][0] < Planet.radius){
             stopFlag = true;
-            error = [0, "position inside planet, rocket has crashed"];
         }
         
         //if stage has no remaining fuel, proceed to next stage, if this is the final stage rocket is out of fuel
@@ -44,7 +42,6 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
             currentStage = Rocket.stages[Rocket.stageCount];
         } else if (currentStage[0][0] <= 0 && Rocket.stageCount == 1){
             emtpyFlag = true;
-           //error = [1, "rocket is out of fuel"];
         }
         
         //assign stage variables
@@ -54,13 +51,12 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         var stageDrag = currentStage[3];
         var stageArea = Math.PI / 4 * Math.pow(currentStage[4], 2);
         var stageThrustVac = currentStage[5];
-        var stageThrustAtm = currentStage[6]
+        var stageThrustAtm = currentStage[6];
         var stageIsp = currentStage[7];
         var stageBurnRate = stageThrustVac / stageIsp / standardGravity;
 
-
         if (position[t][0] > Planet.atmHeight + Planet.radius){
-            stageThrust = stageThrustVac;
+            var stageThrust = stageThrustVac;
         } else {
             stageThrust = stageThrustVac - (stageThrustVac - stageThrustAtm) * Planet.pressure * Math.exp(-(position[t][0] - Planet.radius) / Planet.atmScale / 1000);
             if (stageThrust < 0){
@@ -89,7 +85,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         //calculate accelerations
         var centripetalAcceleration = [(Math.pow(velocity[t][1],2) + Math.pow(velocity[t][2],2)) / position[t][0], 0, 0];
         var gravityAcceleration = [-Planet.sgp / Math.pow(position[t][0],2), 0, 0];
-        var eulerAcceleration = [0,-velocity[t][1] * (1 - position[t][0] / (position[t][0] + velocity[t][0])),0];
+        var eulerAcceleration = [0, -velocity[t][1] * (1 - position[t][0] / (position[t][0] + velocity[t][0])),0];
         if (surfaceSpeed === 0 || position[t][0] > Planet.atmHeight + Planet.radius){
             var dragAcceleration = [0,0,0];
         } else {
@@ -151,22 +147,21 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         if (velocity[t][0] == 0 && velocity[t][1] != 0){
             var velAccelRatio = Math.max(Math.abs(acceleration[t][1] / velocity[t][1]), stageBurnRate / stageFuelMass);
         } else if (velocity[t][1] == 0 && velocity[t][0] != 0){
-            var velAccelRatio = Math.max(Math.abs(acceleration[t][0] / velocity[t][0]), stageBurnRate / stageFuelMass);
+            velAccelRatio = Math.max(Math.abs(acceleration[t][0] / velocity[t][0]), stageBurnRate / stageFuelMass);
         } else {
-            var velAccelRatio = stageBurnRate / stageFuelMass;
+            velAccelRatio = stageBurnRate / stageFuelMass;
         }
 
         if(velAccelRatio > 0.1){
             if (velAccelRatio < 100){
                 dt = 0.1 / velAccelRatio;
             } else {
-                dt = 0.001
+                dt = 0.001;
             }               
         } else {
             dt = 1;
         }
 
-        
         //increment time, velocity, and position based on acceleration
         time[t + 1] = time[t] + dt;
         
@@ -180,7 +175,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
 
         positionAddLast = positionAdd;
         currentStage[0][0] = stageFuelMass - stageBurnRate * dt;
-        console.log(currentStage[0][0])
+
         if (currentStage[0][0] < 0){
             currentStage[0][0] = 0;
         }
@@ -190,7 +185,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         }
     }
 
-    return [error, Rocket, time, position, velocity, acceleration, periapsis];
+    return [0, Rocket, time, position, velocity, acceleration, periapsis];
     
     //calculate orbital properties
     function orbitalPropertiesCalc(velocity, position){
@@ -201,16 +196,17 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         var semiMajorAxis = -Planet.sgp / 2 / orbitalEnergy;
         var apoapsis = semiMajorAxis * (1 + Math.abs(ecc));
         var periapsis = semiMajorAxis * (1 - Math.abs(ecc));
+        console.log(apoapsis, periapsis);
         return [apoapsis, periapsis];
     }
-}
+};
 
 function arrayAdd(array, val){
     
     var arrayNew = [];
     if (Array.isArray(val)){
         if (array.length !== val.length){
-            return "array length mismatch"
+            return "array length mismatch";
         } else {
             for (var i = 0; i < array.length; i++){
                 arrayNew[i] = array[i] + val[i];
@@ -230,7 +226,7 @@ function arraySub(array, val){
     var arrayNew = [];
     if (Array.isArray(val)){
         if (array.length !== val.length){
-            return "array length mismatch"
+            return "array length mismatch";
         } else {
             for (var i = 0; i < array.length; i++){
                 arrayNew[i] = array[i] - val[i];
@@ -250,7 +246,7 @@ function arrayMul(array, val){
     var arrayNew = [];
     if (Array.isArray(val)){
         if (array.length !== val.length){
-            return "array length mismatch"
+            return "array length mismatch";
         } else {
             for (var i = 0; i < array.length; i++){
                 arrayNew[i] = array[i] * val[i];
@@ -270,7 +266,7 @@ function arrayDiv(array, val){
     var arrayNew = [];
     if (Array.isArray(val)){
         if (array.length !== val.length){
-            return "array length mismatch"
+            return "array length mismatch";
         } else {
             for (var i = 0; i < array.length; i++){
                 arrayNew[i] = array[i] / val[i];

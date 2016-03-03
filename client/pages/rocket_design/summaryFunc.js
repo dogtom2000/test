@@ -19,7 +19,6 @@ summaryFunc = function(stage, dataSummary, tankLength, tankDiameter, structuralD
 	var totalFuelReliability = 1;
 	var totalEngineReliability = 1;
 	var totalStructureReliability = 1;
-	var totalReliability = 1;
 
 	dataSummary["mass"][stage] = [fuelMass, engineMass, structureMass, stageMass];
 
@@ -32,8 +31,8 @@ summaryFunc = function(stage, dataSummary, tankLength, tankDiameter, structuralD
 		} else {
 			dvMass[i] = dvMass[i - 1] + dataSummary["mass"][i - 1][3];
 		}
-		dataSummary["dV"][i] = [Math.log((dataSummary["mass"][i][3] + dvMass[i]) / (dataSummary["mass"][i][3] + dvMass[i] - dataSummary["mass"][i][0])) * dataSummary["Isp"][i][0] * 9.80655, Math.log((dataSummary["mass"][i][3] + dvMass[i]) / (dataSummary["mass"][i][3] + dvMass[i] - dataSummary["mass"][i][0])) * dataSummary["Isp"][i][1] * 9.80655]
-		dataSummary["TWR"][i] = [dataSummary["thrust"][i][0] / (dataSummary["mass"][i][3] + dvMass[i]) / 9.80665, dataSummary["thrust"][i][1] / (dataSummary["mass"][i][3] + dvMass[i]) / 9.80665]
+		dataSummary["dV"][i] = [Math.log((dataSummary["mass"][i][3] + dvMass[i]) / (dataSummary["mass"][i][3] + dvMass[i] - dataSummary["mass"][i][0])) * dataSummary["Isp"][i][0] * 9.80655, Math.log((dataSummary["mass"][i][3] + dvMass[i]) / (dataSummary["mass"][i][3] + dvMass[i] - dataSummary["mass"][i][0])) * dataSummary["Isp"][i][1] * 9.80655];
+		dataSummary["TWR"][i] = [dataSummary["thrust"][i][0] / (dataSummary["mass"][i][3] + dvMass[i]) / 9.80665, dataSummary["thrust"][i][1] / (dataSummary["mass"][i][3] + dvMass[i]) / 9.80665];
 	}
 
 	var engineReliability = 1 - 8 * (Math.pow(enginePressure, 0.5) - Math.pow(40, 0.5)) / 100;
@@ -69,5 +68,5 @@ summaryFunc = function(stage, dataSummary, tankLength, tankDiameter, structuralD
 	dataSummary["dV"][6] = totalDv;
 	dataSummary["reliability"][6] = [1, totalFuelReliability, totalEngineReliability, totalStructureReliability, totalFuelReliability * totalEngineReliability * totalStructureReliability];
 
-return dataSummary
-}
+return dataSummary;
+};

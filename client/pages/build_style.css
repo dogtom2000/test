@@ -29,6 +29,10 @@ body{
   overflow-y: scroll;
 }
 
+.center{
+  text-align: center;
+}
+
 .top-middle{
     padding: 5px;
     background-color: #444;

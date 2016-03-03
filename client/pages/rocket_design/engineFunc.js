@@ -55,7 +55,7 @@ engineFunc = function(engineCount, fuel, mixRatio, pressure, nozzleLength, massR
     var c = 1 / 2 / b;
     var expansionRatio = exhaustArea / throatArea;
     
-    machNumber = Math.pow((Math.pow((expansionRatio * 5), 1 / c) - a) / b, 0.2)
+    machNumber = Math.pow((Math.pow((expansionRatio * 5), 1 / c) - a) / b, 0.2);
 
     for (var i = 1; i < 100; i++){
         var F = 1 / machNumber * Math.pow((a + b * Math.pow(machNumber, 2)), c) - expansionRatio;
@@ -68,7 +68,7 @@ engineFunc = function(engineCount, fuel, mixRatio, pressure, nozzleLength, massR
  
     var exhaustPressure = pressure / Math.pow(Math.pow(machNumber, 2) * (gamma - 1) / 2 + 1, gamma / (gamma - 1));
 
-    var exhaustVelocity = Math.pow((2 * gamma) / (gamma - 1) * (1000 * gasConstant * temperature / weight) * (1 - Math.pow(exhaustPressure / pressure, (gamma - 1) / gamma)), 0.5)
+    var exhaustVelocity = Math.pow((2 * gamma) / (gamma - 1) * (1000 * gasConstant * temperature / weight) * (1 - Math.pow(exhaustPressure / pressure, (gamma - 1) / gamma)), 0.5);
 
     var nozzleVolume = (exhaustArea + throatArea) / 2 * nozzleLength; 
 
@@ -82,7 +82,7 @@ engineFunc = function(engineCount, fuel, mixRatio, pressure, nozzleLength, massR
 
     var engineMass = 5 * massRate + Math.pow(massRate / pressure, 0.5) * 75 + nozzleVolume * 80;
 
-    engine = {
+    var engine = {
         "thrustVac": thrustVac * engineCount,
         "thrustAtm": thrustAtm * engineCount,
         "ispVac": ispVac,
@@ -90,5 +90,5 @@ engineFunc = function(engineCount, fuel, mixRatio, pressure, nozzleLength, massR
         "engineMass": engineMass * engineCount
     };
 
-    return engine 
-}
+    return engine
+};

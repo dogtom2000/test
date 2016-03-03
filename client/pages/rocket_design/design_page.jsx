@@ -2,7 +2,7 @@ var partsObject = {
 	"Sounding Rocket": ["0.25 Meter", "0.50 Meter", "1.00 Meter", "1.00 Meter Last"],
 	"Medium Lift Rocket": ["2.0 Meter", "2.5 Meter", "3.0 Meter", "3.0 Meter Last"],
 	"Heavy Lift Rocket": ["4.0 Meter", "7.0 Meter", "10.0 Meter", "10.0 Meter Last"],
-}
+};
 
 BuildPage = React.createClass({
 
@@ -12,8 +12,8 @@ BuildPage = React.createClass({
 
 		return {
 			fuel: Fuel.find().fetch(),
-			parts: Parts.find().fetch(),
-		}
+			parts: Parts.find().fetch()
+		};
 	},
 
 	getInitialState() {
@@ -55,7 +55,7 @@ BuildPage = React.createClass({
 
 			//display control
 			selectClass: "Sounding Rocket",
-			selectParts: ["0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter"],
+			selectParts: ["Unselected","0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter","0.25 Meter"],
 			buildStatus: "",
 			rocketName: "Rocket Name",
 
@@ -170,7 +170,7 @@ BuildPage = React.createClass({
 		Rocket.stageCount = rocketStageCount;
 
 		this.setState({
-			buildStatus: rocketStageCount + " stages built",
+			buildStatus: rocketStageCount + " stages designed",
 			builtRocket: Rocket
 		});
 		
@@ -183,18 +183,17 @@ BuildPage = React.createClass({
 		Rocket.name = this.state.rocketName;
 		Rocket.save = JSON.parse(JSON.stringify(this.state));
 
-		if (this.state.buildStatus == "0 stages built"){
-			var saveVal = "No stages built";
+		if (this.state.buildStatus == "0 stages designed"){
+			saveVal = "0 stages designed";
 		} else {
 		var currentRocket = Vehicle.findOne({name: Rocket.name});
 		if(currentRocket != null){
 			//remove the rocket based on name
 			Vehicle.remove({_id: currentRocket._id});
 		}
-			console.log(Rocket)
 			Vehicle.insert(Rocket);
 			if (Vehicle.findOne({name: Rocket.name}) !== null){
-			var saveVal = "Rocket successfully saved"
+			saveVal = "Rocket successfully saved";
 			}
 		}
 		this.setState({
@@ -206,8 +205,7 @@ BuildPage = React.createClass({
 	loadRocket(){
 		this.setState(
 			Vehicle.findOne({name: arguments[0]}).save
-		)
-		drawRocket();
+		);
 	},
 
 	returnInput(rocketName){
@@ -223,7 +221,8 @@ BuildPage = React.createClass({
 		this.setState({
 			payloadSystem: payloadSystemObject,
 			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.tankLength[stage], this.state.tankDiameter[stage], this.state.structuralDensity[stage], this.state.mixRatio[stage], this.state.enginePressure[stage], this.state.dataEngine[stage], this.state.fuelType[stage], payloadSystemObject)
-		})
+		});
+		
 	},
 
 	addStage(){
@@ -261,7 +260,7 @@ BuildPage = React.createClass({
 			this.setState({
 				stageCount: this.state.stageCount + arguments[0]
 			})
-		}
+		};
 	},
 
 	rocketSubmit(){
@@ -274,7 +273,7 @@ BuildPage = React.createClass({
  		rocketConfigArray[3] = true;
 		for (var i = 0; i < this.state.stageCount; i++){
 			stageConfigArray[i][1] = false;
-			selectPartsArray[i] = partsObject[this.state.selectClass][0]
+			selectPartsArray[i] = partsObject[this.state.selectClass][0];
 		}
 		this.setState({
 			rocketConfig: rocketConfigArray,
@@ -311,7 +310,7 @@ BuildPage = React.createClass({
 		this.setState({
 			selectParts: selectPartsArray,
 			partConfig: partConfigArray,
-		})
+		});
 		this.submitStage(stage, 1);
 	},
 
@@ -327,7 +326,7 @@ BuildPage = React.createClass({
 			engineConfig: engineConfigArray,
 			dataSummary: summaryFunc(stage, this.state.dataSummary, this.state.tankLength[stage], this.state.tankDiameter[stage], this.state.structuralDensity[stage], this.state.mixRatio[stage], this.state.enginePressure[stage], this.state.dataEngine[stage], this.state.fuelType[stage], this.state.payloadSystem)
 
-		})
+		});
 	},
 
 	fuelSelect(){
@@ -340,11 +339,12 @@ BuildPage = React.createClass({
 		this.setState({
 			fuelType: fuelTypeArray,
 			fuelConfig: fuelConfigArray,
-		})
+		});
 		this.submitStage(stage, 2);
 	},
 
 	submitStage(stage, arg2){
+		drawRocket(this.state.selectParts, this.state.stageCount);
 		var stageCount = this.state.stageCount;
 
 		//database data
@@ -440,8 +440,6 @@ BuildPage = React.createClass({
 
 		//function arrays
 		var	dataEngineArray = this.state.dataEngine;
-		var	dataSummaryArray = this.state.dataSummary;
-		var	dataSummaryArray = this.state.dataSummary;
 
 		//property values
 		var	tankLengthValue = tankLengthArray[stage];
@@ -541,7 +539,7 @@ BuildPage = React.createClass({
 				break;
 			case 3:
 				val = mixRatioValue;
-				increment = 0.1
+				increment = 0.1;
 				max = Math.floor(fuelTypeData["mixRatio5"][0] * 10) / 10;
 				min = Math.ceil(fuelTypeData["mixRatio1"][0] * 10) / 10;
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
@@ -556,7 +554,7 @@ BuildPage = React.createClass({
 				break;
 			case 4:
 				val = enginePressureValue;
-				increment = 10
+				increment = 10;
 				max = 300;
 				min = 10;
 				if ((val > min || sign > 0) && (val < max || sign < 0)){
@@ -675,7 +673,7 @@ BuildPage = React.createClass({
 				</div>{/* row two ends */}		
 				
 			</div>
-			)
+			);
 	}
 });
 

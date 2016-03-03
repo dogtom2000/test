@@ -16,7 +16,7 @@ Build_11 = React.createClass({
 
 	render(){
 		return(
-			<div className="col-xs-3 fixed top-side scroll-y">
+			<div className="col-xs-3 fixed top-side scroll-y center">
 				<div id="rocketDisplay"></div>
 			</div>
 		);
@@ -33,7 +33,7 @@ var rocketImage = {
   	display: 'block',
   	marginLeft: 'auto',
   	marginRight: 'auto'
-}
+};
 
 Build_12 = React.createClass({
 
@@ -284,9 +284,9 @@ Build_21 = React.createClass({
 
 	  handleSave(){
 	  	if (Vehicle.findOne({name: this.state.value}) !== undefined){
-	  		return <button type="button" className="btn buttonStyle" data-toggle="modal" data-target="#overwriteModal">Save</button>
+	  		return <button type="button" className="btn buttonStyle" data-toggle="modal" data-target="#overwriteModal">Save</button>;
 	  	} else {
-	  		return <button type="button" className="btn buttonStyle" onClick={this.props.handleSaveRocket}>Save</button>
+	  		return <button type="button" className="btn buttonStyle" onClick={this.props.handleSaveRocket}>Save</button>;
 	  	}
 	  	
 	  },
