@@ -4,7 +4,7 @@ var partsObject = {
 	"Heavy Lift Rocket": ["4.0 Meter", "7.0 Meter", "10.0 Meter", "10.0 Meter Last"],
 };
 
-BuildPage = React.createClass({
+DesignPage2 = React.createClass({
 
 	mixins: [ReactMeteorData],
 
@@ -602,21 +602,21 @@ BuildPage = React.createClass({
 
 				<div className="row top-row">
 
-					<Build_11
+					<Design_11
 					handleAddSystem={this.addSystem}/>
 
-					<Build_12 
+					<Design_12 
 					selectParts={this.state.selectParts[this.state.stageCurrent]}
 					stageCurrent={this.state.stageCurrent}
 					dataSummary={this.state.dataSummary}/>
 
-					<Build_13 dataSummary={this.state.dataSummary}/>
+					<Design_13 dataSummary={this.state.dataSummary}/>
 
 				</div>{/* row one ends */}
 
 				<div className="row bot-row">
 
-					<Build_21 
+					<Design_21 
 					stageCount={this.state.stageCount}
 					handleStageChange={this.stageChange}
 					handleClassChange={this.classChange}
@@ -653,7 +653,7 @@ BuildPage = React.createClass({
 					handleClearShip={this.clearShip}
 					returnInput={this.returnInput}/>			
 
-					<Build_22
+					<Design_22
 					addStatus={this.state.addStatus}
 					handleAddStage={this.addStage}
 								
@@ -668,7 +668,7 @@ BuildPage = React.createClass({
 
 					handleModifyStage={this.modifyStage}/>
 
-					<Build_23 />
+					<Design_23 />
 
 				</div>{/* row two ends */}		
 				

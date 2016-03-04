@@ -1,11 +1,4 @@
-insertData = function(){
-	insertFuel();
-	insertParts();
-	insertPlanet();
-};
-
-insertFuel = function(){
-Fuel.insert({
+var fuelData = [{
 	name: "Aerozine N2O4",
 	defaultMixRatio: 1.9,
 	density: [1442.5, 891.4, 0.75],
@@ -15,8 +8,8 @@ Fuel.insert({
 	mixRatio3: [1.6841,[3097.9, 3167.8, 3257, 3321.1, 3381.6, 3438.2, 3469.8],[20.716, 20.841, 21.002, 21.117, 21.224, 21.32, 21.37],[1.2335, 1.2311, 1.2281, 1.226, 1.2241, 1.2224, 1.2215]],
 	mixRatio4: [1.7607,[3113.29, 3186.11, 3280.27, 3349.01, 3414.87, 3477.51, 3512.86],[21.015, 21.149, 21.322, 21.448, 21.567, 21.676, 21.734],[1.2324, 1.2299, 1.2268, 1.2246, 1.2225, 1.2207, 1.2196]],
 	mixRatio5: [2.0100,[3124.60, 3199.8, 3298, 3370.6, 3441.1, 3509.2, 3548.1],[21.3223, 21.4639, 21.6477, 21.7835, 21.9144, 22.0365, 22.1032],[1.2315, 1.2289, 1.2257, 1.2233, 1.2211, 1.2191, 1.218]]
-});
-Fuel.insert({
+},
+{
 	name: "LH2 LOX",
 	defaultMixRatio: 5.5,
 	density: [1141, 70.8, 0.55],
@@ -26,8 +19,8 @@ Fuel.insert({
 	mixRatio3: [5.2908,[3114.8, 3187.4, 3279.9, 3346.1, 3408.6, 3467.7, 3501.6],[12.004, 12.087, 12.194, 12.269, 12.339, 12.401, 12.433],[1.2133, 1.2107, 1.2075, 1.2053, 1.2032, 1.2014, 1.2005]],
 	mixRatio4: [6.3490,[3211.2, 3299, 3416.1, 3504.3, 3591.5, 3677.6, 3727.7],[13.519, 13.634, 13.789, 13.906, 14.02, 14.129, 14.189],[1.2088, 1.2058, 1.2019, 1.1991, 1.1964, 1.1938, 1.1925]],
 	mixRatio5: [7.9362,[3242.9, 3336.5, 3463.3, 3561, 3660, 3760.3, 3819.9],[15.458, 15.6, 15.795, 15.946, 16.099, 16.25, 16.336],[1.2062, 1.203, 1.1989, 1.1959, 1.1929, 1.19, 1.1884]]
-});
-Fuel.insert({
+},
+{
 	name: "RP1 LOX",
 	defaultMixRatio: 2.3,
 	density: [1141, 749.5, 0.75],
@@ -37,8 +30,8 @@ Fuel.insert({
 	mixRatio3: [2.3013,[3227.5, 3310.5, 3418.8, 3498.2, 3574.5, 3646.8, 3687.5],[21.055, 21.212, 21.418, 21.569, 21.713, 21.846, 21.917],[1.229, 1.2262, 1.2227, 1.2202, 1.2179, 1.2158, 1.2146]],
 	mixRatio4: [2.4422,[3263.6, 3353, 3472.1, 3561.6, 3649.8, 3735.8, 3785],[21.568, 21.742, 21.975, 22.152, 22.326, 22.492, 22.583],[1.2264, 1.2234, 1.2196, 1.2168, 1.2141, 1.2116, 1.2103]],
 	mixRatio5: [3.4754,[3294.1, 3391.9, 3525.9, 3630.8, 3738.7, 3849.6, 3916.3],[24.397, 24.617, 24.923, 25.165, 25.416, 25.672, 25.823],[1.2173, 1.2141, 1.2098, 1.2066, 1.2033, 1.2001, 1.1982]]
-});	
-Fuel.insert({
+},
+{
 	name: "Solid Fuel",
 	defaultMixRatio: 2.1,
 	density: [1952, 1952, 0.75],
@@ -48,106 +41,177 @@ Fuel.insert({
 	mixRatio3: [2.0000,[3068.33, 3125.43, 3195.27, 3243.01, 3285.91, 3324.06, 3344.47],[24.956, 25.093, 25.258, 25.369, 25.468, 25.555, 25.601],[1.091602653, 1.091268908, 1.090781419, 1.090414104, 1.090057182, 1.089757457, 1.089615983]],
 	mixRatio4: [1.0000,[3068.33, 3125.43, 3195.27, 3243.01, 3285.91, 3324.06, 3344.47],[24.956, 25.093, 25.258, 25.369, 25.468, 25.555, 25.601],[1.091602653, 1.091268908, 1.090781419, 1.090414104, 1.090057182, 1.089757457, 1.089615983]],
 	mixRatio5: [0.0000,[3068.33, 3125.43, 3195.27, 3243.01, 3285.91, 3324.06, 3344.47],[24.956, 25.093, 25.258, 25.369, 25.468, 25.555, 25.601],[1.091602653, 1.091268908, 1.090781419, 1.090414104, 1.090057182, 1.089757457, 1.089615983]]
+}];
+var partData = [{
+    type: "Sounding Rocket",
+    name: "0.25 Meter",
+    diameter: 0.25,
+    length: 2,
+    massRate: 2,
+    nozzleLength: 0.2,
+},
+{
+    type: "Sounding Rocket",
+    name: "0.50 Meter",
+    diameter: 0.50,
+    length: 4,
+    massRate: 8,
+    nozzleLength: 0.4,
+},
+{
+    type: "Sounding Rocket",
+    name: "1.00 Meter",
+    diameter: 1.00,
+    length: 8,
+    massRate: 60,
+    nozzleLength: 0.8,
+},
+{
+    type: "Medium Lift Rocket",
+    name: "2.00 Meter",
+    diameter: 2.00,
+    length: 4,
+    massRate: 100,
+    nozzleLength: 1.6,
+},
+{
+    type: "Medium Lift Rocket",
+    name: "2.50 Meter",
+    diameter: 2.50,
+    length: 8,
+    massRate: 200,
+    nozzleLength: 2.0,
+},
+{
+    type: "Medium Lift Rocket",
+    name: "3.00 Meter",
+    diameter: 3.00,
+    length: 16,
+    massRate: 500,
+    nozzleLength: 2.4,
+},
+{
+    type: "Heavy Lift Rocket",
+    name: "4.00 Meter",
+    diameter: 4.00,
+    length: 6,
+    massRate: 140,
+    nozzleLength: 3.0,
+},
+{
+    type: "Heavy Lift Rocket",
+    name: "7.00 Meter",
+    diameter: 7.00,
+    length: 20,
+    massRate: 240,
+    nozzleLength: 3.5,
+},
+{
+    type: "Heavy Lift Rocket",
+    name: "10.0 Meter",
+    diameter: 10.0,
+    length: 36,
+    massRate: 500,
+    nozzleLength: 4.0,
+}];
+
+DesignPage = React.createClass({
+   
+    getInitialState(){
+        return{
+            stageCurrent: 0,
+            stagePart: ["default", "default", "default", "default", "default", "default"],
+            dependentPropsObj: {
+				thrust: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				isp: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				twr: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				dv: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0], [0, 0]],
+				mass: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]],
+				reliability: [[[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [0, 0, 0, 0, 0]],
+				cost: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]]
+            }
+        };
+    },
+   
+    resetState(){
+       
+    },
+   
+    loadDesign(){
+       
+    },
+   
+    saveDesign(){
+       
+    },
+    
+    configureType(){
+        
+    },
+    
+    configureStage(){
+        
+    },
+    
+    configureRocket(){
+        
+    },
+   
+    configureSystem(){
+       
+    },
+   
+    configureDiameter(){
+       
+    },
+   
+    configureEngineCount(){
+       
+    },
+   
+    configureFuelType(){
+       
+    },
+    
+    selectStage(){
+        
+    },
+    
+    dependentProps(){
+    
+    },
+    
+    independentProps(){
+        
+    },
+    
+    render(){
+       return(
+        <div>   
+            <div className="row top-row">
+            
+                <Design11 />
+                
+                <Design12 
+                stageCurrent={this.state.stageCurrent}
+                stagePart={this.props.stagePart}
+                dependentPropsObj={this.state.dependentPropsObj}/>
+                
+                <Design13 
+                dependentPropsObj={this.state.dependentPropsObj}/>
+            
+            </div>{/* row one ends */}
+            
+            <div className="row bot-row">
+            
+                <Design21 />			
+                
+                <Design22 />
+                
+                <Design23 />
+            
+            </div>{/* row two ends */}	
+        </div>
+        ); 
+    }
 });
-};
-
-
-insertParts = function(){
-	Parts.insert({
-		class: "Sounding Rocket",
-		name:  "0.25 Meter",
-		index: 0,
-		length: 3,
-		diameter: 0.25,
-		structuralDensity: 20,
-		massRate: 10,
-		enginePressure: 40,
-		nozzleLength: 0.4,
-	});
-	Parts.insert({
-		class: "Sounding Rocket",
-		name:  "0.50 Meter",
-		index: 1,
-		length: 5,
-		diameter: 0.5,
-		structuralDensity: 20,
-		massRate: 15,
-		enginePressure: 40,
-		nozzleLength: 0.6,
-	});
-	Parts.insert({
-		class: "Sounding Rocket",
-		name:  "1.00 Meter",
-		index: 2,
-		length: 7,
-		diameter: 1,
-		structuralDensity: 20,
-		massRate: 20,
-		enginePressure: 40,
-		nozzleLength: 0.8,
-	});
-	Parts.insert({
-		class: "Sounding Rocket",
-		name:  "1.00 Meter Last",
-		index: 3,
-		length: 7,
-		diameter: 1,
-		structuralDensity: 20,
-		massRate: 20,
-		enginePressure: 40,
-		nozzleLength: 0.8,
-	});
-	Parts.insert({
-		class: "Heavy Lift Rocket",
-		name:  "4.0 Meter",
-		length: 4,
-		diameter: 4,
-		structuralDensity: 20,
-		massRate: 50,
-		enginePressure: 40,
-		nozzleLength: 3,
-	});
-	Parts.insert({
-		class: "Heavy Lift Rocket",
-		name:  "7.0 Meter",
-		length: 16,
-		diameter: 7,
-		structuralDensity: 20,
-		massRate: 200,
-		enginePressure: 40,
-		nozzleLength: 3.5,
-	});
-	Parts.insert({
-		class: "Heavy Lift Rocket",
-		name:  "10.0 Meter",
-		length: 36,
-		diameter: 10,
-		structuralDensity: 20,
-		massRate: 2600,
-		enginePressure: 40,
-		nozzleLength: 6,
-	});
-	Parts.insert({
-		class: "Heavy Lift Rocket",
-		name:  "10.0 Meter Last",
-		length: 36,
-		diameter: 10,
-		structuralDensity: 20,
-		massRate: 2600,
-		enginePressure: 40,
-		nozzleLength: 6,
-	});
-};
-
-insertPlanet = function(){
-		Planet.insert({
-		    name: "Earth",
-		    sgp: 3.986e14,
-		    radius: 6.371e6,
-		    pressure: 1,
-		    atmScale: 7,
-		    atmHeight: 1.4e5,
-		    atmWeight: 28.97,
-		    dayLength: 86400
-	});
-};

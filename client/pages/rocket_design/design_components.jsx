@@ -1,18 +1,4 @@
-var systemTableStyletd = {
-	width: '150px',
-  	padding: '1px'
-}
-
-var systemTableStyleth = {
-	fontWeight: 'bold',
-	fontSize: '20px'
-}
-
-var buttonStyle = {backgroundColor: "black", color: "green"}
-
-
-
-Build_11 = React.createClass({
+Design_11 = React.createClass({
 
 	render(){
 		return(
@@ -35,7 +21,7 @@ var rocketImage = {
   	marginRight: 'auto'
 };
 
-Build_12 = React.createClass({
+Design_12 = React.createClass({
 
 	render(){
 		return(
@@ -158,7 +144,7 @@ Build_12 = React.createClass({
 	}
 });
 
-Build_13 = React.createClass({
+Design_13 = React.createClass({
 
 	render(){
 		return(
@@ -273,7 +259,7 @@ Build_13 = React.createClass({
 });
 
 
-Build_21 = React.createClass({
+Design_21 = React.createClass({
 		getInitialState: function() {
 	    return {value: 'Rocket Name'};
 	  },
@@ -487,7 +473,7 @@ Build_21 = React.createClass({
 	}
 });
 
-Build_22 = React.createClass({
+Design_22 = React.createClass({
 
 	render(){
 		return(
@@ -555,7 +541,7 @@ Build_22 = React.createClass({
 	}
 });
 
-Build_23 = React.createClass({
+Design_23 = React.createClass({
 
 	render(){
 		return(

@@ -9,7 +9,7 @@ FlowRouter.route('/', {
 FlowRouter.route('/design', {
 	action: function() {
 		ReactLayout.render(App, {
-			content: <BuildPage />
+			content: <DesignPage />
 		});
 	}
 });
