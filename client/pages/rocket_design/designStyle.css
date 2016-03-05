@@ -24,26 +24,3 @@
 
 
 
-.scroll-y{
-  overflow-y: scroll;
-}
-
-/*build modify table  */
-#buildModify{
-  width: 100%;
-}
-
-#buildModify>tbody>tr>td{
-
-  width: 10%;
-}
-
-#buildModify>tbody>tr>td:nth-child(2){
-  padding-left: 4px;
-  width: 25%;
-}
-
-#buildModify>tbody>tr>td:first-child{
-  padding-left: 4px;
-  width: 45%;
-}

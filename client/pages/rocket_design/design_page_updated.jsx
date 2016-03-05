@@ -42,85 +42,74 @@ var fuelData = [{
 	mixRatio4: [1.0000,[3068.33, 3125.43, 3195.27, 3243.01, 3285.91, 3324.06, 3344.47],[24.956, 25.093, 25.258, 25.369, 25.468, 25.555, 25.601],[1.091602653, 1.091268908, 1.090781419, 1.090414104, 1.090057182, 1.089757457, 1.089615983]],
 	mixRatio5: [0.0000,[3068.33, 3125.43, 3195.27, 3243.01, 3285.91, 3324.06, 3344.47],[24.956, 25.093, 25.258, 25.369, 25.468, 25.555, 25.601],[1.091602653, 1.091268908, 1.090781419, 1.090414104, 1.090057182, 1.089757457, 1.089615983]]
 }];
-var partData = [{
-    type: "Sounding Rocket",
-    name: "0.25 Meter",
-    diameter: 0.25,
-    length: 2,
-    massRate: 2,
-    nozzleLength: 0.2,
-},
-{
-    type: "Sounding Rocket",
-    name: "0.50 Meter",
-    diameter: 0.50,
-    length: 4,
-    massRate: 8,
-    nozzleLength: 0.4,
-},
-{
-    type: "Sounding Rocket",
-    name: "1.00 Meter",
-    diameter: 1.00,
-    length: 8,
-    massRate: 60,
-    nozzleLength: 0.8,
-},
-{
-    type: "Medium Lift Rocket",
-    name: "2.00 Meter",
-    diameter: 2.00,
-    length: 4,
-    massRate: 100,
-    nozzleLength: 1.6,
-},
-{
-    type: "Medium Lift Rocket",
-    name: "2.50 Meter",
-    diameter: 2.50,
-    length: 8,
-    massRate: 200,
-    nozzleLength: 2.0,
-},
-{
-    type: "Medium Lift Rocket",
-    name: "3.00 Meter",
-    diameter: 3.00,
-    length: 16,
-    massRate: 500,
-    nozzleLength: 2.4,
-},
-{
-    type: "Heavy Lift Rocket",
-    name: "4.00 Meter",
-    diameter: 4.00,
-    length: 6,
-    massRate: 140,
-    nozzleLength: 3.0,
-},
-{
-    type: "Heavy Lift Rocket",
-    name: "7.00 Meter",
-    diameter: 7.00,
-    length: 20,
-    massRate: 240,
-    nozzleLength: 3.5,
-},
-{
-    type: "Heavy Lift Rocket",
-    name: "10.0 Meter",
-    diameter: 10.0,
-    length: 36,
-    massRate: 500,
-    nozzleLength: 4.0,
-}];
+var partData = {
+    "default": [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]],
+    "Sounding Rocket": [
+        [0.25, 2, 2, 0.2],
+        [0.50, 4, 8, 0.4],
+        [1.00, 8, 60, 0.8]],
+    "Medium Lift Rocket": [
+        [2.00, 4, 100, 1.6],
+        [2.50, 8, 200, 2.0],
+        [3.00, 16, 500, 2.4]],
+    "Heavy Lift Rocket": [
+        [4.00, 6, 140, 3.0],
+        [7.00, 20, 240, 3.5],
+        [10.0, 36, 500, 4.0]],
+};
 
+            
 DesignPage = React.createClass({
    
     getInitialState(){
-        return{
+        
+        return {
+            stageCount: 1,
             stageCurrent: 0,
+            saveFormValue: "Save as",
+            saveMessageValue: "Design not saved:",
             stagePart: ["default", "default", "default", "default", "default", "default"],
+            rocketConfig: ["btn buttonStyleHigh", "btn buttonStyle", "btn buttonStyle", false],
+            rocketType: "default",
+            partIndex: [0, 0, 0, 0, 0, 0],
+            stageConfig: [["btn buttonStyleHigh", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], true],
+			stageStatus: false,
+			systemConfig: [true],
+			systemMass: 0,
+			tankLength: ["---", "---", "---", "---", "---", "---"],
+			tankDiameter: [0, 0, 0, 0, 0, 0],
+			structuralDensity: ["---", "---", "---", "---", "---", "---"],
+			fuelType: ["Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel"],
+			massRate: ["---", "---", "---", "---", "---", "---"],
+			mixRatio: ["---", "---", "---", "---", "---", "---"],
+			enginePressure: ["---", "---", "---", "---", "---", "---"],
+			engineCount: [1, 1, 1, 1, 1, 1],
+			nozzleLength: ["---", "---", "---", "---", "---", "---"],
+			partConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
+			engineConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
+			fuelConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+		    stageButtonConfig: [[true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"]],
+            dataEngine: [],
             dependentPropsObj: {
 				thrust: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
 				isp: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
@@ -134,55 +123,487 @@ DesignPage = React.createClass({
     },
    
     resetState(){
-       
+       this.replaceState({
+            stageCount: 1,
+            stageCurrent: 0,
+            saveFormValue: "Save as",
+            saveMessageValue: "Design not saved:",
+            stagePart: ["default", "default", "default", "default", "default", "default"],
+            rocketConfig: ["btn buttonStyleHigh", "btn buttonStyle", "btn buttonStyle", false],
+            rocketType: "default",
+            partIndex: [0, 0, 0, 0, 0, 0],
+            stageConfig: [["btn buttonStyleHigh", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], true],
+			stageStatus: false,
+			systemConfig: [true],
+			systemMass: 0,
+			tankLength: ["---", "---", "---", "---", "---", "---"],
+			tankDiameter: [0, 0, 0, 0, 0, 0],
+			structuralDensity: ["---", "---", "---", "---", "---", "---"],
+			fuelType: ["Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel", "Solid Fuel"],
+			massRate: ["---", "---", "---", "---", "---", "---"],
+			mixRatio: ["---", "---", "---", "---", "---", "---"],
+			enginePressure: ["---", "---", "---", "---", "---", "---"],
+			engineCount: [1, 1, 1, 1, 1, 1],
+			nozzleLength: ["---", "---", "---", "---", "---", "---"],
+			partConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
+			engineConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+
+			fuelConfig:[[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
+						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
+		    stageButtonConfig: [[true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"]],
+            dataEngine: [],
+            dependentPropsObj: {
+				thrust: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				isp: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				twr: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
+				dv: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0], [0, 0]],
+				mass: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]],
+				reliability: [[[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [[1, 1], 1, 1, 1], [0, 0, 0, 0, 0]],
+				cost: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]]
+            }
+        });
     },
    
     loadDesign(){
-       
+       	this.replaceState(
+			Design.findOne({name: arguments[0]}).save
+		);
     },
-   
-    saveDesign(){
-       
+    
+    saveDesign(designName){
+		var designStages = {};
+		var designStageCount = 0;
+		var futureStageMass = this.state.systemMass;
+		for(var i = 0; i < 6; i++){
+			if (this.state.dependentPropsObj["dv"][i][0] > 0 && designStageCount == i){
+				designStages[i + 1] = [[this.state.dependentPropsObj["mass"][i][0], 
+										this.state.dependentPropsObj["mass"][i][0]], 
+										this.state.dependentPropsObj["mass"][i][3] - this.state.dependentPropsObj["mass"][i][0], 
+										futureStageMass, 
+										0.2, 
+										this.state.tankDiameter[i], 
+										this.state.dependentPropsObj["thrust"][i][0], 
+										this.state.dependentPropsObj["thrust"][i][1], 
+										this.state.dependentPropsObj["isp"][i][0]];			
+				designStageCount++;
+				futureStageMass += this.state.dependentPropsObj["mass"][i][3];
+			}			
+		}
+		if (designStageCount == 0){
+			var saveMessage = "Design not saved: 0 stages designed";
+		} else {
+    		var dbDesign = Design.findOne({name: designName});
+    		var design = {};
+    		design.name = designName;
+    		design.stages = designStages;
+    		design.stageCount = designStageCount;
+    		design.save = JSON.parse(JSON.stringify(this.state));
+		if(dbDesign != null){
+			Design.remove({_id: dbDesign._id});
+		}
+			Design.insert(design);
+			if (Design.findOne({name: design.name}) !== null){
+			saveMessage = "Design successfully saved";
+			}
+		}
+		this.setState({
+			saveMessageValue: saveMessage
+		});
     },
     
     configureType(){
-        
+        var rocketConfigArray = this.state.rocketConfig;
+		var firstPart = partData[arguments[0]][0][0];
+		rocketConfigArray[0] = "btn buttonStyle";
+		rocketConfigArray[1] = "btn buttonStyle";
+		rocketConfigArray[2] = "btn buttonStyle";
+		rocketConfigArray[arguments[1]] = "btn buttonStyleHigh";
+		this.setState({
+			rocketConfig: rocketConfigArray,
+			rocketType: arguments[0],
+			stagePart: [firstPart, firstPart, firstPart, firstPart, firstPart, firstPart]
+		});
     },
     
     configureStage(){
-        
+        if (arguments[0] > 0 && this.state.stageCount < 6 || arguments[0] < 0 && this.state.stageCount > 1){
+			this.setState({
+				stageCount: this.state.stageCount + arguments[0]
+			});
+		}
     },
     
     configureRocket(){
-        
+		var rocketConfigArray = this.state.rocketConfig;
+		var stageConfigArray = this.state.stageConfig;
+		var systemConfigArray = this.state.systemConfig;
+		var stagePartArray = this.state.stagePart;
+		var stageButtonConfigArray = this.state.stageButtonConfig;
+		
+		stageConfigArray[6] = false;
+		systemConfigArray[0] = false;
+ 		rocketConfigArray[3] = true;
+ 		stageButtonConfigArray[0][2] = "btn btn-block buttonStyleHigh";
+		for (var i = 0; i < this.state.stageCount; i++){
+			stageConfigArray[i][1] = false;
+			stagePartArray[i] = partData[this.state.rocketType][0][0];
+		}
+		this.setState({
+			rocketConfig: rocketConfigArray,
+			stageConfig: stageConfigArray,
+			systemConfig: systemConfigArray,
+			stagePart: stagePartArray,
+			stageButtonConfig: stageButtonConfigArray
+		});
+
+    	for (var i = 0; i < this.state.stageCount; i++){
+    		this.dependentProps(i, 0);
+    	}
     },
    
     configureSystem(){
-       
+		var stage = this.state.stageCurrent;
+		this.setState({
+			systemMass: arguments[0],
+			dependentPropsObj: calculatePropsFunc(	stage, 
+													this.state.dependentPropsObj, 
+													this.state.tankLength[stage], 
+													this.state.tankDiameter[stage], 
+													this.state.structuralDensity[stage], 
+													this.state.mixRatio[stage], 
+													this.state.enginePressure[stage], 
+													this.state.dataEngine[stage], 
+													fuelData.filter((obj) => obj.name == this.state.fuelType[stage])[0], 
+													arguments[0]),
+		});
     },
    
     configureDiameter(){
-       
+       	var stage = this.state.stageCurrent;
+		var stagePartArray = this.state.stagePart;
+		var partConfigArray = this.state.partConfig;
+		var partIndexArray = this.state.partIndex;
+		stagePartArray[stage] = partData[this.state.rocketType][arguments[0]][0];
+		partConfigArray[stage] = [["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]];
+		partConfigArray[stage][arguments[0]] = ["btn buttonStyleHigh", false];
+		partIndexArray[stage] = arguments[0];
+		this.setState({
+			stagePart: stagePartArray,
+			partConfig: partConfigArray,
+			partIndex: partIndexArray
+		});
+		this.submitStage(stage, 1);
     },
    
     configureEngineCount(){
-       
+       	var stage = this.state.stageCurrent;
+		var engineCountArray = this.state.engineCount;
+		var engineConfigArray = this.state.engineConfig;
+		engineCountArray[stage] = arguments[1];
+		engineConfigArray[stage] = [["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]];
+		engineConfigArray[stage][arguments[0]] = ["btn buttonStyleHigh", false];
+		this.setState({
+			engineCount: engineCountArray,
+			engineConfig: engineConfigArray,
+			dependentPropsObj: calculatePropsFunc(	stage, 
+													this.state.dependentPropsObj, 
+													this.state.tankLength[stage], 
+													this.state.tankDiameter[stage], 
+													this.state.structuralDensity[stage], 
+													this.state.mixRatio[stage], 
+													this.state.enginePressure[stage], 
+													this.state.dataEngine[stage], 
+													fuelData.filter((obj) => obj.name == this.state.fuelType[stage])[0], 
+													this.state.systemMass)
+
+		});
     },
    
     configureFuelType(){
-       
+       	var stage = this.state.stageCurrent;
+		var fuelTypeArray = this.state.fuelType;
+		var fuelConfigArray = this.state.fuelConfig;
+		fuelTypeArray[stage] = arguments[1];
+		fuelConfigArray[stage] = [["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]];
+		fuelConfigArray[stage][arguments[0]] = ["btn buttonStyleHigh", false];
+		this.setState({
+			fuelType: fuelTypeArray,
+			fuelConfig: fuelConfigArray,
+		});
+		this.dependentProps(stage, 2);
     },
     
     selectStage(){
-        
+        var stageButtonConfigArray = this.state.stageButtonConfig;
+		var prevStage = this.state.stageCurrent;
+		var newStage = arguments[0];
+		stageButtonConfigArray[prevStage][2] = "btn btn-block buttonStyle";
+		stageButtonConfigArray[newStage][2] = "btn btn-block buttonStyleHigh";		
+		this.setState({
+			stageButtonConfig: stageButtonConfigArray,
+			stageCurrent: newStage,
+		});
     },
     
-    dependentProps(){
-    
+    dependentProps(stage, source){
+        var stageCount = this.state.stageCount;
+        var rocketPartData = partData[this.state.rocketType][this.state.partIndex[stage]];
+        var rocketFuelData = fuelData.filter((obj) => obj.name == this.state.fuelType[stage])[0];
+        
+        var stageButtonConfigArray = this.state.stageButtonConfig;
+        var	tankLengthArray = this.state.tankLength;
+		var	tankDiameterArray = this.state.tankDiameter;
+		var	structuralDensityArray = this.state.structuralDensity;
+		var	massRateArray = this.state.massRate;			
+		var	enginePressureArray = this.state.enginePressure;
+		var	nozzleLengthArray = this.state.nozzleLength;
+		var	mixRatioArray = this.state.mixRatio;
+        
+        var	dataEngineArray = this.state.dataEngine;
+        
+        if (source == 1 || source == 0){
+            tankDiameterArray[stage] = rocketPartData[0]; 
+			tankLengthArray[stage] = rocketPartData[1]; 
+			massRateArray[stage] = rocketPartData[2]; 			
+			nozzleLengthArray[stage] = rocketPartData[3]; 
+		}
+		if (source == 0){
+			structuralDensityArray[stage] = 20;
+			enginePressureArray[stage] = 40; 
+		}
+		if (source == 2 || source == 0){
+			mixRatioArray[stage] = rocketFuelData["defaultMixRatio"]; 
+		}
+
+		dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], rocketFuelData, mixRatioArray[stage], enginePressureArray[stage], nozzleLengthArray[stage], massRateArray[stage]);
+		
+		if (this.state.stageStatus == false){
+			for (var i = 0; i < stageCount ; i++){
+				stageButtonConfigArray[i][0] = false;
+				stageButtonConfigArray[i][1] = "Stage " + (stageCount - i);
+			}
+		}
+		
+        this.setState({
+            saveMessageValue: "Design not saved:",
+          
+			tankLength: tankLengthArray,
+			tankDiameter: tankDiameterArray,
+			structuralDensity: structuralDensityArray,
+			massRate: massRateArray,
+			mixRatio: mixRatioArray,
+			enginePressure: enginePressureArray,
+			nozzleLength :nozzleLengthArray,
+
+			stageStatus: true,
+			stageButtonConfig: stageButtonConfigArray,
+
+			dataEngine: dataEngineArray,
+			dependentPropsObj: calculatePropsFunc(	stage, 
+													this.state.dependentPropsObj, 
+													tankLengthArray[stage], 
+													tankDiameterArray[stage], 
+													structuralDensityArray[stage], 
+													mixRatioArray[stage], 
+													enginePressureArray[stage], 
+													dataEngineArray[stage], 
+													rocketFuelData, 
+													this.state.systemMass),
+        });
     },
     
     independentProps(){
-        
+        var stage = this.state.stageCurrent;
+
+		var fuelTypeData = fuelData.filter((obj) => obj.name == this.state.fuelType[stage])[0];
+
+		//properties arrays
+		var	tankLengthArray = this.state.tankLength;
+		var	structuralDensityArray = this.state.structuralDensity;
+		var	massRateArray = this.state.massRate;
+		var	mixRatioArray = this.state.mixRatio;
+		var	enginePressureArray = this.state.enginePressure;
+		var	nozzleLengthArray = this.state.nozzleLength;
+
+		//function arrays
+		var	dataEngineArray = this.state.dataEngine;
+
+		//property values
+		var	tankLengthValue = tankLengthArray[stage];
+		var	tankDiameterValue = this.state.tankDiameter[stage];
+		var	structuralDensityValue = structuralDensityArray[stage];
+		var	massRateValue = massRateArray[stage];
+		var	mixRatioValue = mixRatioArray[stage];
+		var	enginePressureValue = enginePressureArray[stage];
+		var	nozzleLengthValue = nozzleLengthArray[stage];
+		
+		var sign = arguments[1];
+		var val;
+		var increment;
+		var max;
+		var min;
+
+		switch(arguments[0]){
+			case 0:
+				val = tankLengthValue;
+				switch (true){
+					case (val < 10 || (val == 10 && sign < 0)):
+						increment = 0.5;
+						break;
+					case ((val > 10 && val < 30) || (val == 10 && sign > 0) || (val == 30 && sign < 0)):
+						increment = 1;
+						break;
+					case (val > 30 || (val == 30 && sign > 0)):
+						increment = 2;
+						break;
+				}
+				max = Math.pow(250 * tankDiameterValue, 0.5);
+				min = Math.max(tankDiameterValue, 0.5);
+				if ((val > min || sign > 0) && (val < max || sign < 0)){
+					tankLengthValue = Math.round((tankLengthValue + sign * increment) * 10) / 10;
+					tankLengthArray[stage] = tankLengthValue;
+					this.setState({
+						tankLength: tankLengthArray,
+					});
+					}
+				break;
+			case 1:
+				val = structuralDensityValue;
+				switch (true){
+					case (val < 40 || (val == 40 && sign < 0)):
+						increment = 2;
+						break;
+					case ((val > 40 && val < 80) || (val == 40 && sign > 0) || (val == 80 && sign < 0)):
+						increment = 5;
+						break;
+					case (val > 80 || (val == 80 && sign > 0)):
+						increment = 10;
+						break;
+				}
+				max = 200;
+				min = 10;
+				if ((val > min || sign > 0) && (val < max || sign < 0)){
+					structuralDensityValue = Math.round((structuralDensityValue + sign * increment) * 10) / 10;
+					structuralDensityArray[stage] = structuralDensityValue;
+					this.setState({
+						structuralDensity: structuralDensityArray,
+					});
+					}
+				break;
+			case 2:
+				val = massRateValue;
+				switch (true){
+					case (val < 10 || (val == 10 && sign < 0)):
+						increment = 1;
+						break;
+					case ((val > 10 && val < 50) || (val == 10 && sign > 0) || (val == 50 && sign < 0)):
+						increment = 5;
+						break;
+					case ((val > 50 && val < 100) || (val == 50 && sign > 0) || (val == 100 && sign < 0)):
+						increment = 10;
+						break;
+					case ((val > 100 && val < 500) || (val == 100 && sign > 0) || (val == 500 && sign < 0)):
+						increment = 20;
+						break;
+					case ((val > 500 && val < 4000) || (val == 500 && sign > 0) || (val == 4000 && sign < 0)):
+						increment = 100;
+						break;
+					case (val > 4000 || (val == 4000 && sign > 0)):
+						increment = 500;
+						break;
+				}
+				max = 10000;
+				min = 1;
+				if ((val > min || sign > 0) && (val < max || sign < 0)){
+					massRateValue = Math.round((massRateValue + sign * increment) * 10) / 10;
+					massRateArray[stage] = massRateValue;
+					dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					this.setState({
+						massRate: massRateArray,
+						dataEngine: dataEngineArray
+					});
+					}
+				break;
+			case 3:
+				val = mixRatioValue;
+				increment = 0.1;
+				max = Math.floor(fuelTypeData["mixRatio5"][0] * 10) / 10;
+				min = Math.ceil(fuelTypeData["mixRatio1"][0] * 10) / 10;
+				if ((val > min || sign > 0) && (val < max || sign < 0)){
+					mixRatioValue = Math.round((mixRatioValue + sign * increment) * 10) / 10;
+					mixRatioArray[stage] = mixRatioValue;
+					dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					this.setState({
+						mixRatio: mixRatioArray,
+						dataEngine: dataEngineArray
+					});
+					}
+				break;
+			case 4:
+				val = enginePressureValue;
+				increment = 10;
+				max = 300;
+				min = 10;
+				if ((val > min || sign > 0) && (val < max || sign < 0)){
+					enginePressureValue = Math.round((enginePressureValue + sign * increment) * 10) / 10;
+					enginePressureArray[stage] = enginePressureValue;
+					dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					this.setState({
+						enginePressure: enginePressureArray,
+						dataEngine: dataEngineArray
+					});
+					}
+				break;
+			case 5:
+				val = nozzleLengthValue;
+				switch (true){
+					case (val < 2 || (val == 2 && sign < 0)):
+						increment = 0.2;
+						break;
+					case (val > 2 || (val == 2 && sign > 0)):
+						increment = 0.5;
+						break;
+				}
+				max = 1.88 * tankDiameterValue;
+				min = 0.2;
+				if ((val > min || sign > 0) && (val < max || sign < 0)){
+					nozzleLengthValue = Math.round((nozzleLengthValue + sign * increment) * 10) / 10;
+					nozzleLengthArray[stage] = nozzleLengthValue;
+					dataEngineArray[stage] = engineFunc(this.state.engineCount[stage], fuelTypeData, mixRatioValue, enginePressureValue, nozzleLengthValue, massRateValue);
+					this.setState({
+						nozzleLength: nozzleLengthArray,
+						dataEngine: dataEngineArray
+					});
+					}
+				break;
+		}
+		this.setState({
+			dependentPropsObj: calculatePropsFunc(	stage, 
+													this.state.dependentPropsObj, 
+													tankLengthValue, 
+													this.state.tankDiameter[stage], 
+													structuralDensityValue, 
+													mixRatioValue, 
+													enginePressureValue, 
+													dataEngineArray[stage], 
+													fuelTypeData, 
+													this.state.systemMass),
+		});
     },
     
     render(){
@@ -204,9 +625,46 @@ DesignPage = React.createClass({
             
             <div className="row bot-row">
             
-                <Design21 />			
+                <Design21 
+                partData={partData}
                 
-                <Design22 />
+                saveFormValue={this.state.saveFormValue}
+                saveMessageValue={this.state.saveMessageValue}
+                rocketConfig={this.state.rocketConfig}
+                systemConfig={this.state.systemConfig}
+				stageConfig={this.state.stageConfig}
+				rocketType={this.state.rocketType}
+				stageCount={this.state.stageCount}
+				
+				stagePart={this.state.stagePart[this.state.stageCurrent]}
+				partConfig={this.state.partConfig[this.state.stageCurrent]}
+				engineConfig={this.state.engineConfig[this.state.stageCurrent]}
+				fuelConfig={this.state.fuelConfig[this.state.stageCurrent]}
+				stageButtonConfig={this.state.stageButtonConfig}
+				
+				handleConfigureType={this.configureType}
+				handleConfigureStage={this.configureStage}
+				handleConfigureRocket={this.configureRocket}
+				handleConfigureSystem={this.configureSystem}
+				handleConfigureDiameter={this.configureDiameter}
+                handleConfigureEngineCount={this.configureEngineCount}
+                handleConfigureFuelType={this.configureFuelType}
+                handleSelectStage={this.selectStage}
+                handleLoadDesign={this.loadDesign}
+				handleSaveDesign={this.saveDesign}
+				handleResetState={this.resetState}/>			
+                
+                <Design22 
+                handleSelectStage={this.selectStage}
+                handleIndependentProps={this.independentProps}
+                stageButtonConfig={this.state.stageButtonConfig}
+            
+            	tankLength={this.state.tankLength[this.state.stageCurrent]}
+				structuralDensity={this.state.structuralDensity[this.state.stageCurrent]}
+				massRate={this.state.massRate[this.state.stageCurrent]}
+				mixRatio={this.state.mixRatio[this.state.stageCurrent]}
+				enginePressure={this.state.enginePressure[this.state.stageCurrent]}
+				nozzleLength={this.state.nozzleLength[this.state.stageCurrent]}/>
                 
                 <Design23 />
             
