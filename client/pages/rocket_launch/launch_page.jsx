@@ -33,6 +33,7 @@ LaunchPage = React.createClass({
 			orbit: orbit[6],
 			Rocket: orbit[1]
 		})
+		Vehicle.update({ _id: this.state.Rocket._id }, orbit[1]);
 	},
 
 	displayOrbit(){
@@ -42,7 +43,7 @@ LaunchPage = React.createClass({
 	},
 
 	removeVehicle(){
-		Vehicle.remove({_id: arguments[0]})
+		Design.remove({_id: arguments[0]})
 	},
 
 	render(){

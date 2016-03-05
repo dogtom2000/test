@@ -1,6 +1,11 @@
 Design12 = React.createClass({
 
 	render(){
+	  if(this.props.stageCurrent == this.props.stageCount - 1){
+	    var partImage = this.props.stagePart + "L.png";
+	  } else { 
+	    partImage = this.props.stagePart + ".png";
+	  }
 		return(
             <div className="col-xs-6 fixed top-middle">
               <div className="col-xs-6 fixed">
@@ -111,7 +116,7 @@ Design12 = React.createClass({
                 </table>
               </div>
               <div className="col-xs-6 fixed">
-                <img className="designImageStyle" src={this.props.selectParts + ".png"}></img>
+                <img className="designImageStyle" src={partImage}></img>
               </div>
             </div>
 		);

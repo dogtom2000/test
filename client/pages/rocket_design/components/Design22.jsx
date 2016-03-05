@@ -14,7 +14,7 @@ Design22 = React.createClass({
 			    </div>
 			  </div>
 			  <div className="col-xs-9 fixed">
-			    <table id="buildModify">
+			    <table id="designModify">
 			      <tbody>
 			        <tr>
 			          <td>Tank Length</td>

@@ -1,0 +1,20 @@
+path {
+    stroke: #f00;
+    stroke-width: 2;
+    fill: none;
+}
+
+#launchDisplay{
+  display: block;
+  text-align: center;
+}
+
+
+
+#chart2, #chart3, #chart4{
+  font-size: 20px;
+}
+
+#rocket-name-input{
+  color: #000;
+}

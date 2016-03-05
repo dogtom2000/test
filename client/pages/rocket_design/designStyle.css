@@ -1,5 +1,5 @@
 .designImageStyle{
- 	height: 560px;
+ 	  height: 560px;
   	width: 234px;
   	border: none;
   	margin-top: 20px;
@@ -20,7 +20,23 @@
   width: 50%;
 }
 
+#designModify{
+  width: 100%;
+}
 
+#designModify>tbody>tr>td{
+  width: 10%;
+}
+
+#designModify>tbody>tr>td:first-child{
+  padding-left: 4px;
+  width: 45%;
+}
+
+#designModify>tbody>tr>td:nth-child(2){
+  padding-left: 4px;
+  width: 25%;
+}
 
 
 

@@ -3,10 +3,6 @@ body{
   height: 100%;
 }
 
-.modal-dialog{
-  color: #000;
-  margin-top: 20%;
-}
 .app-container{
   color: #fff;
   font-size: 15px;
@@ -19,18 +15,6 @@ body{
   min-width: 1024px;
   max-width: 1664px;
   background-color: #000;
-}
-
-.navbar {
-    margin-bottom: 0;
-}
-
-.scroll-y{
-  overflow-y: scroll;
-}
-
-.center{
-  text-align: center;
 }
 
 .top-middle{
@@ -80,47 +64,24 @@ body{
     color: red;
 }
 
-.modalStyle{
-  background-color: #111;
-  color: green;
-}
-
 button:focus {
     border-color: #0F0;
     box-shadow: 0 0 5px rgba(00, 255, 0, 0.8);
 }
 
-/*build modify table  */
-#buildModify{
-  width: 100%;
+.modalStyle{
+  background-color: #111;
+  color: green;
 }
 
-#buildModify>tbody>tr>td{
-
-  width: 10%;
+.modal-dialog{
+  color: #000;
+  margin-top: 20%;
 }
 
-#buildModify>tbody>tr>td:nth-child(2){
-  padding-left: 4px;
-  width: 25%;
+.modal-footer .btn + .btn{
+  margin-left: 0px;
 }
-
-#buildModify>tbody>tr>td:first-child{
-  padding-left: 4px;
-  width: 45%;
-}
-
-/*stage summary list  */
-#rocket-summary td{
-  padding: 1px;
-}
-
-#rocket-summary th{
-  font-weight: bold;
-  font-size: 20px;
-  width: 50%;
-}
-
 
 /* misc */
 .title{ 
@@ -128,13 +89,8 @@ button:focus {
   font-size: 25px;
 }
 
-.dropdown-menu {
-  width: 100%; 
-  text-align: center;
-}
-
-.dropdown-menu li > a:hover{
-  background-color: #8C8C50;
+a, a:active, a:hover, a:visited, a:link{
+  color:green;
 }
 
 .btn{
@@ -142,31 +98,14 @@ button:focus {
  border-radius:0;
 }
 
-/* chart */
-
-path {
-    stroke: #f00;
-    stroke-width: 2;
-    fill: none;
+.navbar {
+    margin-bottom: 0;
 }
 
-#launchDisplay{
-  display: block;
+.scroll-y{
+  overflow-y: scroll;
+}
+
+.center{
   text-align: center;
-}
-
-.modal-footer .btn + .btn{
-  margin-left: 0px;
-}
-
-#chart2, #chart3, #chart4{
-  font-size: 20px;
-}
-
-#rocket-name-input{
-  color: #000;
-}
-
-a, a:active, a:hover, a:visited, a:link{
-  color:green;
 }

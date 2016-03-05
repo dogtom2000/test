@@ -196,7 +196,6 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         var semiMajorAxis = -Planet.sgp / 2 / orbitalEnergy;
         var apoapsis = semiMajorAxis * (1 + Math.abs(ecc));
         var periapsis = semiMajorAxis * (1 - Math.abs(ecc));
-        console.log(apoapsis, periapsis);
         return [apoapsis, periapsis];
     }
 };

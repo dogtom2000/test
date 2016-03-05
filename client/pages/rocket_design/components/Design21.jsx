@@ -1,21 +1,10 @@
 Design21 = React.createClass({
-  
-  getInitialState(){
-    return{
-      saveFormValue: "Save as"
-    };
-  },
-  
-  handleSaveFormChange(e){
-    this.setState({saveFormValue: e.target.value});
-  },
-
 
   handleSave(){
-    if (Design.findOne({name: this.state.saveFormValue}) !== undefined){
+    if (Design.findOne({name: this.props.saveFormValue}) !== undefined){
       return <button type="button" className="btn buttonStyle" data-toggle="modal" data-target="#overwriteModal">Save</button>;
     } else {
-      return <button type="button" className="btn buttonStyle" onClick={this.props.handleSaveDesign.bind(null, this.state.saveFormValue)}>Save</button>;
+      return <button type="button" className="btn buttonStyle" onClick={this.props.handleSaveDesign.bind(null, this.props.saveFormValue)}>Save</button>;
     }
   },
 	  
@@ -140,8 +129,8 @@ Design21 = React.createClass({
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
                   <h4 className="modal-title">Are you sure?</h4>
                   <div className="modal-body">
-                    {[{"name": "cat"}, {"name": "dog"}].map( function(u) { return u.name; } ).map((name, i) =>
-                    <li key={i}><a href="#" onClick={this.props.handleLoadDesign.bind(null, name) } data-dismiss="modal">{name}</a></li>)}
+                    {this.props.savedDesign.map( function(u) { return u.name; } ).map((name, i) =>
+                    <li key={i}><a href="#" onClick={this.props.handleLoadDesign.bind(null, name)} data-dismiss="modal">{name}</a></li>)}
                   </div>
                   <div className="modal-footer">
                     <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
@@ -159,7 +148,7 @@ Design21 = React.createClass({
                   <h4 className="modal-title">Save Rocket</h4>
                 </div>
                 <div className="modal-body">
-                  <input type="text" value={this.state.saveFormValue} onChange={this.handleSaveFormChange} />
+                  <input type="text" value={this.props.saveFormValue} onChange={this.props.handleSaveFormValue} />
                   <h4 className="modal-title">{this.props.saveMessageValue}</h4>
                 </div>
                 <div className="modal-footer">
@@ -177,7 +166,7 @@ Design21 = React.createClass({
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
                   <h4 className="modal-title">Overwrite save?</h4>
                   <div className="modal-footer">
-                    <button type="button" className="btn buttonStyle" onClick={this.props.handleSaveDesign.bind(null, this.state.saveFormValue)} data-dismiss="modal">Overwrite</button>
+                    <button type="button" className="btn buttonStyle" onClick={this.props.handleSaveDesign.bind(null, this.props.saveFormValue)} data-dismiss="modal">Overwrite</button>
                     <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
                   </div>
                 </div>
