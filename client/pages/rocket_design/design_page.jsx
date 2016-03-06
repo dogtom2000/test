@@ -117,7 +117,7 @@ DesignPage = React.createClass({
 						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
 						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
 						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
-		    stageButtonConfig: [[true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"]],
+		    stageButtonConfig: [[true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"]],
             dataEngine: [],
             dependentPropsObj: {
 				thrust: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
@@ -189,15 +189,18 @@ DesignPage = React.createClass({
     },
    
     loadDesign(){
-    	var save = Design.findOne({name: arguments[0]}).save;
+    	var save = this.data.savedDesign.filter((obj) => obj.name == arguments[0])[0].save;
     	save.saveFormValue = arguments[0];
        	this.setState(
 			save
 		);
     },
     
+    deleteDesign(){
+    	Meteor.call("deleteDesign", this.data.savedDesign.filter((obj) => obj.name == arguments[0])[0]._id);
+    },
+    
     saveDesign(designName){
-    	console.log(this.state.saveFormValue)
 		var designStages = {};
 		var designStageCount = 0;
 		var futureStageMass = this.state.systemMass;
@@ -219,20 +222,21 @@ DesignPage = React.createClass({
 		if (designStageCount == 0){
 			var saveMessage = "Design not saved: 0 stages designed";
 		} else {
-    		var dbDesign = Design.findOne({name: designName});
+    		var dbDesign = this.data.savedDesign.filter((obj) => obj.name == designName)[0];
+    		if (dbDesign !== undefined){
+    			dbDesign_id = dbDesign._id;
+    		} else {
+    			dbDesign_id = false;
+    		}
     		var design = {};
     		design.name = designName;
     		design.buildCount = 0;
     		design.stages = designStages;
     		design.stageCount = designStageCount;
     		design.save = JSON.parse(JSON.stringify(this.state));
-		if(dbDesign != null){
-			Design.remove({_id: dbDesign._id});
-		}
-			Design.insert(design);
-			if (Design.findOne({name: design.name}) !== null){
-			saveMessage = "Design successfully saved";
-			}
+    		design.owner = Meteor.user()._id;
+			Meteor.call("addDesign", design, dbDesign_id);
+			saveMessage = "Design  saved";
 		}
 		this.setState({
 			saveMessageValue: saveMessage
@@ -367,8 +371,8 @@ DesignPage = React.createClass({
         var stageButtonConfigArray = this.state.stageButtonConfig;
 		var prevStage = this.state.stageCurrent;
 		var newStage = arguments[0];
-		stageButtonConfigArray[prevStage][2] = "btn btn-block buttonStyle";
-		stageButtonConfigArray[newStage][2] = "btn btn-block buttonStyleHigh";		
+		stageButtonConfigArray[prevStage][2] = "btn buttonStyle";
+		stageButtonConfigArray[newStage][2] = "btn buttonStyleHigh";		
 		this.setState({
 			stageButtonConfig: stageButtonConfigArray,
 			stageCurrent: newStage,
@@ -674,6 +678,7 @@ DesignPage = React.createClass({
                 handleConfigureFuelType={this.configureFuelType}
                 handleSelectStage={this.selectStage}
                 handleLoadDesign={this.loadDesign}
+                handleDeleteDesign={this.deleteDesign}
 				handleSaveDesign={this.saveDesign}
 				handleSaveFormValue={this.saveFormValue}
 				handleResetState={this.resetState}/>			

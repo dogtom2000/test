@@ -14,10 +14,10 @@ FlowRouter.route('/design', {
 	}
 });
 
-FlowRouter.route('/launch', {
+FlowRouter.route('/flight', {
 	action: function() {
 		ReactLayout.render(App, {
-			content: <LaunchPage />
+			content: <FlightPage />
 		});
 	}
 });

@@ -10,7 +10,7 @@ Design12 = React.createClass({
             <div className="col-xs-6 fixed top-middle">
               <div className="col-xs-6 fixed">
                 <div className="title">Stage Summary</div>
-                <table className="table" id="designSummaryTable">
+                <table className="table summaryTable">
                   <thead>
                     <tr>
                       <th>Performance</th>

@@ -1,1 +1,0 @@
-this.Planet = new Mongo.Collection("planet");

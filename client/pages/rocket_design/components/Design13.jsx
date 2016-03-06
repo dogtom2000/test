@@ -4,7 +4,7 @@ Design13 = React.createClass({
 		return(
             <div className="col-xs-3 fixed top-side">
               <div className="title">Rocket Summary</div>
-              <table className="table " id="designSummaryTable">
+              <table className="table summaryTable">
                 <thead>
                   <tr>
                     <th>Performance</th>

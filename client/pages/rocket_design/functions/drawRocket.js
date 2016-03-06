@@ -127,7 +127,7 @@ drawRocket = function(parts, stageCount){
     }
   }
 
-var totalHeight = height[height.length -1] + offset[height.length -1];
+var totalHeight = height[height.length - 1] + offset[height.length - 1] + 40;
 
 d3.select("#displayRocket").selectAll("svg").remove();
 

@@ -6,6 +6,7 @@ ProfilePage = React.createClass({
 
 		return {
 			savedDesign: Design.find().fetch(),
+			vehicle: Vehicle.find().fetch()
 		};
 	},
 	
@@ -15,8 +16,9 @@ ProfilePage = React.createClass({
 		builtRocket.name = selectedDesign.name + " X" + (selectedDesign.buildCount + 1);
 		builtRocket.stageCount = selectedDesign.stageCount;
 		builtRocket.stages = selectedDesign.stages;
-		Design.update({ _id: selectedDesign._id }, { $set: { "buildCount": selectedDesign.buildCount + 1 } });
-		Vehicle.insert(builtRocket);
+		builtRocket.state = ["Earth", "Surface", "---", "---"];
+		Meteor.call("addDesign", { $set: { "buildCount": selectedDesign.buildCount + 1 } }, selectedDesign._id);
+		Meteor.call("addVehicle", builtRocket);
 	},
 	
 	render(){

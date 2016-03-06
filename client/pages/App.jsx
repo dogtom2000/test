@@ -13,3 +13,9 @@ App = React.createClass({
 	}
 });
 
+if (Meteor.isClient) {
+  Meteor.subscribe("design");
+  Meteor.subscribe("vehicle");
+}
+
+

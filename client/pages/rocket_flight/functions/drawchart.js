@@ -1,6 +1,6 @@
 drawchart = function(time_input, data_input, vel_input, acc_input){
 
-d3.select("#launchDisplay").selectAll("svg").remove();
+d3.select("#flightDisplay").selectAll("svg").remove();
 
 var time = time_input;
 
@@ -47,7 +47,7 @@ var chart2 = d3.select("#chart2")
 var chart3 = d3.select("#chart3")
 var chart4 = d3.select("#chart4")
 
-var chart = d3.select("#launchDisplay")
+var chart = d3.select("#flightDisplay")
   .append('svg:svg')
   .attr('width', width + margin.right + margin.left)
   .attr('height', height + margin.top + margin.bottom)

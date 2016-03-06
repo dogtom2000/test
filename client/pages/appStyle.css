@@ -64,11 +64,6 @@ body{
     color: red;
 }
 
-button:focus {
-    border-color: #0F0;
-    box-shadow: 0 0 5px rgba(00, 255, 0, 0.8);
-}
-
 .modalStyle{
   background-color: #111;
   color: green;
@@ -98,6 +93,24 @@ a, a:active, a:hover, a:visited, a:link{
  border-radius:0;
 }
 
+.buttonStyle:hover{
+  color: #3F3;
+}
+
+.buttonStyle:focus, .buttonStyle:active{
+    color: #3F3;
+    outline: 0;
+}
+
+.buttonStyleNeg:hover{
+  color: #F33;
+}
+
+.buttonStyleNeg:focus, .buttonStyleNeg:active{
+    color: #F33;
+    outline: 0;
+}
+
 .navbar {
     margin-bottom: 0;
 }
@@ -108,4 +121,32 @@ a, a:active, a:hover, a:visited, a:link{
 
 .center{
   text-align: center;
+}
+
+.listButton{
+  float: right;
+  width: 100px;
+  border-radius:0;
+  text-align: center;
+  padding: 10px 15px;
+}
+
+.summaryTable tbody tr td{
+  padding: 1px;
+}
+
+.summaryTable thead th{
+  font-weight: bold;
+  font-size: 20px;
+  width: 50%;
+}
+
+.summaryTableFour thead th{
+  font-weight: bold;
+  font-size: 20px;
+  width: 25%;
+}
+
+.summaryTableFour tbody tr td{
+  padding: 1px;
 }

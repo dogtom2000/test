@@ -1,7 +1,7 @@
 Design21 = React.createClass({
 
   handleSave(){
-    if (Design.findOne({name: this.props.saveFormValue}) !== undefined){
+    if (this.props.savedDesign.filter((obj) => obj.name == this.props.saveFormValue)[0] !== undefined){
       return <button type="button" className="btn buttonStyle" data-toggle="modal" data-target="#overwriteModal">Save</button>;
     } else {
       return <button type="button" className="btn buttonStyle" onClick={this.props.handleSaveDesign.bind(null, this.props.saveFormValue)}>Save</button>;
@@ -29,7 +29,7 @@ Design21 = React.createClass({
               <div className="modal-content modalStyle">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
-                  <h2 className="modal-title">Rocket Configuration</h2>
+                  <h2 className="modal-title">Configure Rocket</h2>
                   <div className="modal-body">
                     <h4>Rocket Class</h4>
                     <div className="btn-group btn-block">
@@ -58,7 +58,7 @@ Design21 = React.createClass({
               <div className="modal-content modalStyle">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
-                  <h4 className="modal-title">system</h4>
+                  <h4 className="modal-title">Configure Systems</h4>
                   <div className="modal-body">
                     <h4>Rocket Class</h4>
                     <div className="btn-group btn-block">
@@ -80,18 +80,18 @@ Design21 = React.createClass({
               <div className="modal-content modalStyle">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
-                  <h2 className="modal-title">Stage Configuration</h2>
+                  <h2 className="modal-title">Configure Stages</h2>
                   <div className="modal-body">
                     <h4>Select Stage</h4>
                     <div className="btn-group btn-block">
-                      <button type="button" className={this.props.stageConfig[0][0]} disabled={this.props.stageConfig[0][1]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 0)}>{this.props.stageButtonConfig[0][1]}</button>
-                      <button type="button" className={this.props.stageConfig[1][0]} disabled={this.props.stageConfig[1][1]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 1)}>{this.props.stageButtonConfig[1][1]}</button>
-                      <button type="button" className={this.props.stageConfig[2][0]} disabled={this.props.stageConfig[2][1]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 2)}>{this.props.stageButtonConfig[2][1]}</button>
+                      <button type="button" className={this.props.stageButtonConfig[0][2]} disabled={this.props.stageButtonConfig[0][0]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 0)}>{this.props.stageButtonConfig[0][1]}</button>
+                      <button type="button" className={this.props.stageButtonConfig[1][2]} disabled={this.props.stageButtonConfig[1][0]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 1)}>{this.props.stageButtonConfig[1][1]}</button>
+                      <button type="button" className={this.props.stageButtonConfig[2][2]} disabled={this.props.stageButtonConfig[2][0]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 2)}>{this.props.stageButtonConfig[2][1]}</button>
                     </div>
                     <div className="btn-group btn-block">
-                      <button type="button" className={this.props.stageConfig[3][0]} disabled={this.props.stageConfig[3][1]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 3)}>{this.props.stageButtonConfig[3][1]}</button>
-                      <button type="button" className={this.props.stageConfig[4][0]} disabled={this.props.stageConfig[4][1]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 4)}>{this.props.stageButtonConfig[4][1]}</button>
-                      <button type="button" className={this.props.stageConfig[5][0]} disabled={this.props.stageConfig[5][1]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 5)}>{this.props.stageButtonConfig[5][1]}</button>
+                      <button type="button" className={this.props.stageButtonConfig[3][2]} disabled={this.props.stageButtonConfig[3][0]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 3)}>{this.props.stageButtonConfig[3][1]}</button>
+                      <button type="button" className={this.props.stageButtonConfig[4][2]} disabled={this.props.stageButtonConfig[4][0]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 4)}>{this.props.stageButtonConfig[4][1]}</button>
+                      <button type="button" className={this.props.stageButtonConfig[5][2]} disabled={this.props.stageButtonConfig[5][0]} style={{width: "33.33%"}} onClick={this.props.handleSelectStage.bind(null, 5)}>{this.props.stageButtonConfig[5][1]}</button>
                     </div>
                     <h4>Select Diameter</h4>
                     <div className="btn-group btn-block">
@@ -127,10 +127,15 @@ Design21 = React.createClass({
               <div className="modal-content modalStyle">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
-                  <h4 className="modal-title">Are you sure?</h4>
+                  <h4 className="modal-title">Load Design</h4>
                   <div className="modal-body">
+                    <div>
                     {this.props.savedDesign.map( function(u) { return u.name; } ).map((name, i) =>
-                    <li key={i}><a href="#" onClick={this.props.handleLoadDesign.bind(null, name)} data-dismiss="modal">{name}</a></li>)}
+                       <div key={i} className="btn-group btn-block">
+                           <button className="btn buttonStyle" style={{width: "50%"}} onClick={this.props.handleLoadDesign.bind(null, name)} data-dismiss="modal">{name}</button>
+                           <button className="btn buttonStyle" style={{width: "20%", marginLeft: "30%"}} onClick={this.props.handleDeleteDesign.bind(null, name)}>Delete</button>
+                       </div>)}
+                    </div>
                   </div>
                   <div className="modal-footer">
                     <button type="button" className="btn buttonStyle" data-dismiss="modal">Close</button>
@@ -145,7 +150,7 @@ Design21 = React.createClass({
               <div className="modal-content modalStyle">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
-                  <h4 className="modal-title">Save Rocket</h4>
+                  <h4 className="modal-title">Save Design</h4>
                 </div>
                 <div className="modal-body">
                   <input type="text" value={this.props.saveFormValue} onChange={this.props.handleSaveFormValue} />

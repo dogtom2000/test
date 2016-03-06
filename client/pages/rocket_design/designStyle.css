@@ -10,14 +10,8 @@
   	margin-right: auto;
 }
 
-#designSummaryTable td{
-  padding: 1px;
-}
-
-#designSummaryTable th{
-  font-weight: bold;
-  font-size: 20px;
-  width: 50%;
+#displayRocket{
+  margin-top: 40px;
 }
 
 #designModify{

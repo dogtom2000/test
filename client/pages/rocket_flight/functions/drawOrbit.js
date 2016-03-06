@@ -10,13 +10,13 @@ var radiusp = Math.floor(Planet.radius / dpp);
 
 var ellipseCenter = 792  - ((apoapsis - (apoapsis + periapsis) / 2)) / dpp;
 
-d3.select("#launchDisplay").selectAll("svg").remove();
+d3.select("#flightDisplay").selectAll("svg").remove();
 
 var margin = {top: 0, right: 0, bottom: 0, left: 0}
 , width = 1584 - margin.left - margin.right
 , height = 632 - margin.top - margin.bottom;
 
-var chart = d3.select("#launchDisplay")
+var chart = d3.select("#flightDisplay")
 	.append('svg:svg')
 	.attr('width', width + margin.right + margin.left)
 	.attr('height', height + margin.top + margin.bottom)
