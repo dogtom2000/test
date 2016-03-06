@@ -139,7 +139,7 @@ DesignPage = React.createClass({
             saveFormValue: "Save as",
             stagePart: ["default", "default", "default", "default", "default", "default"],
             rocketConfig: ["btn buttonStyleHigh", "btn buttonStyle", "btn buttonStyle", false],
-            rocketType: "default",
+            rocketType: "Sounding Rocket",
             partIndex: [0, 0, 0, 0, 0, 0],
             stageConfig: [["btn buttonStyleHigh", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], true],
 			stageStatus: false,
@@ -174,7 +174,7 @@ DesignPage = React.createClass({
 						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
 						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]],
 						[["btn buttonStyleHigh", false],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false]]],
-		    stageButtonConfig: [[true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"], [true, "---", "btn btn-block buttonStyle"]],
+		    stageButtonConfig: [[true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"], [true, "---", "btn buttonStyle"]],
             dataEngine: [],
             dependentPropsObj: {
 				thrust: [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
@@ -194,6 +194,7 @@ DesignPage = React.createClass({
        	this.setState(
 			save
 		);
+		drawRocket(save.stagePart, save.stageCount)
     },
     
     deleteDesign(){

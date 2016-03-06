@@ -13,7 +13,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
     var emtpyFlag = false;
 
     var standardGravity = 9.80665;
-    var hvelScale = 0.90;
+    var hvelScale = 0.95;
 
     var time = [0];
     var heading = [];
@@ -32,6 +32,9 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
     for (var t = 0; t < tMax; t++){
         //check to see if rocket falls into planet, will happen if twr is insufficient
         if(position[t][0] < Planet.radius){
+            Rocket.state[1] = "Surface";
+            Rocket.state[2] = "---";
+            Rocket.state[3] = "---";
             stopFlag = true;
         }
         
@@ -124,7 +127,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
 
         switch (true){
              case (orbitFlag):      
-                var netAccelSq = Math.pow(stageThrust / stageMass, 2) + Math.pow(centripetalAcceleration[0], 2) - Math.pow(gravityAcceleration[0], 2) - Math.pow(eulerAcceleration[0], 2);
+                var netAccelSq = Math.pow(stageThrust / stageMass, 2) + Math.pow(centripetalAcceleration[0], 2) - Math.pow(gravityAcceleration[0], 2) - Math.pow(eulerAcceleration[1], 2);
                 if (netAccelSq > 0){
                        velocity[t][0] = 0;
                        acceleration[t] = [0, Math.pow(netAccelSq, 0.5), 0];

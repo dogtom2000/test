@@ -25,10 +25,11 @@ FlightPage = React.createClass({
 	getInitialState() {
 
 		return {
-			maneuverConfig: [["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], 0],
+			maneuverConfig: [["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], false],
 			mulVal: 1,
-			maneuverValue: [0, 0, 0, 0],
+			maneuverValue: 0,
 			Rocket: {stageCount: 0, stages: [[[0, 0], [0], [0]]], state: ["---", "---", "---", "---"]},
+			Planet: {radius: 0}
 		};
 	},
 	
@@ -38,60 +39,64 @@ FlightPage = React.createClass({
 		var rocket = this.data.vehicle.filter((obj) => obj.name == arguments[0])[0];
 		var maneuverConfigArray = this.state.maneuverConfig;
 		if (rocket.state[1] == "Surface"){
-			maneuverConfigArray[4] = 0;
-			maneuverConfigArray[0][1] = false;
-			maneuverConfigArray[1][1] = true;
-			maneuverConfigArray[2][1] = true;
-			maneuverConfigArray[3][1] = true;
+		var	maneuverConfig = [["btn buttonStyle", false],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], false];
+
 		} else if (rocket.state[1] == "Orbit") {
-			maneuverConfigArray[4] = 1;
-			maneuverConfigArray[0][1] = true;
-			maneuverConfigArray[1][1] = false;
-			maneuverConfigArray[2][1] = false;
-			maneuverConfigArray[3][1] = false;
+			maneuverConfig = [["btn buttonStyle", true],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false], false];
+
 		}
 
 		this.setState({
 			Rocket: rocket,
-			Planet: planet,
-			maneuverValue: [orbitHeight, orbitHeight, orbitHeight, orbitHeight],
-			maneuverConfig: maneuverConfigArray
+			Planet: planetData.filter((obj) => obj.name == planet)[0],
+			maneuverValue: orbitHeight,
+			maneuverConfig: maneuverConfig
 			
 		});
-		console.log(rocket, planet)
+		drawOrbit(rocket.state[2], rocket.state[3], planetData.filter((obj) => obj.name == planet)[0]);
 	},
 
 	initiateBurn(){
 		var Rocket = this.state.Rocket;
-		var Planet = planetData.filter((obj) => obj.name == this.state.Planet)[0];
-		
+		var Planet = this.state.Planet;
+
 		switch(this.state.maneuverConfig[4]){
 			case 0:
-				var orbit = this.state.maneuverValue[0];
+				var orbit = this.state.maneuverValue;
 				var maneuverOutput = orbitBody(Planet, Rocket, orbit * 1000);
+				Rocket = maneuverOutput[0];
 				drawchart(maneuverOutput[1], maneuverOutput[2], maneuverOutput[3], maneuverOutput[4]);
-				this.setState({
-					Rocket: maneuverOutput[0]
-				});
+				Meteor.call("updateVehicle", maneuverOutput[0], this.state.Rocket._id);
 				break;
 			case 1:
-				hohman(Rocket, Planet, "periapsis", this.state.maneuverValue[1] * 1000)
+				Rocket = hohman(Rocket, Planet, "apoapsis", this.state.maneuverValue * 1000 + Planet.radius);
+				Meteor.call("updateVehicle", Rocket, this.state.Rocket._id);
+				drawOrbit(Rocket.state[2], Rocket.state[3], this.state.Planet)
 				break;
 			case 2:
+				Rocket = hohman(Rocket, Planet, "periapsis", this.state.maneuverValue * 1000 + Planet.radius);
+				Meteor.call("updateVehicle", Rocket, this.state.Rocket._id);
+				drawOrbit(Rocket.state[2], Rocket.state[3], this.state.Planet)
+				break;
 			case 3:
-				maneuverOutput = reentry(Planet, Rocket, Rocket.state[2],  Rocket.state[3] - 100000)
+				maneuverOutput = reentry(Planet, Rocket, Rocket.state[2],  hohman(Rocket, Planet, "periapsis", this.state.maneuverValue * 1000 + Planet.radius).state[3])
+				Rocket = maneuverOutput[0];
 				drawchart(maneuverOutput[1], maneuverOutput[2], maneuverOutput[3], maneuverOutput[4]);
+				Meteor.call("updateVehicle", maneuverOutput[0], this.state.Rocket._id);
 				break;
 		}
 
-		Meteor.call("updateVehicle", maneuverOutput[0], this.state.Rocket._id);
-	},
+		if (Rocket.state[1] == "Surface"){
+		var	maneuverConfig = [["btn buttonStyle", false],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], false];
 
-	displayOrbit(){
-		//orbit = reentry(Planet.find({name: "Earth"}).fetch()[0], this.state.Rocket, 360000 + 6371000,  -50000 + 6371000);
-		//drawchart(orbit[2], orbit[3], orbit[4], orbit[5]);
-		Rocket = this.state.Rocket;
-		drawOrbit(Rocket.state[2], Rocket.state[3], planetData.filter((obj) => obj.name == Rocket.state[0])[0]);
+		} else if (Rocket.state[1] == "Orbit") {
+			maneuverConfig = [["btn buttonStyle", true],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false], false];
+
+		}
+		this.setState({
+		maneuverConfig: maneuverConfig	
+		});
+		
 	},
 
 	deleteVehicle(){
@@ -113,16 +118,16 @@ FlightPage = React.createClass({
 	},
 	
 	desiredOrbit(){
-		var maneuverValueArray = this.state.maneuverValue;
-		maneuverValueArray[arguments[0]] += this.state.mulVal * arguments[1];
+		var maneuverValue = this.state.maneuverValue;
+		maneuverValue += this.state.mulVal * arguments[0];
 		this.setState({
-				maneuverValue: maneuverValueArray
+				maneuverValue: maneuverValue
 		});
 	},
 	
 	changeMulVal(){
 			var mulVal = this.state.mulVal;
-			if (mulVal > 100){
+			if (mulVal > 10000){
 				mulVal = 1;
 			} else {
 				mulVal *= 10;
@@ -160,6 +165,7 @@ FlightPage = React.createClass({
 					handleDesiredOrbit={this.desiredOrbit}/>			
 
 					<Flight22 
+					Planet={this.state.Planet}
 					Rocket={this.state.Rocket}/>
 
 					<Flight23
@@ -172,7 +178,7 @@ FlightPage = React.createClass({
 				</div>{/* row two ends */}		
 
 			</div>
-			)
+			);
 	}
 
 });

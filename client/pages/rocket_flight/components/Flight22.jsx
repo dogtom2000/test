@@ -11,6 +11,14 @@ Flight22 = React.createClass({
 			deltaV[0] += Math.log(stageMass / emtpyMass) * 9.80665 * this.props.Rocket.stages[keys[i]][7];
 			deltaV[1] += Math.log(stageMass / emtpyMass) * 9.80665 * this.props.Rocket.stages[keys[i]][7] * this.props.Rocket.stages[keys[i]][6] / this.props.Rocket.stages[keys[i]][5];
 		}
+		if(isNaN(this.props.Rocket.state[2])){
+			var apoapsisValue = this.props.Rocket.state[2];
+			var periapsisValue = this.props.Rocket.state[3];
+		} else {
+			apoapsisValue = Math.round(this.props.Rocket.state[2] - this.props.Planet.radius);
+			periapsisValue = Math.round(this.props.Rocket.state[3] - this.props.Planet.radius);
+		};
+		
 		return(
 			<div className="col-xs-6 fixed bot-middle">
 	            <table className="table summaryTableFour">
@@ -31,13 +39,13 @@ Flight22 = React.createClass({
 	                </tr>
 	                <tr>
 	                  <td>Apoapsis</td>
-	                  <td>{this.props.Rocket.state[2]}</td>
+	                  <td>{apoapsisValue}</td>
 	                  <td>Stages</td>
 	                  <td>{this.props.Rocket.stageCount}</td>
 	                </tr>
 	                <tr>
 	                  <td>Periapsis</td>
-	                  <td>{this.props.Rocket.state[3]}</td>
+	                  <td>{periapsisValue}</td>
 	                  <td>Delta V</td>
 	                  <td>{Math.round(deltaV[0]) + " (" + Math.round(deltaV[1]) + ")"}</td>
 	                </tr>

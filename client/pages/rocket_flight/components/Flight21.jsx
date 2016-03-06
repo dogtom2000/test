@@ -44,28 +44,21 @@ Flight21 = React.createClass({
 			                  <button type="button" className="close" data-dismiss="modal">&times;</button>
 			                  <h4 className="modal-title">Flight Control</h4>
 			                  <div className="modal-body">
-			                  	<div className="btn-group btn-block">
-	                        		<button className="btn buttonStyle" style={{width: "40%", marginLeft: "60%"}} onClick={this.props.handleChangeMulVal}>{this.props.mulVal}</button>
-	                    		 </div>
 				                  <div className="btn-group btn-block">
-	                           		<button className={this.props.maneuverConfig[0][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 0)} disabled={this.props.maneuverConfig[0][1]}>Launch to Orbit: {this.props.maneuverValue[0]} km</button>
-	                        		<button className="btn buttonStyle" style={{width: "20%", marginLeft: "10%"}} onClick={this.props.handleDesiredOrbit.bind(null, 0, 1)}>+</button>
-	                        		<button className="btn buttonStyleNeg" style={{width: "20%"}} onClick={this.props.handleDesiredOrbit.bind(null, 0, -1)}>-</button>
+	                           		<button className={this.props.maneuverConfig[0][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 0)} disabled={this.props.maneuverConfig[0][1]}>Launch to Orbit</button>
+	                        		<button className="btn buttonStyle" style={{width: "40%", marginLeft: "10%"}}>{this.props.maneuverValue} km</button>
 	                    		 </div>
 								<div className="btn-group btn-block">
-	                           		<button className={this.props.maneuverConfig[1][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 1)} disabled={this.props.maneuverConfig[1][1]}>Change apoapsis: {this.props.maneuverValue[1]} km</button>
-	                        		<button className="btn buttonStyle" style={{width: "20%", marginLeft: "10%"}} onClick={this.props.handleDesiredOrbit.bind(null, 1, 1)}>+</button>
-	                        		<button className="btn buttonStyleNeg" style={{width: "20%"}} onClick={this.props.handleDesiredOrbit.bind(null, 1, -1)}>-</button>
+	                           		<button className={this.props.maneuverConfig[1][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 1)} disabled={this.props.maneuverConfig[1][1]}>Change apoapsis</button>
+	                        		<button className="btn buttonStyle" style={{width: "40%", marginLeft: "10%"}} onClick={this.props.handleChangeMulVal}>{this.props.mulVal}</button>
 	                    		 </div>
 	                    		 <div className="btn-group btn-block">
-	                           		<button className={this.props.maneuverConfig[2][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 2)} disabled={this.props.maneuverConfig[2][1]}>Change periapsis: {this.props.maneuverValue[2]} km</button>
-	                        		<button className="btn buttonStyle" style={{width: "20%", marginLeft: "10%"}} onClick={this.props.handleDesiredOrbit.bind(null, 2, 1)}>+</button>
-	                        		<button className="btn buttonStyleNeg" style={{width: "20%"}} onClick={this.props.handleDesiredOrbit.bind(null, 2, -1)}>-</button>
+	                           		<button className={this.props.maneuverConfig[2][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 2)} disabled={this.props.maneuverConfig[2][1]}>Change periapsis</button>
+	                    		 	<button className="btn buttonStyle" style={{width: "20%", marginLeft: "10%"}} onClick={this.props.handleDesiredOrbit.bind(null, 1)}>+</button>
+	                        		<button className="btn buttonStyleNeg" style={{width: "20%"}} onClick={this.props.handleDesiredOrbit.bind(null, -1)}>-</button>
 	                    		 </div>
 	                    		 <div className="btn-group btn-block">
-	                           		<button className={this.props.maneuverConfig[3][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 3)} disabled={this.props.maneuverConfig[3][1]}>Attempt reentry: {this.props.maneuverValue[3]} km</button>
-	                        		<button className="btn buttonStyle" style={{width: "20%", marginLeft: "10%"}} onClick={this.props.handleDesiredOrbit.bind(null, 3, 1)}>+</button>
-	                        		<button className="btn buttonStyleNeg" style={{width: "20%"}} onClick={this.props.handleDesiredOrbit.bind(null, 3, -1)}>-</button>
+	                           		<button className={this.props.maneuverConfig[3][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 3)} disabled={this.props.maneuverConfig[3][1]}>Attempt reentry</button>
 	                    		 </div>
 			                  </div>
 			                  <div className="modal-footer">

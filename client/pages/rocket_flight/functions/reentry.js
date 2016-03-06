@@ -37,10 +37,15 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
 
         //check to see if rocket falls into planet, will happen if twr is insufficient
         if(position[t][0] < Planet.radius){
+            Rocket.state[1] = "Surface"
+            Rocket.state[2] = "---";
+            Rocket.state[3] = "---";
             stopFlag = true;
         }
         
         if (position[t][0] > rad_reentry){
+            Rocket.state[2] = apoapsis;
+            Rocket.state[3] = periapsis;
         	stopFlag = true;
         }
         
@@ -121,7 +126,7 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
         if (stopFlag == true){
             break;
         }
-        console.log(velAccelRatio)
+
     }
     
     return [Rocket, time, position, velocity, acceleration];
