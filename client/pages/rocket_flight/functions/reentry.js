@@ -59,7 +59,7 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
         //calculate surface speed
         var surfaceVelocity = arrayAdd(velocity[t], [0, - position[t][0] * Math.sin(phi) * 2 * Math.PI / Planet.dayLength, 0]);
         var surfaceSpeed = magn(surfaceVelocity);
-
+/*
         if (velocity[t][0] < 0 && surfaceSpeed > 250 && surfaceSpeed < 700){
             currentStage[3] = 0.75;
             currentStage[4] = 10;
@@ -68,7 +68,7 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
             currentStage[3] = 1.5;
             currentStage[4] = 35;
         }
-
+*/
         //calculate orbital properties
         var orbitalProperties = orbitalPropertiesCalc(velocity[t], position[t]);
         apoapsis = orbitalProperties[0];
