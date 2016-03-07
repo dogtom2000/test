@@ -1,158 +1,104 @@
-drawRocket = function(parts, stageCount){
-
-  parts = parts.slice(0,stageCount);
-  var system = true;
-  var diameter = [];
-  var height = [];
-  var img = [];
-
-  if(system){
-    img.push("pod.png");
-    diameter.push(0);
-    height.push(21);
-  } else {
-        img.push(0);
-    diameter.push(0);
-    height.push(0);
-  }
-
-  for (var i = 0; i < parts.length - 1; i++){
+drawRocket = function(parts, stageCount, systemMass){
+  
+  
+  var imageHeight = {
+    "4_4": 25,
+    "4_7": 60,
+    "4_a": 96,
+    "4_c": 31,
+    "4_f": 53,
+    "4_l": 53,
+    "4_s": 21,
     
-    switch (parts[i]){
+    "7_4": 60,
+    "7_7": 44,
+    "7_a": 40,
+    "7_c": 78,
+    "7_f": 117,
+    "7_l": 117,
+    "7_s": 81,
+    
+    "a_4": 96,
+    "a_7": 40,
+    "a_a": 40,
+    "a_c": 127,
+    "a_f": 166,
+    "a_l": 280,
+    "a_s": 121,
+    
+    "0.25_0.25": 4,
+    "0.25_0.5": 1,
+    "0.25_1": 4,
+    "0.25_c": 52,
+    "0.25_f": 53,
+    "0.25_l": 53,
+    "0.25_s": 7,
+    
+    "0.5_0.25": 1,
+    "0.5_0.5": 4,
+    "0.5_1": 4,
+    "0.5_c": 71,
+    "0.5_f": 71,
+    "0.5_l": 71,
+    "0.5_s": 14,
+    
+    "1_0.25": 4,
+    "1_0.5": 4,
+    "1_1": 6,
+    "1_c": 111,
+    "1_f": 112,
+    "1_l": 112,
+    "1_s": 30
+  };
   
-      case 4:
-        img.push("4m_cropped.png");
-        diameter.push(4);
-        height.push(31);
-        break;
-  
-      case 7:
-        img.push("7m_cropped.png");
-        diameter.push(7);
-        height.push(78);
-        break;
-      
-      case 10:
-        img.push("10m_cropped.png");
-        diameter.push(10);
-        height.push(127);
-        break;
+  for (var i = 0; i < parts.length; i++){
+    if(parts[i] == 10){
+      parts[i] = "a";
     }
   }
 
-  switch (parts[parts.length - 1]){
+  var imgArray = [];
+  var totalHeight = [];
   
-    case 4:
-      img.push("4m_full.png");
-      diameter.push(4);
-      height.push(53);
-      break;
+  imgArray[0] = parts[0] + "_s";
+  totalHeight[0] = imageHeight[imgArray[0]];
   
-    case 7:
-      img.push("7m_full.png");
-      diameter.push(7);
-      height.push(117);
-      break;
-    
-    case 10:
-      img.push("10l_full.png");
-      diameter.push(10);
-      height.push(280);
-      break;
+  var j = 1;
+  for (var i = 0; i < stageCount - 1; i++){
+    imgArray[j] = parts[i] + "_c";
+    totalHeight[j] = imageHeight[imgArray[j]] + totalHeight[j - 1];
+    j++;
+    imgArray[j] = parts[i] + "_" + parts[i + 1];
+    totalHeight[j] = imageHeight[imgArray[j]] + totalHeight[j - 1];
+    j++;
   }
   
+  imgArray[j] = parts[stageCount - 1] + "_l";
+  totalHeight[j] = imageHeight[imgArray[j]] + totalHeight[j - 1];
   
-  for (i = 1; i < parts.length; i++){
-    
-    switch(true){
-      
-    case (diameter[i] == 4 && diameter[i+1] == 4):
-      img.splice(i * 2, 0, "4_4.png");
-      height.splice(i * 2, 0, 25);
-      break;
-      
-      
-    case (diameter[i] == 4 && diameter[i+1] == 7):
-      img.splice(i * 2, 0, "4_7.png");
-      height.splice(i * 2, 0, 60);
-      break;
-      
-    case (diameter[i] == 7 && diameter[i+1] == 4):
-      img.splice(i * 2, 0, "7_4.png");
-      height.splice(i * 2, 0, 60);
-      break;
-     case (diameter[i] == 7 && diameter[i+1] == 7):
-      img.splice(i * 2, 0, "7_7.png");
-      height.splice(i * 2, 0, 44);
-      break;
-      
-    case (diameter[i] == 7 && diameter[i+1] == 10):
-      img.splice(i * 2, 0, "7_10.png");
-      height.splice(i * 2, 0, 40);
-      break;
-   
-      
-    case (diameter[i] == 10 && diameter[i+1] == 7):
-      img.splice(i * 2, 0, "10_7.png");
-      height.splice(i * 2, 0, 40);
-      break;
-      
-      
-    case (diameter[i] == 10 && diameter[i+1] == 10):
-      img.splice(i * 2, 0, "10_10.png");
-      height.splice(i * 2, 0, 40);
-      break;
-      
-      case (diameter[i] == 10 && diameter[i+1] == 4):
-      img.splice(i * 2, 0, "10_4.png");
-      height.splice(i * 2, 0, 96);
-      break;
-      
-      
-      case (diameter[i] == 4 && diameter[i+1] == 10):
-      img.splice(i * 2, 0, "4_10.png");
-      height.splice(i * 2, 0, 96);
-      break;
-      
-  }  
-
-  }
+  d3.select("#displayRocket").selectAll("svg").remove();
   
-  var offset = [];
-    
-  for (i = 0; i < height.length ; i++){
-    offset[i] = 0;
-    for (var j = 0; j < i; j++){
-      offset[i] += height[j];
-    }
+  var chart = d3.select("#displayRocket")
+  	.append('svg:svg')
+  	.attr('width', 117)
+  	.attr('height', totalHeight[j] + 40);
+  	
+  if(systemMass > 0){
+    var partImage = "images/" + imgArray[0] + ".png";
+    chart.append("svg:image")
+    .attr("xlink:href", partImage)
+    .attr("width", 117)
+    .attr("height", imageHeight[imgArray[0]]);
   }
 
-var totalHeight = height[height.length - 1] + offset[height.length - 1] + 40;
+  for (i = 1; i < imgArray.length; i++){
+    partImage = "images/" + imgArray[i] + ".png";
+    chart.append("svg:image")
+    .attr("xlink:href", partImage)
+    .attr("width", 117)
+    .attr("height", imageHeight[imgArray[i]])
+    .attr("transform", 'translate(0,'+ totalHeight[i - 1] +')');
+    
+  }
 
-d3.select("#displayRocket").selectAll("svg").remove();
-
-var chart = d3.select("#displayRocket")
-	.append('svg:svg')
-	.attr('width', 117)
-	.attr('height', totalHeight)
-if(system){
-  chart.append("svg:image")
-  .attr("xlink:href", img[0])
-  .attr("width", 117)
-  .attr("height", height[0]);
-}
-
-
-for (i = 1; i < img.length; i++){
-  chart.append("svg:image")
-  .attr("xlink:href", img[i])
-  .attr("width", 117)
-  .attr("height", height[i])
-  .attr("transform", 'translate(0,'+ offset[i] +')');
-  
-}
-
-
-
-
-}
+};

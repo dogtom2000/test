@@ -186,6 +186,7 @@ DesignPage = React.createClass({
 				cost: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]]
             }
         });
+        drawRocket( ["default", "default", "default", "default", "default", "default"], 1, 0)
     },
    
     loadDesign(){
@@ -194,7 +195,7 @@ DesignPage = React.createClass({
        	this.setState(
 			save
 		);
-		drawRocket(save.stagePart, save.stageCount)
+		drawRocket(save.stagePart, save.stageCount, save.systemMass)
     },
     
     deleteDesign(){
@@ -310,6 +311,7 @@ DesignPage = React.createClass({
 													fuelData.filter((obj) => obj.name == this.state.fuelType[stage])[0], 
 													arguments[0]),
 		});
+		drawRocket(this.state.stagePart, this.state.stageCount, arguments[0])
     },
    
     configureDiameter(){
@@ -340,18 +342,8 @@ DesignPage = React.createClass({
 			engineCount: engineCountArray,
 			engineConfig: engineConfigArray,
 			saveMessageValue: "Design not saved:",
-			dependentPropsObj: calculatePropsFunc(	stage, 
-													this.state.dependentPropsObj, 
-													this.state.tankLength[stage], 
-													this.state.tankDiameter[stage], 
-													this.state.structuralDensity[stage], 
-													this.state.mixRatio[stage], 
-													this.state.enginePressure[stage], 
-													this.state.dataEngine[stage], 
-													fuelData.filter((obj) => obj.name == this.state.fuelType[stage])[0], 
-													this.state.systemMass)
-
 		});
+		this.dependentProps(stage, false);
     },
    
     configureFuelType(){
@@ -381,7 +373,9 @@ DesignPage = React.createClass({
     },
     
     dependentProps(stage, source){
-    	drawRocket(this.state.stagePart, this.state.stageCount)
+    	if ((source == 0 && stage == 0) || source != 0){
+    		drawRocket(this.state.stagePart, this.state.stageCount, this.state.systemMass)
+    	}
         var stageCount = this.state.stageCount;
         var rocketPartData = partData[this.state.rocketType][this.state.partIndex[stage]];
         var rocketFuelData = fuelData.filter((obj) => obj.name == this.state.fuelType[stage])[0];

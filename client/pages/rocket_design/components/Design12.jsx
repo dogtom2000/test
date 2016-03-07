@@ -116,7 +116,7 @@ Design12 = React.createClass({
                 </table>
               </div>
               <div className="col-xs-6 fixed">
-                <img className="designImageStyle" src={partImage}></img>
+                <img className="designImageStyle" src={"images/" + partImage}></img>
               </div>
             </div>
 		);
