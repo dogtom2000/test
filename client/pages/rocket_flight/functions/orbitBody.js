@@ -147,7 +147,13 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
             default:
                 acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, thrustAcceleration, eulerAcceleration);
         }
+        if (currentStage[0][0] < 0){
+            currentStage[0][0] = 0;
+        }
 
+        if (stopFlag == true){
+            break;
+        }
         if (velocity[t][0] == 0 && velocity[t][1] != 0){
             var velAccelRatio = Math.max(Math.abs(acceleration[t][1] / velocity[t][1]), stageBurnRate / stageFuelMass);
         } else if (velocity[t][1] == 0 && velocity[t][0] != 0){
@@ -182,13 +188,7 @@ orbitBody = function(Planet, Rocket, orbit){ //, theta, phi
         positionAddLast = positionAdd;
         currentStage[0][0] = stageFuelMass - stageBurnRate * dt;
 
-        if (currentStage[0][0] < 0){
-            currentStage[0][0] = 0;
-        }
 
-        if (stopFlag == true){
-            break;
-        }
 
     }
     return [Rocket, time, position, velocity, acceleration];

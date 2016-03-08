@@ -7,7 +7,6 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
 	var rad_reentry = Planet.atmHeight * 1.1 + Planet.radius;
 	var spe_reentry = Math.pow(2 * Planet.sgp * (1 / rad_reentry - 1 / apoapsis) + Math.pow(vel_apo, 2), 0.5);
 	var ang_reentry = Math.asin(omega_rad_squared / rad_reentry / spe_reentry);
-
     //set constant, variable theta/phi could be implemented in future build
     var theta = 0;
     var phi = Math.PI / 2;
@@ -16,18 +15,20 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
     //initialize variables
     var t = 0;
     var dt = 1;
-    var tMax = 200000;
+    var tMax = 20000;
     var stopFlag = false;
 
+    var dragMagSum = 0;
+    var initialApoapsis = apoapsis; //calculate apo for vel_peri initial + dragSum if our apo is greater than the starting value this make this the drag apo
 
     var time = [0];
     var acceleration = [[0,0,0]]; //[d2r/dr2, d2theta/dt2, d2phi/dt2]
     var velocity = [[0,0,0]]; //[dr/dt, dtheta/dt, dphi/dt]
     var position = [[0,0,0]]; //[r, theta, phi]
-    var positionAddLast = [0, Math.sin(phi) * 2 * Math.PI / Planet.dayLength, 0];
+    var positionAddLast = [-spe_reentry * Math.cos(ang_reentry), spe_reentry * Math.sin(ang_reentry) / rad_reentry , 0];
 
     //intial values
-    velocity[0] = [-spe_reentry * Math.cos(ang_reentry), 0.9999 * spe_reentry * Math.sin(ang_reentry) , 0];
+    velocity[0] = [-spe_reentry * Math.cos(ang_reentry), spe_reentry * Math.sin(ang_reentry) , 0];
     position[0] = [rad_reentry, theta, phi];
 
     //set current stage to first rocket stage
@@ -37,7 +38,7 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
 
         //check to see if rocket falls into planet, will happen if twr is insufficient
         if(position[t][0] < Planet.radius){
-            Rocket.state[1] = "Surface"
+            Rocket.state[1] = "Surface";
             Rocket.state[2] = "---";
             Rocket.state[3] = "---";
             stopFlag = true;
@@ -86,6 +87,12 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
             dragAcceleration = arrayMul(surfaceVelocity, dragFraction);
         }
 
+        var dragMag = magn(dragAcceleration);
+
+        if (dragMag > 0){
+            dragMagSum += dragMag;
+        }
+        
         //add accerlations together        
         acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, eulerAcceleration);
 
@@ -98,18 +105,12 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
         } else {
             velAccelRatio = 0;
         }
-
-        if(velAccelRatio > 0.1){
-            if (velAccelRatio < 100){
-                dt = 0.1 / velAccelRatio;
-            } else {
-                dt = 0.001;
-            }               
-        } else {
-            dt = 1;
+        
+        if (stopFlag == true){
+            break;
         }
 
-        
+        dt = 1;
         //increment time, velocity, and position based on acceleration
         time[t + 1] = time[t] + dt;
         
@@ -123,12 +124,10 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
 
         positionAddLast = positionAdd;
         
-        if (stopFlag == true){
-            break;
-        }
+
 
     }
-    
+
     return [Rocket, time, position, velocity, acceleration];
     
     //calculate orbital properties

@@ -110,10 +110,9 @@ if (timeduration > 15000){
   timeduration = 15000;
 }
 
-
 main.append("svg:path")
   .attr('class', 'line')
-  .attr("d", line(data[0]))
+  .attr("d", line([data[0]]))
   .transition()
   .duration(timeduration)
   .attrTween('d', pathTween(data))
