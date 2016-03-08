@@ -33,7 +33,7 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
 
     //set current stage to first rocket stage
     var currentStage = Rocket.stages[Rocket.stageCount];
-
+    console.log(position[0][0], velocity[0])
     for (var t = 0; t < tMax; t++){
 
         //check to see if rocket falls into planet, will happen if twr is insufficient
@@ -127,7 +127,7 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
 
 
     }
-
+    console.log(position[t][0], velocity[t])
     return [Rocket, time, position, velocity, acceleration];
     
     //calculate orbital properties
