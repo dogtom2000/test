@@ -18,9 +18,6 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
     var tMax = 20000;
     var stopFlag = false;
 
-    var dragMagSum = 0;
-    var initialApoapsis = apoapsis; //calculate apo for vel_peri initial + dragSum if our apo is greater than the starting value this make this the drag apo
-
     var time = [0];
     var acceleration = [[0,0,0]]; //[d2r/dr2, d2theta/dt2, d2phi/dt2]
     var velocity = [[0,0,0]]; //[dr/dt, dtheta/dt, dphi/dt]
@@ -33,7 +30,7 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
 
     //set current stage to first rocket stage
     var currentStage = Rocket.stages[Rocket.stageCount];
-    console.log(position[0][0], velocity[0])
+
     for (var t = 0; t < tMax; t++){
 
         //check to see if rocket falls into planet, will happen if twr is insufficient
@@ -87,34 +84,24 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
             dragAcceleration = arrayMul(surfaceVelocity, dragFraction);
         }
 
-        var dragMag = magn(dragAcceleration);
-
-        if (dragMag > 0){
-            dragMagSum += dragMag;
-        }
-        
-        //add accerlations together        
+          //add accerlations together        
         acceleration[t] = arrayAddPlus(centripetalAcceleration, gravityAcceleration, dragAcceleration, eulerAcceleration);
 
-        if (velocity[t][0] == 0 && velocity[t][1] != 0){
-            var velAccelRatio = Math.abs(acceleration[t][1] / velocity[t][1]);
-        } else if (velocity[t][1] == 0 && velocity[t][0] != 0){
-            velAccelRatio = Math.abs(acceleration[t][0] / velocity[t][0]);
-        } else if (velocity[t][0] != 0 && velocity[t][1] != 0){
-            velAccelRatio = Math.max(Math.abs(acceleration[t][1] / velocity[t][1]), Math.abs(acceleration[t][0] / velocity[t][0]));
-        } else {
-            velAccelRatio = 0;
-        }
-        
         if (stopFlag == true){
             break;
         }
 
-        dt = 1;
+        dt = 0.1;
         //increment time, velocity, and position based on acceleration
         time[t + 1] = time[t] + dt;
         
-        velocity[t + 1] = arrayAdd(velocity[t], arrayMul(acceleration[t], dt));
+        if (t == 0){
+            var velocityAdd = arrayMul(acceleration[t], dt);
+        } else {
+            velocityAdd = arrayMul(arrayAdd(acceleration[t], acceleration[t - 1]), 0.5 * dt);
+        }
+        
+        velocity[t + 1] = arrayAdd(velocity[t], velocityAdd);
             
         var positionAdd = [velocity[t + 1][0], velocity[t + 1][1] / position[t][0], velocity[t + 1][2] / position[t][0]];
 
@@ -123,11 +110,9 @@ reentry = function(Planet, Rocket, apoapsis, periapsis){ //, theta, phi
         position[t + 1] = arrayAdd(position[t], arrayMul(positionAddAve, dt)); 
 
         positionAddLast = positionAdd;
-        
-
 
     }
-    console.log(position[t][0], velocity[t])
+    console.log(t)
     return [Rocket, time, position, velocity, acceleration];
     
     //calculate orbital properties
