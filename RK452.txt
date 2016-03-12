@@ -29,7 +29,6 @@ for (var i = 1; i < 200; i++){
     vt[i] = data[3];
     time[i] = time[i - 1] + data[5];
     currentStage[0][0] = data[4];
-    console.log(time[i], r[i]);
 }
 
 
@@ -38,24 +37,25 @@ for (var i = 1; i < 200; i++){
 
 function RK452(r, t, vr, vt, stage, planet, heading){
     
-    var hmaxFlag = false;
     var thrustVac = stage[5];
     var thrustAtm = stage[6];
     
     if (stage[0][0] > 0){
         var burnRate = thrustVac / stage[7] / 9.80665;
-        var hmax = stage[0][0] / burnRate;
+        var hmax = Math.min(stage[0][0] / burnRate, 20);
     } else {
         burnRate = 0;
-        hmax = 0;
+        hmax = 20;
     }
     
+    var hmin = 0.002;
+
     var mass = stage[0][0] + stage[1] + stage[2];
     var dragConstant = stage[3] * Math.PI / 4 * Math.pow(stage[4], 2);
         
-    var h = 10;
+    var h = 1;
         
-    for (var i = 0; i < 10; i++){
+    for (var i = 0; i < 2; i++){
     
         var k1 =    a(
                         r,
@@ -151,21 +151,21 @@ function RK452(r, t, vr, vt, stage, planet, heading){
         
         var maxError = Math.min(rError, tError, vrError, vtError);
         
-        var sh = 0.84 * Math.pow(maxError, 1 / 4) * h;
         
-        if (Math.abs(h - sh) / sh < 1e-1 || (hmaxFlag ==  true && hmax > sh)){
-            break;
+        var sh = Math.pow(maxError / 2, 1 / 4) * h;
+        
+        if (i == 0){
+            if (sh > hmax){
+                h = hmax;
+            } else if (sh < hmin){
+                h = hmin;
+            } else {
+                h = sh;
+            }
         }
-        
-        if (h > hmax && hmax > 0){
-            h = hmax;
-            hmaxFlag = true;
-        } else {
-            h = sh;
-        }
-        
+
     }
-    
+
     return [r2, t2, vr2, vt2, fuelMass, h];
 }
 
@@ -201,7 +201,7 @@ function a(r, vr, vt, mass, h, dragConstant, thrustVac, thrustAtm, burnRate, hea
         at_t = 0;
     }
     
-    var ar = vt * vt / r - 3.986e14 / r / r + ar_d + ar_t;
+    var ar = vt * vt / r - Planet.sgp / r / r + ar_d + ar_t;
     var at = vt * (r / (r + vr) - 1) + at_d + at_t;
 
     return [h * vr, h * vt / r, h * ar, h * at, - h * burnRate];

@@ -1,17 +1,11 @@
-reentry = function(planet, rocket, apoapsis, periapsis){
-    var vel_apo = Math.pow(2 * Planet.sgp * periapsis / apoapsis / (apoapsis + periapsis), 0.5);
-	var omega_rad_squared = apoapsis * vel_apo;
+orbitB = function(planet, rocket, orbit){
 
-	var rad_reentry = Planet.atmHeight * 1.1 + Planet.radius;
-	var spe_reentry = Math.pow(2 * Planet.sgp * (1 / rad_reentry - 1 / apoapsis) + Math.pow(vel_apo, 2), 0.5);
-	var ang_reentry = Math.asin(omega_rad_squared / rad_reentry / spe_reentry);
-	
 	var apoFlag = false;
 	var posFlag = false;
 	
 	var time = [0];
-	var position = [[rad_reentry, 0]];
-	var velocity = [[-spe_reentry * Math.cos(ang_reentry), spe_reentry * Math.sin(ang_reentry)]];
+	var position = [[planet.radius, 0]];
+	var velocity = [[0, 2 * Math.PI * planet.radius / planet.dayLength]];
 	var acceleration = [[0, 0]];
 	
 	var stage = rocket.stages[rocket.stageCount];

@@ -63,7 +63,7 @@ FlightPage = React.createClass({
 		switch(this.state.maneuverConfig[4]){
 			case 0:
 				var orbit = this.state.maneuverValue;
-				var maneuverOutput = orbitBody(Planet, Rocket, orbit * 1000);
+				var maneuverOutput = orbitB(Planet, Rocket, orbit * 1000);
 				Rocket = maneuverOutput[0];
 				drawchart(maneuverOutput[1], maneuverOutput[2], maneuverOutput[3], maneuverOutput[4]);
 				Meteor.call("updateVehicle", maneuverOutput[0], this.state.Rocket._id);
@@ -79,7 +79,7 @@ FlightPage = React.createClass({
 				drawOrbit(Rocket.state[2], Rocket.state[3], this.state.Planet)
 				break;
 			case 3:
-				maneuverOutput = reentry(Planet, Rocket, Rocket.state[2],  hohman(Rocket, Planet, "periapsis", this.state.maneuverValue * 1000 + Planet.radius).state[3])
+				maneuverOutput = reentry2(Planet, Rocket, Rocket.state[2],  hohman(Rocket, Planet, "periapsis", this.state.maneuverValue * 1000 + Planet.radius).state[3])
 				Rocket = maneuverOutput[0];
 				drawchart(maneuverOutput[1], maneuverOutput[2], maneuverOutput[3], maneuverOutput[4]);
 				Meteor.call("updateVehicle", maneuverOutput[0], this.state.Rocket._id);

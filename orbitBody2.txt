@@ -1,0 +1,361 @@
+var startTime = new Date();
+
+var Rocket = {
+    stageCount: 2,
+    stages: {
+                "1": [[300000, 300000], 40000, 10000, 0.2, 10, 4000000, 2000000, 500],
+                "2": [[300000, 300000], 40000, 360000, 0.2, 10, 12000000, 10000000, 500]
+            }
+};
+ 
+ var Planet =  {
+		    name: "Earth",
+		    sgp: 3.986e14,
+		    radius: 6.371e6,
+		    pressure: 1,
+		    atmScale: 7,
+		    atmHeight: 1.4e5,
+		    atmWeight: 28.97,
+		    dayLength: 86400
+	};
+var total = 0;
+orbitBody(Planet, Rocket, 192000);
+
+function orbitBody(Planet, Rocket, orbit){ //, theta, phi
+
+    //set constant, variable theta/phi could be implemented in future build
+    var theta = 0;
+
+    //initialize variables
+    var apoFlag = false;
+    var prevApo = Planet.radius;
+
+    var time = [0];
+    var position = [[Planet.radius, theta, 0]];
+    var acceleration = [[0, 0, 0]];
+    var velocity = [[0, Planet.radius * 2 * Math.PI / Planet.dayLength, 0]];
+
+    //set current stage to first rocket stage
+    var currentStage = Rocket.stages[Rocket.stageCount];
+
+    for (var i = 1; i < 20000; i++){
+        //check to see if rocket falls into planet, will happen if twr is insufficient
+        if(position[i - 1][0] < Planet.radius){
+            //Rocket.state[1] = "Surface";
+            //Rocket.state[2] = "---";
+            //Rocket.state[3] = "---";
+            break;
+        }
+        
+        //if stage has no remaining fuel, proceed to next stage, if this is the final stage rocket is out of fuel
+        if(currentStage[0][0] <= 0 && Rocket.stageCount > 1){
+            delete Rocket.stages[Rocket.stageCount];
+            Rocket.stageCount--;
+            currentStage = Rocket.stages[Rocket.stageCount];
+        }
+        
+        //calculate orbital properties
+        var orbitalProperties = orbitalPropertiesCalc(velocity[i - 1], position[i - 1], Planet);
+        var apoapsis = orbitalProperties[0];
+        var periapsis = orbitalProperties[1];
+        var factor = (position[i - 1][0] - Planet.radius) / orbit;
+        
+        if (i > 1){
+            var hmax = Math.min((orbit + Planet.radius - apoapsis) / ((apoapsis - prevApo) / (time[i - 1] - time[i - 2])), 20);
+            
+        } else {
+            hmax = 1;
+        }
+        
+        if (hmax < 0.1){
+            hmax = 0.1;
+        }
+
+        var hvelocityApoapsis = orbitalPropertiesCalc([velocity[i - 1][0], factor * Math.pow(Planet.sgp / (Planet.radius + orbit), 0.5), 0], position[i - 1], Planet)[0];
+        
+        //calculate heading
+        var headingFraction = (hvelocityApoapsis - apoapsis) / (Planet.radius + orbit - apoapsis);
+   
+        if (headingFraction > 1){
+            headingFraction = 1;
+        } else if (headingFraction < 0){
+            headingFraction = 0;
+        }
+   
+   
+   
+        if( apoapsis > Planet.radius + orbit || position[i - 1][0] > Planet.radius + orbit){
+            var heading = Math.PI / 2;
+        } else {
+            heading = headingFraction * Math.PI / 2;
+        }
+ 
+        if(apoapsis > Planet.radius + orbit){
+            break;
+        }
+ 
+ 
+        var output = RK45(position[i - 1][0], position[i - 1][1], velocity[i - 1][0], velocity[i - 1][1], currentStage, Planet, heading, hmax);
+        position[i] = [output[0], output[1], 0];
+        velocity[i] = [output[2], output[3], 0];
+        acceleration[i] = [output[4], output[5], 0];
+        currentStage[0][0] = output[6];
+        time[i] = time[i - 1] + output[7];
+        //console.log(heading, factor, position[i][0], apoapsis, velocity[i])
+        //console.log(heading , time[i], position[i][0], position[i][1]);
+    }
+    //console.log(time[i-1], i, apoapsis - 6371000, periapsis - 6371000, position[i-1][0] - 6371000, velocity[i-1])
+    return [Rocket, time, position, velocity, acceleration];
+    
+}
+
+function arraySub(array, val){
+    
+    var arrayNew = [];
+    if (Array.isArray(val)){
+        if (array.length !== val.length){
+            return "array length mismatch";
+        } else {
+            for (var i = 0; i < array.length; i++){
+                arrayNew[i] = array[i] - val[i];
+            }            
+        } 
+    } else {
+        for (var i = 0; i < array.length; i++){
+            arrayNew[i] = array[i] - val;
+        }
+    }
+    return arrayNew;
+
+}
+
+function arrayDiv(array, val){
+    
+    var arrayNew = [];
+    if (Array.isArray(val)){
+        if (array.length !== val.length){
+            return "array length mismatch";
+        } else {
+            for (var i = 0; i < array.length; i++){
+                arrayNew[i] = array[i] / val[i];
+            }            
+        } 
+    } else {
+        for (var i = 0; i < array.length; i++){
+            arrayNew[i] = array[i] / val;
+        }
+    }
+    return arrayNew;
+
+}
+
+function magn(vector){
+    
+    if (vector.length == 2){
+        return Math.pow(Math.pow(vector[0],2) + Math.pow(vector[1],2),0.5);
+    } else if (vector.length == 3){
+        return Math.pow(Math.pow(vector[0],2) + Math.pow(vector[1],2) + Math.pow(vector[2],2),0.5);
+    }
+   
+}
+
+function cross(u, v){
+    
+    return [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    
+}
+
+function dot(u, v){
+    
+    return u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
+    
+}
+
+function orbitalPropertiesCalc(velocity, position, planet){
+    var angularMomentum = cross([position[0], 0, 0], velocity);
+    var eccVector = arraySub(arrayDiv(cross(velocity, angularMomentum), planet.sgp), [1, 0, 0]);
+    var ecc = magn(eccVector);
+    var orbitalEnergy = Math.pow(magn(velocity), 2) / 2 - planet.sgp / position[0];
+    var semiMajorAxis = -planet.sgp / 2 / orbitalEnergy;
+    var apoapsis = semiMajorAxis * (1 + Math.abs(ecc));
+    var periapsis = semiMajorAxis * (1 - Math.abs(ecc));
+    var eccentricAnomaly = Math.acos((1 - ecc * ecc) / ecc - position[0] / semiMajorAxis / ecc + ecc);
+    var meanAnomaly = eccentricAnomaly - ecc * Math.sin(eccentricAnomaly);
+    var timeToApoapsis = (Math.PI - meanAnomaly) / Math.pow(planet.sgp / Math.pow(semiMajorAxis, 3), 0.5);
+    return [apoapsis, periapsis, timeToApoapsis];
+}
+
+function RK45(r, t, vr, vt, stage, planet, heading, hmax){
+    
+    var thrustVac = stage[5];
+    var thrustAtm = stage[6];
+    
+    if (stage[0][0] > 0 && heading != -1){
+        var burnRate = thrustVac / stage[7] / 9.80665;
+        hmax = Math.min(stage[0][0] / burnRate, hmax);
+    } else {
+        burnRate = 0;
+    }
+    
+    var hmin = 0.01;
+
+    var mass = stage[0][0] + stage[1] + stage[2];
+    var dragConstant = stage[3] * Math.PI / 4 * Math.pow(stage[4], 2);
+        
+    var h = 1;
+        
+    for (var i = 0; i < 2; i++){
+    
+        var k1 =    a(
+                        r,
+                        vr, 
+                        vt,
+                        mass,
+                        h,
+                        dragConstant,
+                        thrustVac,
+                        thrustAtm,
+                        burnRate,
+                        heading
+                    );
+        var k2 =    a(
+                        r  + 1 / 4 * k1[0],
+                        vr + 1 / 4 * k1[2], 
+                        vt + 1 / 4 * k1[3], 
+                        mass + 1 / 4 * k1[4],
+                        h,
+                        dragConstant,
+                        thrustVac,
+                        thrustAtm,
+                        burnRate,
+                        heading
+                    );
+        var k3 =    a(
+                        r  + 3 / 32 * k1[0] + 9 / 32 * k2[0],
+                        vr + 3 / 32 * k1[2] + 9 / 32 * k2[2], 
+                        vt + 3 / 32 * k1[3] + 9 / 32 * k2[3], 
+                        mass + 3 / 32 * k1[4] + 9 / 32 * k2[4],
+                        h,
+                        dragConstant,
+                        thrustVac,
+                        thrustAtm,
+                        burnRate,
+                        heading
+                    );
+        var k4 =    a(
+                        r  + 1932 / 2197 * k1[0] - 7200 / 2197 * k2[0] + 7296 / 2197 * k3[0],
+                        vr + 1932 / 2197 * k1[2] - 7200 / 2197 * k2[2] + 7296 / 2197 * k3[2], 
+                        vt + 1932 / 2197 * k1[3] - 7200 / 2197 * k2[3] + 7296 / 2197 * k3[3], 
+                        mass + 1932 / 2197 * k1[4] - 7200 / 2197 * k2[4] + 7296 / 2197 * k3[4],
+                        h,
+                        dragConstant,
+                        thrustVac,
+                        thrustAtm,
+                        burnRate,
+                        heading
+                    );
+        var k5 =    a(
+                        r  + 439 / 216 * k1[0] - 8 * k2[0] + 3680 / 513 * k3[0] - 845 / 4104 * k4[0],
+                        vr + 439 / 216 * k1[2] - 8 * k2[2] + 3680 / 513 * k3[2] - 845 / 4104 * k4[2], 
+                        vt + 439 / 216 * k1[3] - 8 * k2[3] + 3680 / 513 * k3[3] - 845 / 4104 * k4[3], 
+                        mass + 439 / 216 * k1[4] - 8 * k2[4] + 3680 / 513 * k3[4] - 845 / 4104 * k4[4],
+                        h,
+                        dragConstant,
+                        thrustVac,
+                        thrustAtm,
+                        burnRate,
+                        heading
+                    );
+        var k6 =    a(
+                        r  - 8 / 27 * k1[0] + 2 * k2[0] - 3544 / 2565 * k3[0] + 1859 / 4104 * k4[0] - 11 / 40 * k5[0],
+                        vr - 8 / 27 * k1[2] + 2 * k2[2] - 3544 / 2565 * k3[2] + 1859 / 4104 * k4[2] - 11 / 40 * k5[2], 
+                        vt - 8 / 27 * k1[3] + 2 * k2[3] - 3544 / 2565 * k3[3] + 1859 / 4104 * k4[3] - 11 / 40 * k5[3], 
+                        mass - 8 / 27 * k1[4] + 2 * k2[4] - 3544 / 2565 * k3[4] + 1859 / 4104 * k4[4] - 11 / 40 * k5[4],
+                        h,
+                        dragConstant,
+                        thrustVac,
+                        thrustAtm,
+                        burnRate,
+                        heading
+                    );
+        
+        var r1 = r + 25 / 216 * k1[0] + 1408 / 2565 * k3[0] + 2197 / 4104 * k4[0] - 1 / 5 * k5[0];
+        var r2 = r + 16 / 135 * k1[0] + 6656 / 12825 * k3[0] + 28561 / 56430 * k4[0] - 9 / 50 * k5[0] + 2 / 55 * k6[0];
+        
+        var t1 = t + 25 / 216 * k1[1] + 1408 / 2565 * k3[1] + 2197 / 4104 * k4[1] - 1 / 5 * k5[1];
+        var t2 = t + 16 / 135 * k1[1] + 6656 / 12825 * k3[1] + 28561 / 56430 * k4[1] - 9 / 50 * k5[1] + 2 / 55 * k6[1];
+        
+        var vr1 = vr + 25 / 216 * k1[2] + 1408 / 2565 * k3[2] + 2197 / 4104 * k4[2] - 1 / 5 * k5[2];
+        var vr2 = vr + 16 / 135 * k1[2] + 6656 / 12825 * k3[2] + 28561 / 56430 * k4[2] - 9 / 50 * k5[2] + 2 / 55 * k6[2];
+        
+        var vt1 = vt + 25 / 216 * k1[3] + 1408 / 2565 * k3[3] + 2197 / 4104 * k4[3] - 1 / 5 * k5[3];
+        var vt2 = vt + 16 / 135 * k1[3] + 6656 / 12825 * k3[3] + 28561 / 56430 * k4[3] - 9 / 50 * k5[3] + 2 / 55 * k6[3];  
+        
+        var fuelMass = stage[0][0] - burnRate * h;  
+        
+        var rError = 0.1 * h / Math.abs(r1 - r2);
+        var tError = 1e-7 * h / Math.abs(t1 - t2);
+        var vrError = 1e-8 * h / Math.abs(vr1 - vr2);
+        var vtError = 1e-8 * h / Math.abs(vt1 - vt2);
+        
+        var maxError = Math.min(rError, tError, vrError, vtError);
+
+        var sh = Math.pow(maxError / 2, 1 / 4) * h;
+        
+        if (i == 0){
+            if (sh > hmax){
+                h = hmax;
+            } else if (sh < hmin){
+                h = hmin;
+            } else {
+                h = sh;
+            }
+        }
+
+    }
+
+    return [r2, t2, vr2, vt2, (vr - vr2) / h, (vt - vt2) / h, fuelMass, h];
+}
+
+function a(r, vr, vt, mass, h, dragConstant, thrustVac, thrustAtm, burnRate, heading){
+
+    var vt_s = vt - r * 2 * Math.PI / Planet.dayLength;
+    var sp_s = Math.pow(vr * vr + vt_s * vt_s, 0.5);
+
+    if (sp_s == 0 || r > Planet.atmHeight + Planet.radius){
+        var ar_d = 0;
+        var at_d = 0;
+    } else {
+        var atmDensity = 0.042295 * Planet.pressure * Math.exp(-(r - Planet.radius) / Planet.atmScale / 1000) * Planet.atmWeight;
+        var a_d = 1 / 2 * atmDensity * Math.pow(sp_s, 2) * dragConstant / sp_s / mass;
+        ar_d = -vr * a_d;
+        at_d = -vt_s * a_d;
+    }
+
+    if (burnRate != 0){
+        if(r < Planet.atmHeight + Planet.radius){
+            var thrust = thrustVac - (thrustVac - thrustAtm) * Planet.pressure * Math.exp(-(r - Planet.radius) / Planet.atmScale / 1000);
+            if (thrust < 0){
+                thrust = 0;
+            }
+        } else {
+            thrust = thrustVac;
+        }
+        var ar_t = Math.cos(heading) * thrust / mass;
+        var at_t = Math.sin(heading) * thrust / mass;
+    } else {
+        ar_t = 0;
+        at_t = 0;
+    }
+    
+    var ar = vt * vt / r - Planet.sgp / r / r + ar_d + ar_t;
+    var at = vt * (r / (r + vr) - 1) + at_d + at_t;
+
+    return [h * vr, h * vt / r, h * ar, h * at, - h * burnRate];
+}
+
+
+var endTime = new Date();
+
+
+console.log(startTime - endTime)

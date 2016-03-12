@@ -1,5 +1,5 @@
 drawchart = function(time_input, data_input, vel_input, acc_input){
-
+console.log(vel_input)
 d3.select("#flightDisplay").selectAll("svg").remove();
 
 var time = time_input;
@@ -9,10 +9,10 @@ var velocity = [];
 var acceleration = [];
 
 for (var i = 0; i < data_input.length; i++){
-	data.push([(data_input[i][1] * 6371000 - 463.31219 * time[i])/1000 , data_input[i][0] /1000- 6371 ])
-	velocity.push(Math.pow(vel_input[i][0] * vel_input[i][0] + (vel_input[i][1] - 463.31219) * (vel_input[i][1] - 463.31219) + vel_input[i][2] * vel_input[i][2], 0.5));
+	data.push([(data_input[i][1] * 6371000 - 463.31219 * time[i])/1000 / 4 , data_input[i][0] /1000- 6371 ]);
+	velocity.push(Math.pow(vel_input[i][0] * vel_input[i][0] + (vel_input[i][1]) * (vel_input[i][1]), 0.5));
 	if (i < acc_input.length){
-	acceleration.push(Math.pow(acc_input[i][0] * acc_input[i][0] + acc_input[i][1] * acc_input[i][1] + acc_input[i][2] * acc_input[i][2], 0.5));
+	acceleration.push(Math.pow(acc_input[i][0] * acc_input[i][0] + acc_input[i][1] * acc_input[i][1], 0.5));
 	}
 }
 
@@ -20,7 +20,7 @@ var hzmax = d3.max(data, function(d) { return d[0]; });
 var vtmax = d3.max(data, function(d) { return d[1]; });
 
 
-var dpp = Math.max((hzmax + 40) / 1584, (vtmax + 20) / 632);
+var dpp = Math.max((hzmax + 10) / 1584, (vtmax + 20) / 632);
 
 var dppAtm = Math.ceil(140 / dpp);
 var dppGrnd = Math.ceil(1 / dpp) + 1;
@@ -31,7 +31,7 @@ var hzoffset = (1584 * dpp - hzmax) / 2;
 var vtoffset = 632 * dpp;
 
 if (dppSpace < 0){
-  dppRect = 0;
+  var dppRect = 0;
 } else {
   dppRect = dppSpace;
 }
@@ -51,13 +51,13 @@ var chart = d3.select("#flightDisplay")
   .append('svg:svg')
   .attr('width', width + margin.right + margin.left)
   .attr('height', height + margin.top + margin.bottom)
-  .attr('class', 'chart')
+  .attr('class', 'chart');
 
 var main = chart.append('g')
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
   .attr('width', width)
   .attr('height', height)
-  .attr('class', 'main') 
+  .attr('class', 'main');
 
 main.append('rect')
 	.attr("width", width)
@@ -94,14 +94,14 @@ var grndoffset = dppSpace + dppAtm;
     .attr("transform", 'translate(0,' + grndoffset +')')
     .attr("fill", "#487906"); 
 
-var g = main.append("svg:g"); 
+var g = main.append("svg:g");
 
 var line = d3.svg.line()
 .x(function(d, i) {
-  return x(d[0])
+  return x(d[0]);
 })
 .y(function(d, i) {
-  return y(d[1])
+  return y(d[1]);
 });
 
 var timeduration = 50 * Math.max.apply(null, time);
@@ -133,7 +133,7 @@ function pathTween(data) {
             var t =(d.getTime() - c.getTime()) * dt ;
 
             while (t >= time[i]){
-              i++
+              i++;
             } 
             if (t >= time[time.length - 1]) {
               t_int = 1;
@@ -145,8 +145,8 @@ function pathTween(data) {
 	            var yvalue = (data[i][1] - data[i-1][1]) * t_int + data[i-1][1];
 	            var output_vel_new =  (velocity[i] - velocity[i-1]) * t_int + velocity[i-1];
             	var output_acc_new = (acceleration[i] - acceleration[i-1]) * t_int + acceleration[i-1];
-              var yvel = (vel_input[i][0] - vel_input[i-1][0]) * t_int + vel_input[i-1][0]
-              var xvel = (vel_input[i][1] - vel_input[i-1][1]) * t_int + vel_input[i-1][1]
+              var yvel = (vel_input[i][0] - vel_input[i-1][0]) * t_int + vel_input[i-1][0];
+              var xvel = (vel_input[i][1] - vel_input[i-1][1]) * t_int + vel_input[i-1][1];
 	            outputarray.push([xvalue, yvalue]);  
             }           
 
@@ -155,7 +155,7 @@ function pathTween(data) {
             	var output_vel = output_vel_new;
             	 chart3.selectAll("*").remove();
             chart3.append("text")
-              .html("V (m/s):" + Math.floor(output_vel) + " " + Math.floor(xvel * 100 - 46331.219) / 100+ " " + Math.floor(yvel * 100)/ 100 +
+              .html("V (m/s):" + Math.floor(output_vel) + " " + Math.floor(xvel * 100) / 100+ " " + Math.floor(yvel * 100)/ 100 +
                 "<br/>" + " A (km):" + Math.floor(yvalue) +
                 "<br/>" + " R (km):" + Math.floor(xvalue));
               
@@ -175,8 +175,8 @@ function pathTween(data) {
              
               
             return line(outputarray);
-        }
-    }
+        };
+    };
  }
 
-}
+};
