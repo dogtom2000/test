@@ -22,10 +22,10 @@ Flight21 = React.createClass({
 			                  <h4 className="modal-title">Load Vehicle</h4>
 			                  <div className="modal-body">
 			                    <div>
-			                    {this.props.vehicle.map( function(u) { return u.name; } ).map((name, i) =>
+			                    {this.props.vehicle.map( function(u) { return [u.name, u.state]; } ).map((data, i) =>
 			                       <div key={i} className="btn-group btn-block">
-			                           <button className="btn buttonStyle" style={{width: "50%"}} onClick={this.props.handleLoadVehicle.bind(null, name)} data-dismiss="modal">{name}</button>
-			                           <button className="btn buttonStyle" style={{width: "20%", marginLeft: "30%"}} onClick={this.props.handleDeleteVehicle.bind(null, name)}>Delete</button>
+			                           <button className="btn buttonStyle" style={{width: "50%"}} onClick={this.props.handleLoadVehicle.bind(null, data[0])} data-dismiss="modal">{data[0] + " - " + data[1][0] + ": " + data[1][1]}</button>
+			                           <button className="btn buttonStyle" style={{width: "20%", marginLeft: "30%"}} onClick={this.props.handleDeleteVehicle.bind(null, data[0])}>Delete</button>
 			                       </div>)}
 			                    </div>
 			                  </div>
@@ -50,12 +50,11 @@ Flight21 = React.createClass({
 	                    		 </div>
 								<div className="btn-group btn-block">
 	                           		<button className={this.props.maneuverConfig[1][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 1)} disabled={this.props.maneuverConfig[1][1]}>Change apoapsis</button>
-	                        		<button className="btn buttonStyle" style={{width: "40%", marginLeft: "10%"}} onClick={this.props.handleChangeMulVal}>{this.props.mulVal}</button>
+	                        		<input style={{width: "40%", marginLeft: "10%", backgroundColor: "#000", textAlign: "center"}} type="text" value={this.props.maneuverFormValue} onChange={this.props.handleManeuverValue} />
 	                    		 </div>
+	                    		 
 	                    		 <div className="btn-group btn-block">
 	                           		<button className={this.props.maneuverConfig[2][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 2)} disabled={this.props.maneuverConfig[2][1]}>Change periapsis</button>
-	                    		 	<button className="btn buttonStyle" style={{width: "20%", marginLeft: "10%"}} onClick={this.props.handleDesiredOrbit.bind(null, 1)}>+</button>
-	                        		<button className="btn buttonStyleNeg" style={{width: "20%"}} onClick={this.props.handleDesiredOrbit.bind(null, -1)}>-</button>
 	                    		 </div>
 	                    		 <div className="btn-group btn-block">
 	                           		<button className={this.props.maneuverConfig[3][0]} style={{width: "50%"}} onClick={this.props.handleConfigureManeuver.bind(null, 3)} disabled={this.props.maneuverConfig[3][1]}>Attempt reentry</button>
@@ -75,4 +74,3 @@ Flight21 = React.createClass({
 		);
 	}
 });
-//<button type="button" className="btn btn-block buttonStyle" onClick={this.props.displayOrbit}>View Orbit</button>}

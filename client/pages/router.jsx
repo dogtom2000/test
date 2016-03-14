@@ -30,3 +30,11 @@ FlowRouter.route('/profile', {
 	}
 });
 
+FlowRouter.route('/system', {
+	action: function() {
+		ReactLayout.render(App, {
+			content: <SystemPage />
+		});
+	}
+});
+

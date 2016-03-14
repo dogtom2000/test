@@ -6,9 +6,28 @@ var planetData = [{
 		    atmScale: 7,
 		    atmHeight: 1.4e5,
 		    atmWeight: 28.97,
-		    dayLength: 86400
+		    dayLength: 8.616e4,
+		    soi: 9.245e8,
+		    apoapsis: 1.521e11,
+		    periapsis: 1.471e11,
+		    children: ["Moon"],
+		    color: "blue"
+	},
+	{
+			name: "Moon",
+		    sgp: 4.905e12,
+		    radius: 1.737e6,
+		    pressure: 0,
+		    atmScale: 1,
+		    atmHeight: 0,
+		    atmWeight: 0,
+		    dayLength: 2.361e6,
+		    soi: 6.619e8,
+		    apoapsis: 4.054e8,
+		    periapsis: 3.626e8,
+		    children:[],
+		    color: "grey"
 	}]; 
-
 
 FlightPage = React.createClass({
 
@@ -28,8 +47,9 @@ FlightPage = React.createClass({
 			maneuverConfig: [["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], false],
 			mulVal: 1,
 			maneuverValue: 0,
+			maneuverFormValue: 0,
 			Rocket: {stageCount: 0, stages: [[[0, 0], [0], [0]]], state: ["---", "---", "---", "---"]},
-			Planet: {radius: 0}
+			Planet: {radius: 0},
 		};
 	},
 	
@@ -37,7 +57,6 @@ FlightPage = React.createClass({
 		var planet = this.data.vehicle.filter((obj) => obj.name == arguments[0])[0].state[0];
 		var orbitHeight = Math.round((planetData.filter((obj) => obj.name == planet)[0].atmHeight + 50000 ) / 1000);
 		var rocket = this.data.vehicle.filter((obj) => obj.name == arguments[0])[0];
-		var maneuverConfigArray = this.state.maneuverConfig;
 		if (rocket.state[1] == "Surface"){
 		var	maneuverConfig = [["btn buttonStyle", false],["btn buttonStyle", true],["btn buttonStyle", true],["btn buttonStyle", true], false];
 
@@ -49,11 +68,10 @@ FlightPage = React.createClass({
 		this.setState({
 			Rocket: rocket,
 			Planet: planetData.filter((obj) => obj.name == planet)[0],
-			maneuverValue: orbitHeight,
 			maneuverConfig: maneuverConfig
 			
 		});
-		drawOrbit(rocket.state[2], rocket.state[3], planetData.filter((obj) => obj.name == planet)[0]);
+		drawOrbit(rocket.state[2], rocket.state[3], rocket, planetData);
 	},
 
 	initiateBurn(){
@@ -71,12 +89,12 @@ FlightPage = React.createClass({
 			case 1:
 				Rocket = hohman(Rocket, Planet, "apoapsis", this.state.maneuverValue * 1000 + Planet.radius);
 				Meteor.call("updateVehicle", Rocket, this.state.Rocket._id);
-				drawOrbit(Rocket.state[2], Rocket.state[3], this.state.Planet)
+				drawOrbit(Rocket.state[2], Rocket.state[3], Rocket, planetData)
 				break;
 			case 2:
 				Rocket = hohman(Rocket, Planet, "periapsis", this.state.maneuverValue * 1000 + Planet.radius);
 				Meteor.call("updateVehicle", Rocket, this.state.Rocket._id);
-				drawOrbit(Rocket.state[2], Rocket.state[3], this.state.Planet)
+				drawOrbit(Rocket.state[2], Rocket.state[3], Rocket, planetData)
 				break;
 			case 3:
 				maneuverOutput = reentry2(Planet, Rocket, Rocket.state[2],  hohman(Rocket, Planet, "periapsis", this.state.maneuverValue * 1000 + Planet.radius).state[3])
@@ -93,6 +111,9 @@ FlightPage = React.createClass({
 			maneuverConfig = [["btn buttonStyle", true],["btn buttonStyle", false],["btn buttonStyle", false],["btn buttonStyle", false], false];
 
 		}
+		
+		
+		
 		this.setState({
 		maneuverConfig: maneuverConfig	
 		});
@@ -105,13 +126,58 @@ FlightPage = React.createClass({
 
 	configureManeuver(){
 		var maneuverConfigArray = this.state.maneuverConfig;
+		var maneuverFormValue = this.state.maneuverFormValue;
 		maneuverConfigArray[4] = arguments[0];
 		for (var i = 0; i < 4; i++){
 			maneuverConfigArray[i][0] = "btn buttonStyle";
 		}
 		maneuverConfigArray[arguments[0]][0] = "btn buttonStyleHigh";
+		
+		switch(arguments[0]){
+			case 0:
+				if (maneuverFormValue > Math.round(this.state.Planet.radius * 0.05 / 1000)){
+					var value = Math.round(this.state.Planet.radius * 0.05 / 1000);
+				} else if (maneuverFormValue < this.state.Planet.atmHeight / 1000 + 1){
+					value = this.state.Planet.atmHeight / 1000 + 1;
+				} else {
+					value = maneuverFormValue;
+				}
+				break;				
+			case 1:
+				if (maneuverFormValue > Math.round(this.state.Planet.soi / 1000)){
+					value = Math.round(this.state.Planet.soi / 1000);
+				} else if (maneuverFormValue < this.state.Planet.atmHeight / 1000 + 1){
+					value = this.state.Planet.atmHeight / 1000 + 1;
+				} else {
+					value = maneuverFormValue;
+				}
+				break;				
+			case 2:
+				if (maneuverFormValue > Math.round(this.state.Planet.soi / 1000)){
+					value = Math.round(this.state.Planet.soi / 1000);
+				} else if (maneuverFormValue < this.state.Planet.atmHeight / 1000 + 1){
+					value = this.state.Planet.atmHeight / 1000 + 1;
+				} else {
+					value = maneuverFormValue;
+				}
+				break;				
+			case 3:
+				if (maneuverFormValue > Math.round(this.state.Planet.atmHeight / 1000 - 1)){
+					value = Math.round(this.state.Planet.atmHeight / 1000 - 1);
+				} else if (maneuverFormValue < -this.state.Planet.radius / 1000 + 1){
+					value = -this.state.Planet.radius / 1000 + 1;
+				} else {
+					value = maneuverFormValue;
+				}
+				break;
+			case false:
+					value = maneuverFormValue;
+				break;
+		}			
+
 		this.setState({
-			maneuverConfig: maneuverConfigArray
+			maneuverConfig: maneuverConfigArray,
+			maneuverValue: value
 		});
 		
 		
@@ -135,7 +201,68 @@ FlightPage = React.createClass({
 			
 			this.setState({
 				mulVal: mulVal
-			})
+			});
+	},
+	
+	maneuverValue(e){
+		var maneuver = this.state.maneuverConfig[4];
+		var formValue = e.target.value;
+		
+		if(isNaN(formValue) == false || formValue == "-"){
+			
+			switch(maneuver){
+				case 0:
+					if (formValue > Math.round(this.state.Planet.radius * 0.05 / 1000)){
+						var value = Math.round(this.state.Planet.radius * 0.05 / 1000);
+					} else if (formValue < this.state.Planet.atmHeight / 1000 + 1){
+						value = this.state.Planet.atmHeight / 1000 + 1;
+					} else {
+						value = formValue;
+					}
+					break;				
+				case 1:
+					if (formValue > Math.round(this.state.Planet.soi / 1000)){
+						value = Math.round(this.state.Planet.soi / 1000);
+					} else if (formValue < this.state.Planet.atmHeight / 1000 + 1){
+						value = this.state.Planet.atmHeight / 1000 + 1;
+					} else {
+						value = formValue;
+					}
+					break;				
+				case 2:
+					if (formValue > Math.round(this.state.Planet.soi / 1000)){
+						value = Math.round(this.state.Planet.soi / 1000);
+					} else if (formValue < this.state.Planet.atmHeight / 1000 + 1){
+						value = this.state.Planet.atmHeight / 1000 + 1;
+					} else {
+						value = formValue;
+					}
+					break;				
+				case 3:
+					if (formValue > Math.round(this.state.Planet.atmHeight / 1000 - 1)){
+						value = Math.round(this.state.Planet.atmHeight / 1000 - 1);
+					} else if (formValue < -this.state.Planet.radius / 1000 + 1){
+						value = -this.state.Planet.radius / 1000 + 1;
+					} else {
+						value = formValue;
+					}
+					break;
+				case false:
+						value = formValue;
+					break;
+			}	
+			if (formValue == "-"){
+				value = 0;
+			}
+
+	
+			this.setState({
+				maneuverFormValue: formValue,
+				maneuverValue: value
+				
+			});
+		}
+		
 	},
 
 	render(){
@@ -152,6 +279,9 @@ FlightPage = React.createClass({
 				<div className="row bot-row">
 
 					<Flight21 
+					
+					handleManeuverValue={this.maneuverValue}
+					maneuverFormValue={this.state.maneuverFormValue}
 					vehicle={this.data.vehicle}
 					Rocket={this.state.Rocket}
 					handleLoadVehicle={this.loadVehicle}

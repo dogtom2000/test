@@ -14,6 +14,7 @@ Header = React.createClass({
 				<li><a href="/profile" 	style={navBarStyle}>Profile</a></li>
 				<li><a href="/design" 	style={navBarStyle}>Design</a></li>
 				<li><a href="/flight"	style={navBarStyle}>Flight Control</a></li>
+				<li><a href="/system"	style={navBarStyle}>Solar System</a></li>
 				<li><Login /></li>
 			</ul>
 		</header>

@@ -1,5 +1,5 @@
 drawchart = function(time_input, data_input, vel_input, acc_input){
-console.log(vel_input)
+
 d3.select("#flightDisplay").selectAll("svg").remove();
 
 var time = time_input;
@@ -20,7 +20,7 @@ var hzmax = d3.max(data, function(d) { return d[0]; });
 var vtmax = d3.max(data, function(d) { return d[1]; });
 
 
-var dpp = Math.max((hzmax + 10) / 1584, (vtmax + 20) / 632);
+var dpp = Math.max((hzmax + 40 / 4) / 1584, (vtmax + 20) / 632);
 
 var dppAtm = Math.ceil(140 / dpp);
 var dppGrnd = Math.ceil(1 / dpp) + 1;
