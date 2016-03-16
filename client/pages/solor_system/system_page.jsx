@@ -27,6 +27,13 @@ SystemPage = React.createClass({
 
 		};
 	},
+	
+	
+	displayFunction(){
+		var pp = planetPositions(2016, 3, 15);
+		plotPP(pp);
+		console.log("test")
+	},
 
 	render(){
 		return(
@@ -38,7 +45,8 @@ SystemPage = React.createClass({
 				</div>{/* row one ends */}
 
 				<div className="row bot-row">
-					<System21 />
+					<System21 
+					displayFunction={this.displayFunction}/>
 					<System22 />
 					<System23 />
 				</div>{/* row two ends */}		
