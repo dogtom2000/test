@@ -1,14 +1,11 @@
 
 
+transferOrbit("Earth", "Mars", julianDate(20, 7, 2020), 207);
 
-
-
-travelTime("Earth", "Mars", julianDate(20, 7, 2020), + 207);
-
-function travelTime(planetOne, planetTwo, date, travelTime){
+function transferOrbit(planetOne, planetTwo, date, travelTime){
 	
-	var positionOne = transfer("Earth", date);
-	var positionTwo = transfer("Mars", date + travelTime);
+	var positionOne = transfer(planetOne, date );
+	var positionTwo = transfer(planetTwo, date + travelTime);
 	
 	var GM = 3.964016e-14;
 	
@@ -21,57 +18,120 @@ function travelTime(planetOne, planetTwo, date, travelTime){
 	var y1 = positionOne[2];
 	var y2 = positionTwo[2];
 	
+	var z1 = positionOne[3];
+	var z2 = positionTwo[3];
+	
 	var delTrueAnomaly = Math.acos((x1 * x2 + y1 * y2) / (r1 * r2));
 	
 	var kvar = r1 * r2 * (1 - Math.cos(delTrueAnomaly));
 	var lvar = r1 + r2;
 	var mvar = r1 * r2 * (1 + Math.cos(delTrueAnomaly));
+	var dvar = r1 * r2 / 2 * (1 - Math.cos(delTrueAnomaly));
 
+	var paraTimeMax = - kvar * lvar * dvar / ((2 * mvar - lvar * lvar) * dvar - mvar * kvar);
+	
+	var Pi = kvar / (lvar + Math.pow(2 * mvar, 0.5));
+	var Pii = kvar / (lvar - Math.pow(2 * mvar, 0.5));
+	
 	if (delTrueAnomaly < Math.PI){
-		var pvar = kvar / (lvar + Math.pow(2 * mvar, 0.5));
-		var parameter1 = kvar / (lvar - Math.pow(2 * mvar, 0.5)) - 0.01;
-		var parameter2 = parameter1 - 0.01;
+		var parameter1 = (paraTimeMax + Pii) / 2 ;
+		var parameter2 = (paraTimeMax + 2 * Pii) / 3;
 	} else {
-		pvar = kvar / (lvar - Math.pow(2 * mvar, 0.5));
-		parameter1 = pvar / 1.1;
-		parameter2 = parameter1 - 0.01;
+		parameter1 = (Pi + Pii) / 2;
+		parameter2 = (Pi + 2 * Pii) / 3;
 	}
+	
+	var smAxis = mvar * kvar * paraTimeMax / ((2 * mvar - lvar * lvar) * paraTimeMax * paraTimeMax + 2 * kvar * lvar * paraTimeMax - kvar * kvar);
+	var fvar = 1 - r2 / paraTimeMax * (1 - Math.cos(delTrueAnomaly));
+	var gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * paraTimeMax, 0.5);
+	var delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+	
+	var timeMax = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * Math.PI) / 86400;
 
-	for(var i = 0; i <10; i++){
-		
-		var smAxis = mvar * kvar * parameter1 / ((2 * mvar - lvar * lvar) * parameter1 * parameter1 + 2 * kvar * lvar * parameter1 - kvar * kvar);
-		var fvar = 1 - r2 / parameter1 * (1 - Math.cos(delTrueAnomaly));
-		var gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * parameter1, 0.5);
-		var delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+	var smAxis = mvar * kvar * paraTimeMax / ((2 * mvar - lvar * lvar) * paraTimeMax * paraTimeMax + 2 * kvar * lvar * paraTimeMax - kvar * kvar);
+	var fvar = 1 - r2 / paraTimeMax * (1 - Math.cos(delTrueAnomaly));
+	var gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * paraTimeMax, 0.5);
+	var delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+	
+	smAxis = mvar * kvar * (Pi + 1e-8) / ((2 * mvar - lvar * lvar) * (Pi + 1e-8) * (Pi + 1e-8) + 2 * kvar * lvar * (Pi + 1e-8) - kvar * kvar);
+	fvar = 1 - r2 / (Pi + 1e-8) * (1 - Math.cos(delTrueAnomaly));
+	gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * (Pi + 1e-8), 0.5);
+	delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+	
+	var timew1 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
+
+
+	smAxis = mvar * kvar * (Pii - 1e-8) / ((2 * mvar - lvar * lvar) * (Pii - 1e-8) * (Pii - 1e-8) + 2 * kvar * lvar * (Pii - 1e-8) - kvar * kvar);
+	fvar = 1 - r2 / (Pii - 1e-8) * (1 - Math.cos(delTrueAnomaly));
+	gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * (Pii - 1e-8), 0.5);
+	delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+	
+	var timew2 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
+	
+	
+	
+	for(var i = 0; i <20; i++){
+
+		if((travelTime < timew1 && travelTime < timew2) || travelTime > timeMax){
+			return ["----","----"];
+		}
+
+			
+		smAxis = mvar * kvar * parameter1 / ((2 * mvar - lvar * lvar) * parameter1 * parameter1 + 2 * kvar * lvar * parameter1 - kvar * kvar);
+		fvar = 1 - r2 / parameter1 * (1 - Math.cos(delTrueAnomaly));
+		gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * parameter1, 0.5);
+		delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
 		
 		var time1 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
-		
+
 		smAxis = mvar * kvar * parameter2 / ((2 * mvar - lvar * lvar) * parameter2 * parameter2 + 2 * kvar * lvar * parameter2 - kvar * kvar);
 		fvar = 1 - r2 / parameter2 * (1 - Math.cos(delTrueAnomaly));
 		gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * parameter2, 0.5);
 		delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
 	
 		var time2 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
-		
 
 		if(Math.abs(time1 - time2) < 1e-10){
 			break;
-		}
-		
+		} else {
+			
 		var parameterTemp = parameter1;
 		parameter1 = parameter2 + (travelTime - time2)  * (parameter2 - parameter1) / (time2 - time1);
 		
-		if (delTrueAnomaly < Math.PI && parameter1 < pvar){
-			parameter1 = (parameter2 + pvar) / 2;
-		} else if (delTrueAnomaly > Math.PI && parameter1 > pvar){
-			parameter1 = (parameter2 + pvar) / 2;
-		}
-		
-		parameter2 = parameterTemp;	
-		
-		console.log(smAxis, time1);
 
+		
+			if (delTrueAnomaly < Math.PI){
+				if(parameter1 < paraTimeMax){
+					parameter1 = (paraTimeMax + parameterTemp) / 2;
+				}
+	
+			}
+			
+			if (parameter1 > Pii){
+				parameter1 = (Pii + parameterTemp) / 2;
+			}
+			
+			parameter2 = parameterTemp;	
+		}
 	}
+	
+	var fdot = -Math.pow(GM * smAxis, 0.5) / r1 / r2 * Math.sin(delEccAnomaly);
+	var gdot = 1 - smAxis / r2 * (1 - Math.cos(delEccAnomaly));
+	
+	var vel1 = [(x2 - fvar * x1) / gvar, (y2 - fvar * y1) / gvar, (z2 - fvar * z1) / gvar];
+	var vel2 = [fdot * x1 + gdot * vel1[0], fdot * y1 + gdot * vel1[1], fdot * z1 + gdot * vel1[2]];
+	
+	var Vsp1 = [vel1[0] * 1.495978707e11 - positionOne[4], vel1[1] * 1.495978707e11 - positionOne[5], vel1[2] * 1.495978707e11 - positionOne[6]];
+	var Vsp2 = [vel2[0] * 1.495978707e11 - positionTwo[4], vel2[1] * 1.495978707e11 - positionTwo[5], vel2[2] * 1.495978707e11 - positionTwo[6]];
+
+	var Vinfty1 = Math.pow( Vsp1[0] * Vsp1[0] + Vsp1[1] * Vsp1[1] + Vsp1[2] * Vsp1[2], 0.5)
+	var Vinfty2 = Math.pow( Vsp2[0] * Vsp2[0] + Vsp2[1] * Vsp2[1] + Vsp2[2] * Vsp2[2], 0.5)
+	
+	console.log(Vinfty1, Vinfty2, x1, y1, z1, smAxis)
+	
+	return [Vinfty1, Vinfty2, x1, y1, z1, smAxis];
+	
+
 }
 
 function julianDate(day, month, year){
@@ -197,12 +257,14 @@ function transfer(planet, date){
 			    					coef[planet].meanAnomaly[1] * centTime + 
 			    					coef[planet].meanAnomaly[2] * Math.pow(centTime, 2) + 
 			    					coef[planet].meanAnomaly[3] * Math.pow(centTime, 3);
+			    var longPerihelion = meanLong - meanAnomaly;
 			} else {
-    			var longPerihelion = argPerihelion + longAscNode;
+    			longPerihelion = argPerihelion + longAscNode;
     			longPerihelion -= Math.floor(longPerihelion / 360) * 360;
     			meanAnomaly = meanLong - longPerihelion;
 			}
-
+			
+			longPerihelion = (longPerihelion / 360 - Math.floor(longPerihelion / 360)) * 2 * Math.PI;
 			meanAnomaly = (meanAnomaly / 360 - Math.floor(meanAnomaly / 360)) * 2 * Math.PI;
 			meanLong = (meanLong / 360 - Math.floor(meanLong / 360)) * 2 * Math.PI;
 			inc = (inc / 360 - Math.floor(inc / 360)) * 2 * Math.PI;
@@ -241,5 +303,14 @@ function transfer(planet, date){
 			var x = r * Math.cos(eclipticLat) * Math.cos(eclipticLong);
 			var z = r * Math.sin(eclipticLat);
 
-		    return [r, x, y, z];
+			var angMom =  Math.pow(3.964016e-14 * smAxis * (1 - ecc * ecc), 0.5);
+			var velPla = Math.pow(2 * 3.964016e-14 * (1 / r - 1 / 2 / smAxis), 0.5);
+			
+			var flightAngle = Math.atan2(y, x) + Math.asin(angMom / velPla / r);
+			
+			var vx = velPla * Math.cos(flightAngle) * Math.cos(Math.sin(flightAngle - longAscNode) * inc) * 1.495978707e11;
+			var vy = velPla * Math.sin(flightAngle) * Math.cos(Math.sin(flightAngle - longAscNode) * inc) * 1.495978707e11;
+			var vz = velPla * Math.sin(Math.sin(flightAngle -longAscNode) * inc) * 1.495978707e11;
+			
+		    return [r, x, y, z, vx, vy, vz];
 }
