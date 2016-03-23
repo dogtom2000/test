@@ -1,17 +1,20 @@
 
+for (var i = 850; i < 950; i+=5){
+transferOrbit("Jupiter", "Earth", julianDate(20, 7, 2020), i);
+}
 
-transferOrbit("Earth", "Mars", julianDate(20, 7, 2020), 207);
+//planetVelocity("Mars", julianDate(20, 7, 2020) + 207);
 
-function transferOrbit(planetOne, planetTwo, date, travelTime){
-	
-	var positionOne = transfer(planetOne, date );
-	var positionTwo = transfer(planetTwo, date + travelTime);
+function planetVelocity(planet, date){
+
+	var positionOne = orbitalElements(planet, date);
+	var positionTwo = orbitalElements(planet, date + 1);
 	
 	var GM = 3.964016e-14;
-	
+
 	var r1 = positionOne[0];
 	var r2 = positionTwo[0];
-	
+
 	var x1 = positionOne[1];
 	var x2 = positionTwo[1];
 	
@@ -21,117 +24,180 @@ function transferOrbit(planetOne, planetTwo, date, travelTime){
 	var z1 = positionOne[3];
 	var z2 = positionTwo[3];
 	
-	var delTrueAnomaly = Math.acos((x1 * x2 + y1 * y2) / (r1 * r2));
+	var 	delTrueAnomaly =  positionTwo[6] - positionOne[6];
+
+	var pvar = positionOne[4] * (1 - Math.pow(positionOne[5], 2));
+
+	var fvar = 1 - r2 / pvar * (1 - Math.cos(delTrueAnomaly));
+	var gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * pvar, 0.5);
+
+	var velocity = [(x2 - fvar * x1) / gvar, (y2 - fvar * y1) / gvar, (z2 - fvar * z1) / gvar];
 	
+	return velocity;
+}
+
+function transferOrbit(planetOne, planetTwo, date, travelTime){
+	
+	var positionOne = orbitalElements(planetOne, date);
+	var positionTwo = orbitalElements(planetTwo, date + travelTime);
+	
+	var vp1 = planetVelocity(planetOne, date);
+	var vp2 = planetVelocity(planetTwo, date + travelTime);
+	
+	var GM = 3.964016e-14;
+	
+	var r1 = positionOne[0];
+	var r2 = positionTwo[0];
+
+	var x1 = positionOne[1];
+	var x2 = positionTwo[1];
+	
+	var y1 = positionOne[2];
+	var y2 = positionTwo[2];
+	
+	var z1 = positionOne[3];
+	var z2 = positionTwo[3];
+	
+	var delTrueAnomaly = Math.acos((x1 * x2 + y1 * y2 + z1 * z2) / (r1 * r2));
+
 	var kvar = r1 * r2 * (1 - Math.cos(delTrueAnomaly));
 	var lvar = r1 + r2;
 	var mvar = r1 * r2 * (1 + Math.cos(delTrueAnomaly));
-	var dvar = r1 * r2 / 2 * (1 - Math.cos(delTrueAnomaly));
 
-	var paraTimeMax = - kvar * lvar * dvar / ((2 * mvar - lvar * lvar) * dvar - mvar * kvar);
-	
 	var Pi = kvar / (lvar + Math.pow(2 * mvar, 0.5));
 	var Pii = kvar / (lvar - Math.pow(2 * mvar, 0.5));
 	
-	if (delTrueAnomaly < Math.PI){
-		var parameter1 = (paraTimeMax + Pii) / 2 ;
-		var parameter2 = (paraTimeMax + 2 * Pii) / 3;
-	} else {
-		parameter1 = (Pi + Pii) / 2;
-		parameter2 = (Pi + 2 * Pii) / 3;
-	}
-	
-	var smAxis = mvar * kvar * paraTimeMax / ((2 * mvar - lvar * lvar) * paraTimeMax * paraTimeMax + 2 * kvar * lvar * paraTimeMax - kvar * kvar);
-	var fvar = 1 - r2 / paraTimeMax * (1 - Math.cos(delTrueAnomaly));
-	var gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * paraTimeMax, 0.5);
+	var smAxis = mvar * kvar * (Pi + 1e-8) / ((2 * mvar - lvar * lvar) * (Pi + 1e-8) * (Pi + 1e-8) + 2 * kvar * lvar * (Pi + 1e-8) - kvar * kvar);
+	var fvar = 1 - r2 / (Pi + 1e-8) * (1 - Math.cos(delTrueAnomaly));
+	var gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * (Pi + 1e-8), 0.5);
 	var delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
 	
-	var timeMax = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * Math.PI) / 86400;
-
-	var smAxis = mvar * kvar * paraTimeMax / ((2 * mvar - lvar * lvar) * paraTimeMax * paraTimeMax + 2 * kvar * lvar * paraTimeMax - kvar * kvar);
-	var fvar = 1 - r2 / paraTimeMax * (1 - Math.cos(delTrueAnomaly));
-	var gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * paraTimeMax, 0.5);
-	var delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
-	
-	smAxis = mvar * kvar * (Pi + 1e-8) / ((2 * mvar - lvar * lvar) * (Pi + 1e-8) * (Pi + 1e-8) + 2 * kvar * lvar * (Pi + 1e-8) - kvar * kvar);
-	fvar = 1 - r2 / (Pi + 1e-8) * (1 - Math.cos(delTrueAnomaly));
-	gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * (Pi + 1e-8), 0.5);
-	delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
-	
-	var timew1 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
-
+	var timePi = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
 
 	smAxis = mvar * kvar * (Pii - 1e-8) / ((2 * mvar - lvar * lvar) * (Pii - 1e-8) * (Pii - 1e-8) + 2 * kvar * lvar * (Pii - 1e-8) - kvar * kvar);
 	fvar = 1 - r2 / (Pii - 1e-8) * (1 - Math.cos(delTrueAnomaly));
 	gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * (Pii - 1e-8), 0.5);
 	delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
 	
-	var timew2 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
+	var timePii = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
 	
-	
-	
-	for(var i = 0; i <20; i++){
+	var ptrial = (Pii - Pi) / 2 + Pi;
 
-		if((travelTime < timew1 && travelTime < timew2) || travelTime > timeMax){
-			return ["----","----"];
+	smAxis = mvar * kvar * ptrial / ((2 * mvar - lvar * lvar) * ptrial * ptrial + 2 * kvar * lvar * ptrial - kvar * kvar);
+	fvar = 1 - r2 / ptrial * (1 - Math.cos(delTrueAnomaly));
+	gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * ptrial, 0.5);
+	delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+	
+	var ttrial = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
+
+	var pvals = [Pi + 1e-8, ptrial , Pii - 1e-8];
+	var tvals = [timePi, ttrial ,timePii];
+	
+	for (var i = 0; i < 20; i++){
+		var plefttrial = (pvals[0] + pvals[1] ) / 2;
+		var prighttrial = (pvals[2] + pvals[1] ) / 2;
+	
+		smAxis = mvar * kvar * plefttrial / ((2 * mvar - lvar * lvar) * plefttrial * plefttrial + 2 * kvar * lvar * plefttrial - kvar * kvar);
+		fvar = 1 - r2 / plefttrial * (1 - Math.cos(delTrueAnomaly));
+		gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * plefttrial, 0.5);
+		delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+		
+		var tlefttrial = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
+	
+		smAxis = mvar * kvar * prighttrial / ((2 * mvar - lvar * lvar) * prighttrial * prighttrial + 2 * kvar * lvar * prighttrial - kvar * kvar);
+		fvar = 1 - r2 / prighttrial * (1 - Math.cos(delTrueAnomaly));
+		gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * prighttrial, 0.5);
+		delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+		
+		var trighttrial = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
+		
+		if(tlefttrial < tvals[1] && trighttrial < tvals[1]){
+			tvals[0] = tlefttrial;
+			pvals[0] = plefttrial;
+			tvals[2] = trighttrial;
+			pvals[2] = prighttrial;
+		} else if (trighttrial > tvals[1] && tlefttrial < tvals[1]){
+			tvals[0] = tvals[1];
+			pvals[0] = pvals[1];
+		} else if (tlefttrial > tvals[1] && trighttrial < tvals[1]){
+			tvals[2] = tvals[1];
+			pvals[2] = pvals[1];
+		} else if(tlefttrial > trighttrial){
+			tvals[2] = trighttrial;
+			pvals[2] = prighttrial;
+		} else if(trighttrial > tlefttrial){
+			tvals[0] = tlefttrial;
+			pvals[0] = plefttrial;
 		}
-
-			
-		smAxis = mvar * kvar * parameter1 / ((2 * mvar - lvar * lvar) * parameter1 * parameter1 + 2 * kvar * lvar * parameter1 - kvar * kvar);
-		fvar = 1 - r2 / parameter1 * (1 - Math.cos(delTrueAnomaly));
-		gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * parameter1, 0.5);
+		
+		var pmidtrial = (pvals[0] + pvals[2] ) / 2;
+		
+		smAxis = mvar * kvar * pmidtrial / ((2 * mvar - lvar * lvar) * pmidtrial * pmidtrial + 2 * kvar * lvar * pmidtrial - kvar * kvar);
+		fvar = 1 - r2 / pmidtrial * (1 - Math.cos(delTrueAnomaly));
+		gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * pmidtrial, 0.5);
 		delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
 		
-		var time1 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
-
-		smAxis = mvar * kvar * parameter2 / ((2 * mvar - lvar * lvar) * parameter2 * parameter2 + 2 * kvar * lvar * parameter2 - kvar * kvar);
-		fvar = 1 - r2 / parameter2 * (1 - Math.cos(delTrueAnomaly));
-		gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * parameter2, 0.5);
-		delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+		var tmidtrial = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
 	
-		var time2 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
-
-		if(Math.abs(time1 - time2) < 1e-10){
+		tvals[1] = tmidtrial;
+		pvals[1] = pmidtrial;
+	
+		if (Math.abs(tvals[1] - tvals[0]) + Math.abs(tvals[1] - tvals[2])< 1e-1){
 			break;
-		} else {
-			
-		var parameterTemp = parameter1;
-		parameter1 = parameter2 + (travelTime - time2)  * (parameter2 - parameter1) / (time2 - time1);
-		
-
-		
-			if (delTrueAnomaly < Math.PI){
-				if(parameter1 < paraTimeMax){
-					parameter1 = (paraTimeMax + parameterTemp) / 2;
-				}
-	
-			}
-			
-			if (parameter1 > Pii){
-				parameter1 = (Pii + parameterTemp) / 2;
-			}
-			
-			parameter2 = parameterTemp;	
 		}
 	}
-	
-	var fdot = -Math.pow(GM * smAxis, 0.5) / r1 / r2 * Math.sin(delEccAnomaly);
-	var gdot = 1 - smAxis / r2 * (1 - Math.cos(delEccAnomaly));
-	
-	var vel1 = [(x2 - fvar * x1) / gvar, (y2 - fvar * y1) / gvar, (z2 - fvar * z1) / gvar];
-	var vel2 = [fdot * x1 + gdot * vel1[0], fdot * y1 + gdot * vel1[1], fdot * z1 + gdot * vel1[2]];
-	
-	var Vsp1 = [vel1[0] * 1.495978707e11 - positionOne[4], vel1[1] * 1.495978707e11 - positionOne[5], vel1[2] * 1.495978707e11 - positionOne[6]];
-	var Vsp2 = [vel2[0] * 1.495978707e11 - positionTwo[4], vel2[1] * 1.495978707e11 - positionTwo[5], vel2[2] * 1.495978707e11 - positionTwo[6]];
 
-	var Vinfty1 = Math.pow( Vsp1[0] * Vsp1[0] + Vsp1[1] * Vsp1[1] + Vsp1[2] * Vsp1[2], 0.5)
-	var Vinfty2 = Math.pow( Vsp2[0] * Vsp2[0] + Vsp2[1] * Vsp2[1] + Vsp2[2] * Vsp2[2], 0.5)
-	
-	console.log(Vinfty1, Vinfty2, x1, y1, z1, smAxis)
-	
-	return [Vinfty1, Vinfty2, x1, y1, z1, smAxis];
-	
+	if(travelTime < tvals[1] && travelTime > timePii){
 
+		var parameter = pvals[1] + (travelTime - tvals[1])  * (pvals[1] - Pii) / (tvals[1] - timePii);
+		
+		for (var i = 0; i < 20; i++){
+		
+			smAxis = mvar * kvar * parameter / ((2 * mvar - lvar * lvar) * parameter * parameter + 2 * kvar * lvar * parameter - kvar * kvar);
+			fvar = 1 - r2 / parameter * (1 - Math.cos(delTrueAnomaly));
+			gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * parameter, 0.5);
+			delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+				
+			var time1 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
+			
+			smAxis = mvar * kvar * (parameter + 1e-8) / ((2 * mvar - lvar * lvar) * (parameter + 1e-8) * (parameter + 1e-8) + 2 * kvar * lvar * (parameter + 1e-8) - kvar * kvar);
+			fvar = 1 - r2 / (parameter + 1e-8) * (1 - Math.cos(delTrueAnomaly));
+			gvar = r1 * r2 * Math.sin(delTrueAnomaly) / Math.pow(GM * (parameter + 1e-8), 0.5);
+			delEccAnomaly = Math.acos(1 - r1 / smAxis * (1 - fvar));
+				
+			var time2 = (gvar + Math.pow(Math.pow(smAxis, 3) / GM, 0.5) * (delEccAnomaly - Math.sin(delEccAnomaly))) / 86400;
+			
+			var parameterNew = parameter - (travelTime - time1) / ((time1 - time2) / 1e-8);
+			
+			if (parameterNew < pvals[1]){
+				parameter = (parameter + pvals[1]) / 2;
+			} else if (parameterNew > Pii){
+				parameter = (Pii + parameter) / 2;
+			} else {
+				parameter = parameterNew;
+			}
+			if (Math.abs(travelTime - time1) < 1e-10){
+				break;
+			}
+		
+		}
+	
+		var fdot = -Math.pow(GM * smAxis, 0.5) / r1 / r2 * Math.sin(delEccAnomaly);
+		var gdot = 1 - smAxis / r2 * (1 - Math.cos(delEccAnomaly));
+		
+		var vel1 = [(x2 - fvar * x1) / gvar, (y2 - fvar * y1) / gvar, (z2 - fvar * z1) / gvar];
+		var vel2 = [fdot * x1 + gdot * vel1[0], fdot * y1 + gdot * vel1[1], fdot * z1 + gdot * vel1[2]];
+		
+		var Vsp1 = [(vel1[0] - vp1[0]) * 1.495978707e11, (vel1[1] - vp1[1]) * 1.495978707e11, (vel1[2] - vp1[2]) * 1.495978707e11];
+		var Vsp2 = [(vel2[0] - vp2[0]) * 1.495978707e11, (vel2[1] - vp2[1]) * 1.495978707e11, (vel2[2] - vp2[2]) * 1.495978707e11];
+	
+		var Vinfty1 = Math.pow( Vsp1[0] * Vsp1[0] + Vsp1[1] * Vsp1[1] + Vsp1[2] * Vsp1[2], 0.5);
+		var Vinfty2 = Math.pow( Vsp2[0] * Vsp2[0] + Vsp2[1] * Vsp2[1] + Vsp2[2] * Vsp2[2], 0.5);
+		
+		console.log(Vinfty1 + Vinfty2, travelTime, delTrueAnomaly);
+		
+		return [Vinfty1, Vinfty2, x1, y1, z1, smAxis];
+	}
 }
 
 function julianDate(day, month, year){
@@ -145,7 +211,7 @@ function julianDate(day, month, year){
 	return Math.floor(365.25 * year) + Math.floor(30.6001 * (month + 1)) + day + 1720994.5 + B;
 }
 
-function transfer(planet, date){
+function orbitalElements(planet, date){
 	var coef = {
 		"Mercury": {
 			meanLong: [178.179078,149474.07078,0.0003011,0],
@@ -296,21 +362,11 @@ function transfer(planet, date){
 			var lambdaMinusOmega = Math.atan(Math.cos(inc) * Math.tan(argLat));
 			
 			var eclipticLong = lambdaMinusOmega + longAscNode + (Math.floor(argLat / (Math.PI / 2)) - Math.floor(lambdaMinusOmega / (Math.PI / 2))) * Math.PI / 2;
-
 			var eclipticLat = Math.asin(Math.sin(argLat) * Math.sin(inc));
 
 			var y = r * Math.cos(eclipticLat) * Math.sin(eclipticLong);
 			var x = r * Math.cos(eclipticLat) * Math.cos(eclipticLong);
 			var z = r * Math.sin(eclipticLat);
 
-			var angMom =  Math.pow(3.964016e-14 * smAxis * (1 - ecc * ecc), 0.5);
-			var velPla = Math.pow(2 * 3.964016e-14 * (1 / r - 1 / 2 / smAxis), 0.5);
-			
-			var flightAngle = Math.atan2(y, x) + Math.asin(angMom / velPla / r);
-			
-			var vx = velPla * Math.cos(flightAngle) * Math.cos(Math.sin(flightAngle - longAscNode) * inc) * 1.495978707e11;
-			var vy = velPla * Math.sin(flightAngle) * Math.cos(Math.sin(flightAngle - longAscNode) * inc) * 1.495978707e11;
-			var vz = velPla * Math.sin(Math.sin(flightAngle -longAscNode) * inc) * 1.495978707e11;
-			
-		    return [r, x, y, z, vx, vy, vz];
+			return [r, x, y, z, smAxis, ecc, trueAnomaly];
 }

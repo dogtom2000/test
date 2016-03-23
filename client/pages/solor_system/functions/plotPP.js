@@ -8,7 +8,7 @@ plotPP = function(pp){
     , width = 632 - margin.left - margin.right
     , height = 632 - margin.top - margin.bottom;
     
-    var hh = 2;
+    var hh = 40;
     
 	  var x = d3.scale.linear().domain([-hh, hh]).range([0, width])
     var y = d3.scale.linear().domain([-hh, hh]).range([height, 0])

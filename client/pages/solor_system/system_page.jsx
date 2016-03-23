@@ -30,7 +30,7 @@ SystemPage = React.createClass({
 	
 	
 	displayFunction(){
-		var pp = planetPositions(2016, 3, 15);
+		var pp = planetPositions(2016, 3, 20);
 		plotPP(pp);
 		console.log("test")
 	},
